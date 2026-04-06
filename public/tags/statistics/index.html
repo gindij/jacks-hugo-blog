@@ -31,7 +31,7 @@
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -40,12 +40,16 @@
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -180,7 +184,7 @@
     <ul>
       
       <li>
-        <a class="link" href="/posts/2019-09-23-mse/">Understanding mean squared error</a>
+        <a class="link" href="/posts/2019-09-23-mse/">MSE = Bias² &#43; Variance</a>
         <time>23 September 2019</time>
       </li>
       

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,7 +33,7 @@ As our conversation continued and we talked about the way my dad studies music, 
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -42,12 +42,16 @@ As our conversation continued and we talked about the way my dad studies music, 
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   

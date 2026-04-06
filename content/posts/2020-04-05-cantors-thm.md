@@ -18,8 +18,8 @@ This post concerns a result that Cantor proved in the same 1891 paper in which h
 
 Before we get into it, we establish a small amount of notation. If $a$ is an element of $A$, we write $a \in
 A$. The size of the set $A$, or $A$'s cardinality, is denoted $|A|$. The power set of a set $A$, denoted
-$P(A)$, is the set of all subsets of $A$. For example, the power set of $A = \\{1, 2\\}$ is $P(A) =
-\\{\emptyset,\\{1\\}, \\{2\\}, \\{1, 2\\}\\}$, where $\emptyset$ is the empty set. There is actually a
+$P(A)$, is the set of all subsets of $A$. For example, the power set of $A = \{1, 2\}$ is $P(A) =
+\{\emptyset,\{1\}, \{2\}, \{1, 2\}\}$, where $\emptyset$ is the empty set. There is actually a
 straightforward argument that shows that if $|A| = n$, then $|P(A)| = 2^n$.
 It goes like this. Each element $a$ in $A$ is either in or not in each subset of $A$. Thus, constructing a
 subset requires $n$ choices, each of which is between two options ("in" or "not in"); the number of such

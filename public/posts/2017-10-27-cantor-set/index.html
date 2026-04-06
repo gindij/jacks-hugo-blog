@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,7 +38,7 @@ Visually, the $C_i$ look like">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -47,12 +47,16 @@ Visually, the $C_i$ look like">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -238,7 +242,7 @@ example, when we delete the middle thirds of the left and right parts of $C_1$ t
 $0, \frac{1}{3}, \frac{2}{3}$, or $1$. Formally, we would argue that if $x$ is an endpoint of $C_i$, we know two things:</p>
 <ol>
 <li>$x \in C_k$ for $k \leq i$.</li>
-<li>$x$ is not removed during the construction of any of the other $C_k$ for $k &gt; i$.
+<li>$x$ is not removed during the construction of any of the other $C_k$ for $k > i$.
 Thus, $x$ is in every one of the $C_i$ so by definition of $C$ (as the intersection of the $C_i$), $x \in C$.
 Is there anything else in $C$? If the only numbers left are endpoints of intervals, then $C$ would be a subset of
 $\mathbb{Q}$ and we would thus conclude that $C$ is countable.</li>
@@ -249,10 +253,11 @@ need to think about how much we delete on each pass. On the first pass, we delet
 On the second, we delete 2 intervals of size $1/9$ ($1/3^2$). On the third, we delete, 4 intervals of size $1/27$ ($1/
 3^3$). Generalizing this pattern, we see that on the $i$th iteration, we cut $2^{i-1}$ intervals, each of size $1/3^i$. To
 count up how much length we cut, we just need the sum of
-$$\frac{1}{3} + 2\biggr(\frac{1}{9}\biggr) + 4\biggr(\frac{1}{27}\biggr) + \dots + 2^{i-1}\biggr(\frac{1}{3^i}\biggr) + \dots = \frac{1}{3}\sum_{i = 1}^\infty <br>
-\biggr(\frac{2}{3}\biggr)^{i-1}$$</p>
-<p>The series is geometric with ratio less than 1, so the sum evaluates to
-$$\frac{1}{3}\biggr(\frac{1}{1 - \frac{2}{3}}\biggr) = \frac{1}{3}\cdot 3 = 1.$$
+</p>
+$$\frac{1}{3} + 2\biggr(\frac{1}{9}\biggr) + 4\biggr(\frac{1}{27}\biggr) + \dots + 2^{i-1}\biggr(\frac{1}{3^i}\biggr) + \dots = \frac{1}{3}\sum_{i = 1}^\infty \
+\biggr(\frac{2}{3}\biggr)^{i-1}$$<p>The series is geometric with ratio less than 1, so the sum evaluates to
+</p>
+$$\frac{1}{3}\biggr(\frac{1}{1 - \frac{2}{3}}\biggr) = \frac{1}{3}\cdot 3 = 1.$$<p>
 But that’s kinda odd… we started with an interval of length 1, and have cut out… all of it? (Mathematically, we say that
 $C$ has zero length.)</p>
 <h2 id="so-is-it-countable">So is it countable?</h2>

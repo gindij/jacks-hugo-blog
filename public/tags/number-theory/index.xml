@@ -19,11 +19,11 @@
 &lt;h2 id=&#34;proving-it&#34;&gt;Proving it&lt;/h2&gt;
 &lt;p&gt;The theorem can be stated as follows:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Theorem:&lt;/strong&gt; Every positive whole number $n &amp;gt; 1$ can be written as a unique product of prime numbers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Theorem:&lt;/strong&gt; Every positive whole number $n &gt; 1$ can be written as a unique product of prime numbers.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; The proof has 2 parts. We will first show that the decomposition exists and then we will show that it’s unique.
 For existence, we will use induction. The base case, when $n = 2$, is trivial. 2 is the product of… well… 2. So now we
-assume that $n &amp;gt; 2$ and then every number $1 &amp;lt; k &amp;lt; n$ has such a decomposition. If $n$ is prime, we’ve succeeded (same
+assume that $n &gt; 2$ and then every number $1 &lt; k &lt; n$ has such a decomposition. If $n$ is prime, we’ve succeeded (same
 logic we used for the base case). If $n$ is composite, then we can write $n = ab$ with $a$ and $b$ both strictly smaller
 than $n$. By the induction hypothesis, both $a$ and $b$ have prime factor decompositions, so $n$ does as well.&lt;/p&gt;
 &lt;p&gt;(If you aren’t familiar with induction, what we’ve done is shown that in the very smallest case, we have what we want.

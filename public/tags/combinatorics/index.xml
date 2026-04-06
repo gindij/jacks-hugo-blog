@@ -31,35 +31,42 @@ At this point we observe two simple facts:&lt;/p&gt;
 &lt;li&gt;Each intersection is going to be counted 4 times. Why? Because each intersection requires two strings, each of which has two people holding the ends. Thus, once I’ve come up with my formula for the number of intersections per person, I have to remember that simply multiplying the result by $n$ is going to count each intersection 4 times, so we need to divide the total number of intersections we find by 4.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;From (1) and (2), we can deduce that our answer is going to have the form:
-$$\frac{n}{4} \cdot \text{intersections per person}$$&lt;/p&gt;
-&lt;p&gt;The last thing we need to do is figure out the way to express the number of intersections per person. We will derive this in steps:&lt;/p&gt;
+&lt;/p&gt;
+$$\frac{n}{4} \cdot \text{intersections per person}$$&lt;p&gt;The last thing we need to do is figure out the way to express the number of intersections per person. We will derive this in steps:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Each string that crosses the middle of the circle splits the circle into two groups. For simplicity, let’s call them the right-hand and left-hand groups.&lt;/li&gt;
 &lt;li&gt;The number of edges that intersect the splitting string is exactly the number of strings that pass from the right-hand group to the left-hand group.&lt;/li&gt;
-&lt;li&gt;Let’s say that there are $k$ people in the right-hand group. Because there are 2 people holding the splitting string, the left group must have the remaining people, i.e. $n - k - 2$. Each of the $k$ people in the right group shares a string with each of the people in the left group, so the number of strings that cross the splitting string is given by $\text{(# of people in right group)} \cdot \text{(# of people in left group)} = k (n - k - 2)$.&lt;/li&gt;
+&lt;li&gt;Let’s say that there are $k$ people in the right-hand group. Because there are 2 people holding the splitting string, the left group must have the remaining people, i.e. $n - k - 2$. Each of the $k$ people in the right group shares a string with each of the people in the left group, so the number of strings that cross the splitting string is given by $\text{(\# of people in right group)} \cdot \text{(\# of people in left group)} = k (n - k - 2)$.&lt;/li&gt;
 &lt;li&gt;We now just have to treat each string that a person is holding as a splitting string, use the formula from (3) and add the results up.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;If you understand steps (1)-(4), the rest is just boring, but unfortunately necessary algebra. If you’re new to discrete math, you should try to work this out yourself; there are some summations in there that you’ll encounter over and over again and it’s a good way to get familiar with some of them. If algebra isn’t your thing, trust me that this approach works and skip to the intuitive approach below.&lt;/p&gt;
 &lt;p&gt;The goal now is to simplify
-$$\sum_{k=1}^{n-3} k(n-k-2).$$
+&lt;/p&gt;
+$$\sum_{k=1}^{n-3} k(n-k-2).$$&lt;p&gt;
 (We will multiply by $n/4$ at the end.) Our first step will be to distribute the $k$ to get:
-$$\sum_{k=1}^{n-3} nk - k^2 - 2k.$$
+&lt;/p&gt;
+$$\sum_{k=1}^{n-3} nk - k^2 - 2k.$$&lt;p&gt;
 From now on, I’m going to write the summation without the indices (because typing them is tedious), but they’re implied. Splitting up into three summations, we have:
-$$\sum nk - \sum k^2 - \sum 2k.$$
+&lt;/p&gt;
+$$\sum nk - \sum k^2 - \sum 2k.$$&lt;p&gt;
 Pulling out constants, this is equal to
-$$n\sum k - \sum k^2 - 2 \sum k = (n-2)\sum k - \sum k^2.$$
+&lt;/p&gt;
+$$n\sum k - \sum k^2 - 2 \sum k = (n-2)\sum k - \sum k^2.$$&lt;p&gt;
 We know (but if you don’t, try to prove it yourself), that $\sum_{i=1}^m i = m(m+1)/2$. Once you’ve proven that, you can use a similar method to prove that $\sum_{i=1}^m i^2 = m(m+1)(2m+1)/6$. Substituting these in and recalling that $m$ in our case is $n - 3$, we have
-$$\frac{(n-2)(n-3)(n-3+1)}{2} - \frac{(n-3)(n-3+1)(2n-6+1)}{6}$$
+&lt;/p&gt;
+$$\frac{(n-2)(n-3)(n-3+1)}{2} - \frac{(n-3)(n-3+1)(2n-6+1)}{6}$$&lt;p&gt;
 Simplifying that monster,
+&lt;/p&gt;
 $$
 \begin{align*}
-\frac{3(n-2)(n-3)(n-2) - (n-3)(n-2)(2n-5)}{6}
-&amp;amp;= \frac{(n-3)(n-2)(3n - 6 - (2n - 5))}{6} \\
-&amp;amp;= \frac{(n-3)(n-2)(n-1)}{6}.
+  \frac{3(n-2)(n-3)(n-2) - (n-3)(n-2)(2n-5)}{6}
+  &amp;= \frac{(n-3)(n-2)(3n - 6 - (2n - 5))}{6} \\\\
+  &amp;= \frac{(n-3)(n-2)(n-1)}{6}.
 \end{align*}
-$$
+$$&lt;p&gt;
 Multiplying that by $n/4$, we end up with the surprisingly neat formula for the total number of intersections:
-$$\frac{n(n-1)(n-2)(n-3)}{4!}.$$
+&lt;/p&gt;
+$$\frac{n(n-1)(n-2)(n-3)}{4!}.$$&lt;p&gt;
 For those who have seen this formula before, this is exactly the number of ways to choose a group of 4 people from a population of size $n$. Once I had spent all this time doing all that algebra, it occurred to me that there had to be an easier way to articulate the solution&amp;hellip;&lt;/p&gt;
 &lt;h2 id=&#34;intuitive-approach&#34;&gt;Intuitive approach&lt;/h2&gt;
 &lt;p&gt;The simple way to solve the problem is to use one observation (that we actually made earlier): each intersection corresponds exactly with a single group of four people. If you draw the picture for $n = 4$, you’ll clearly see the single intersection. This observation finishes the problem for us… Can you see how?

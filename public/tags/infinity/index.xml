@@ -17,12 +17,12 @@
 &lt;p&gt;This will be a quick one. From the very beginning of our mathematical educations, there is a
 fundamental fact of which we are made aware: If $a$ and $b$ are numbers of any
 kind (natural numbers, integers, rationals, reals, complex), then &amp;ndash; now hold on to your hats &amp;ndash;
+&lt;/p&gt;
 $$
 \begin{align*}
-a + b = b + a.
+    a + b = b + a.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Earth-shattering &amp;ndash; I know. As some of you are likely already aware, I find infinity fascinating. In this post,
+$$&lt;p&gt;Earth-shattering &amp;ndash; I know. As some of you are likely already aware, I find infinity fascinating. In this post,
 I want to briefly discuss how infinity can mess with some of our most basic assumptions
 about the nature of one of our most basic arithmetic operations. Without further ado, let&amp;rsquo;s dive
 in.&lt;/p&gt;
@@ -30,18 +30,19 @@ in.&lt;/p&gt;
 &lt;p&gt;In our everyday lives (unless you&amp;rsquo;re a mathematician), we only ever consider what it means to carry
 out arithmetic operations on finite collections of numbers. A first course in calculus challenges us
 to think about the nature of infinite sums, objects like:
+&lt;/p&gt;
 $$
 \begin{align*}
-1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots
+    1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots
 \end{align*}
-$$
+$$&lt;p&gt;
 or
+&lt;/p&gt;
 $$
 \begin{align*}
-1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots
+    1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;But what &amp;ndash; you might ask &amp;ndash; is so interesting about these sums? Don&amp;rsquo;t an infinite number of numbers
+$$&lt;p&gt;But what &amp;ndash; you might ask &amp;ndash; is so interesting about these sums? Don&amp;rsquo;t an infinite number of numbers
 added together have to add up to $\infty$?&lt;/p&gt;
 &lt;p&gt;(Mathmatical aside &amp;ndash; feel free to skip:
 Before answering that question, it is worth considering what mathmeticians even mean when they ask
@@ -58,24 +59,26 @@ the ones with finite sums &lt;strong&gt;convergent&lt;/strong&gt; and the ones w
 is an example of a series whose underlying sequence has terms that get smaller and smaller, but
 which, despite that fact, diverges. For full effect, let&amp;rsquo;s briefly have a look at why it diverges.&lt;/p&gt;
 &lt;p&gt;Let $H$ denote the sum of the Harmonic Series, and let&amp;rsquo;s compare $H$ to the sum of another,
-similar-looking series $H&amp;rsquo;$:
+similar-looking series $H&#39;$:
+&lt;/p&gt;
 $$
 \begin{align*}
-H &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{3} + \frac{1}{4}\biggr) + \biggr(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\biggr) + \dots \
-H&amp;rsquo; &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{4} + \frac{1}{4}\biggr) + \biggr(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\biggr) + \dots
+    H &amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{3} + \frac{1}{4}\biggr) + \biggr(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\biggr) + \dots \\
+    H&#39; &amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{4} + \frac{1}{4}\biggr) + \biggr(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\biggr) + \dots
 \end{align*}
-$$
-Notice that (1) each of the parenthesized groups of terms in $H&amp;rsquo;$ sum to $1/2$, and (2) each of the corresponding groups of terms
+$$&lt;p&gt;
+Notice that (1) each of the parenthesized groups of terms in $H&#39;$ sum to $1/2$, and (2) each of the corresponding groups of terms
 in $H$ sums to a number that is &lt;em&gt;greater&lt;/em&gt; than $1/2$. One of the rules one learns in calculus is (informally) that if you are
-comparing two sums and the smaller of them is infinite, the larger one must be infinite too. Since $H &amp;gt; H&amp;rsquo;$ because of (1), and
-$H&amp;rsquo; = \infty$ because it is a sum of infinitely many $1/2$s, $H$ must be infinite too.&lt;/p&gt;
+comparing two sums and the smaller of them is infinite, the larger one must be infinite too. Since $H &gt; H&#39;$ because of (1), and
+$H&#39; = \infty$ because it is a sum of infinitely many $1/2$s, $H$ must be infinite too.&lt;/p&gt;
 &lt;h1 id=&#34;can-we-make-it-converge&#34;&gt;Can we make it converge?&lt;/h1&gt;
 &lt;p&gt;Even though $H$ diverges, we can make it converge by changing half of the additions into subtractions like so:
+&lt;/p&gt;
 $$
 \begin{align*}
-1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots \
+    1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots \\
 \end{align*}
-$$
+$$&lt;p&gt;
 It turns out that this modified series converges! (We will not spend time proving that this series converges, but if you&amp;rsquo;re interested, I wrote another post a while ago covering that; you can check it out &lt;a href=&#34;https://www.jgindi.me/posts/alternating/&#34;&gt;here&lt;/a&gt;.)
 To make things even weirder, if you group the terms with even denominators together, the sum of their absolute values diverges. (The same applies to the group of terms with odd denominators, as you might expect.)&lt;/p&gt;
 &lt;p&gt;For visual intuition that this series converges (in lieu of a proof), this image should help
@@ -132,9 +135,9 @@ straightforward argument that shows that if $|A| = n$, then $|P(A)| = 2^n$.
 It goes like this. Each element $a$ in $A$ is either in or not in each subset of $A$. Thus, constructing a
 subset requires $n$ choices, each of which is between two options (&amp;ldquo;in&amp;rdquo; or &amp;ldquo;not in&amp;rdquo;); the number of such
 subsets is thus $2 \times \dots \times 2 = 2^n$.&lt;/p&gt;
-&lt;p&gt;Cantor&amp;rsquo;s Theorem is quite compact. It says that $|P(A)| &amp;gt; |A|$; in English, the number of subsets of $A$ is
+&lt;p&gt;Cantor&amp;rsquo;s Theorem is quite compact. It says that $|P(A)| &gt; |A|$; in English, the number of subsets of $A$ is
 strictly greater than the size of $A$. But based on what we just showed, shouldn&amp;rsquo;t this be obvious? For any
-$n \geq 0$, $2^n &amp;gt; n$, after all. What is so revolutionary or helpful about Cantor&amp;rsquo;s Theorem? As is often the
+$n \geq 0$, $2^n &gt; n$, after all. What is so revolutionary or helpful about Cantor&amp;rsquo;s Theorem? As is often the
 case with theorems in set theory, the subtlety stems from having to extend the result to infinite sets.&lt;/p&gt;
 &lt;p&gt;The beauty of Cantor&amp;rsquo;s Theorem is that with one elegant argument, Cantor proves the above for any set,
 finite, countably infinite, or uncountably infinite. The way he does it is by using a proof technique called
@@ -154,7 +157,7 @@ in the set it maps to, namely $S_c$. But if it is in $S_c$, we get into the same
 first case. Thus, $c$ cannot be in $S_c$ and $c$ cannot not be in $S_c$. We have thus reached our desired
 contradiction! Our assumption, that $|A| = |P(A)|$, must be false.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;re not quite done, though. We&amp;rsquo;ve shown that $A$ and $P(A)$ are not the same size, but which is bigger?
-Well the $S_c$ that did not have a matching $c$ was a member of $P(A)$, so we must have $|P(A)| &amp;gt; |A|$,
+Well the $S_c$ that did not have a matching $c$ was a member of $P(A)$, so we must have $|P(A)| &gt; |A|$,
 proving the theorem.&lt;/p&gt;
 &lt;p&gt;Cantor&amp;rsquo;s Theorem answers this post&amp;rsquo;s original question. Can you see how? It says that if you take any
 infinite set $A$, its power set $P(A)$ furnishes a larger infinity. But then we get an even larger infinity
@@ -188,7 +191,7 @@ example, when we delete the middle thirds of the left and right parts of $C_1$ t
 $0, \frac{1}{3}, \frac{2}{3}$, or $1$. Formally, we would argue that if $x$ is an endpoint of $C_i$, we know two things:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;$x \in C_k$ for $k \leq i$.&lt;/li&gt;
-&lt;li&gt;$x$ is not removed during the construction of any of the other $C_k$ for $k &amp;gt; i$.
+&lt;li&gt;$x$ is not removed during the construction of any of the other $C_k$ for $k &gt; i$.
 Thus, $x$ is in every one of the $C_i$ so by definition of $C$ (as the intersection of the $C_i$), $x \in C$.
 Is there anything else in $C$? If the only numbers left are endpoints of intervals, then $C$ would be a subset of
 $\mathbb{Q}$ and we would thus conclude that $C$ is countable.&lt;/li&gt;
@@ -199,10 +202,11 @@ need to think about how much we delete on each pass. On the first pass, we delet
 On the second, we delete 2 intervals of size $1/9$ ($1/3^2$). On the third, we delete, 4 intervals of size $1/27$ ($1/
 3^3$). Generalizing this pattern, we see that on the $i$th iteration, we cut $2^{i-1}$ intervals, each of size $1/3^i$. To
 count up how much length we cut, we just need the sum of
-$$\frac{1}{3} + 2\biggr(\frac{1}{9}\biggr) + 4\biggr(\frac{1}{27}\biggr) + \dots + 2^{i-1}\biggr(\frac{1}{3^i}\biggr) + \dots = \frac{1}{3}\sum_{i = 1}^\infty &lt;br&gt;
-\biggr(\frac{2}{3}\biggr)^{i-1}$$&lt;/p&gt;
-&lt;p&gt;The series is geometric with ratio less than 1, so the sum evaluates to
-$$\frac{1}{3}\biggr(\frac{1}{1 - \frac{2}{3}}\biggr) = \frac{1}{3}\cdot 3 = 1.$$
+&lt;/p&gt;
+$$\frac{1}{3} + 2\biggr(\frac{1}{9}\biggr) + 4\biggr(\frac{1}{27}\biggr) + \dots + 2^{i-1}\biggr(\frac{1}{3^i}\biggr) + \dots = \frac{1}{3}\sum_{i = 1}^\infty \
+\biggr(\frac{2}{3}\biggr)^{i-1}$$&lt;p&gt;The series is geometric with ratio less than 1, so the sum evaluates to
+&lt;/p&gt;
+$$\frac{1}{3}\biggr(\frac{1}{1 - \frac{2}{3}}\biggr) = \frac{1}{3}\cdot 3 = 1.$$&lt;p&gt;
 But that’s kinda odd… we started with an interval of length 1, and have cut out… all of it? (Mathematically, we say that
 $C$ has zero length.)&lt;/p&gt;
 &lt;h2 id=&#34;so-is-it-countable&#34;&gt;So is it countable?&lt;/h2&gt;

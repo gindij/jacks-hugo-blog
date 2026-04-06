@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -37,7 +37,7 @@ B$ without one having to send the other his/her entire file.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -46,12 +46,16 @@ B$ without one having to send the other his/her entire file.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -229,7 +233,7 @@ strings. The comparison protocol works as follows:</p>
 <li>Alice picks a prime $p \in \{2..n^2\lg n\}$ (fear not; we will explain the choice
 of this range soon). Because $A$ is an $n$-bit string, we can look at it as an $n$-
 bit binary integer. Alice computes $A \pmod p$ and sends Bob the prime $p$ and $A
-\pmod p$. (Note: computing $A \pmod p$ means the remainder of $A$ left over when we
+  \pmod p$. (Note: computing $A \pmod p$ means the remainder of $A$ left over when we
 divide it by $p$.)</li>
 <li>Bob computes $B \pmod p$. If $A = B \pmod p$ ($A$ and $B$ leave the same $p$-
 remainder), Bob outputs that the files are the same. Otherwise, he should conclude
@@ -244,7 +248,8 @@ algorithm will never fail. Mathematically, if $A = B$, then $A = B \pmod p$ so B
 will always output &ldquo;same&rdquo; in this case.</p>
 <p>The interesting case to analyze is the case in which $A \neq B$. In this case, we are
 interested in
-$$\Pr[A = B \pmod p <del>|</del> A \neq B].$$
+</p>
+$$\Pr[A = B \pmod p ~|~ A \neq B].$$<p>
 In English, we are interested in the probability that Bob outputs &ldquo;same&rdquo; even when
 his and Alice&rsquo;s files are not in sync. To analyze this probability, we need to
 entertain a quick tangent.</p>
@@ -255,7 +260,7 @@ show, using the theorem and some algebra that we need not bother ourselves with 
 that there are about $n^2$ primes in the range from which we drew $p$ (start by
 substituting $N = n^2 \lg n$ in the theorem).</p>
 <p>Keep this fact in mind. Let $C = |A - B|$. We can reformulate the probability of the
-protocol failing as $\Pr[C = 0 \pmod p <del>|</del> C \neq 0]$.</p>
+protocol failing as $\Pr[C = 0 \pmod p ~|~ C \neq 0]$.</p>
 <p>Next, we note that because $A$ and $B$ both have $n$-bits, $C$ too must have $n$-
 bits. This means that $1 \leq C \leq 2^n$. Note that 2 is prime, so a nice feature of
 $C$ that we can observe is that $C$ has at most $n$ prime divisors. This is the key

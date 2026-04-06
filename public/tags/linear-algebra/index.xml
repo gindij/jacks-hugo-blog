@@ -40,31 +40,33 @@ power our internet!&amp;rdquo;&lt;/p&gt;
 stretched (not rotated) when acted upon by $A$. An eigenvalue $\lambda$ of $A$
 that corresponds to $v$ is the stretch factor. Formally, $v$ is an eigenvector
 of $A$, with corresponding eigenvalue $\lambda$ if we have
-$$Av = \lambda v.$$
+&lt;/p&gt;
+$$Av = \lambda v.$$&lt;p&gt;
 For the rest of the post, we will assume we&amp;rsquo;re dealing with a symmetric
 positive definite matrix.&lt;/p&gt;
 &lt;h2 id=&#34;a-helpful-characterization&#34;&gt;A helpful characterization&lt;/h2&gt;
 &lt;p&gt;Our first step will be to develop a helpful characterization of eigenvalues. To do
 this, given a matrix $A$ and a nonzero vector $x$, we consider the problem
-$$\text{minimize}_\alpha ~~ | Ax - \alpha x|_2^2.$$
+&lt;/p&gt;
+$$\text{minimize}_\alpha ~~ \| Ax - \alpha x\|_2^2.$$&lt;p&gt;
 We are essentially trying to find a scalar that is the closest approximation we
 can find to an eigenvalue corresponding to the vector $x$, &lt;em&gt;i.e.&lt;/em&gt; an $\alpha$ such
 that $Ax \approx \alpha x$. We can easily solve this minimization problem by
 setting the derivative of the objective (w.r.t. $\alpha$) to 0 and solving for $\alpha$.
 Carrying this out, as a function of $x$, we get:
+&lt;/p&gt;
 $$
-\alpha(x) = \frac{x^TAx}{x^Tx}
-$$&lt;/p&gt;
-&lt;p&gt;What we are interested in are the critical points of $\alpha(x)$ as a function of $x$.
+  \alpha(x) = \frac{x^TAx}{x^Tx}
+$$&lt;p&gt;What we are interested in are the critical points of $\alpha(x)$ as a function of $x$.
 Using the vector analog of the quotient rule for taking derivatives, we have
+&lt;/p&gt;
 $$
 \begin{align*}
-\nabla_x \alpha(A, x) &amp;amp;= \frac{2Ax}{x^Tx} - \frac{(2x)(x^TAx)}{(x^Tx)^2} \\
-&amp;amp;= \frac{2}{x^Tx}\biggr(Ax - \biggr(\frac{x^TAx}{x^Tx}x\biggr)\biggr) \\
-&amp;amp;= \frac{2}{x^Tx}(Ax - \alpha(x)x).
+  \nabla_x \alpha(A, x) &amp;= \frac{2Ax}{x^Tx} - \frac{(2x)(x^TAx)}{(x^Tx)^2} \\\\
+  &amp;= \frac{2}{x^Tx}\biggr(Ax - \biggr(\frac{x^TAx}{x^Tx}x\biggr)\biggr) \\\\
+  &amp;= \frac{2}{x^Tx}(Ax - \alpha(x)x).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Suppose $v$ is a critical point of $\alpha$, &lt;em&gt;i.e.&lt;/em&gt; $\nabla \alpha(v) = 0$. For that $v$,
+$$&lt;p&gt;Suppose $v$ is a critical point of $\alpha$, &lt;em&gt;i.e.&lt;/em&gt; $\nabla \alpha(v) = 0$. For that $v$,
 we would have $Av = \alpha(v)v$. That is, $v$ is an eigenvector of $A$, with eigenvalue
 $\alpha(v)$. Conversely, if $v$ is an eigenvector of $A$ with corresponding
 eigenvalue $\lambda$, then we have $r(v) = \lambda \frac{x^Tx}{x^Tx} = \lambda$.
@@ -115,17 +117,18 @@ just need to show that the sequence $v_i$ converges to an eigenvector of $A$ (
 because we&amp;rsquo;ve already shown that given an eigenvector, $\alpha$ produces an eigenvalue).&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s say that $\{q_i\}$, $i = 1,\dots,m$, make up an orthogonal basis of eigenvectors of $A$
 corresponding to the eigenvalues $\lambda_i$ (this set exists because $A$ is symmetric).
-We can also assume, without altering the proof, that $|\lambda_1| &amp;gt; |\lambda_2| \geq \dots \geq |\lambda_m|$.
+We can also assume, without altering the proof, that $|\lambda_1| &gt; |\lambda_2| \geq \dots \geq |\lambda_m|$.
 Because $v_k = c_kA^kv_0$ for some sequence of constants $c_k$ (because of the
 normalization at each step), we can use the expansion of $v_k$ in the basis $\{q_i\}$ as
+&lt;/p&gt;
 $$
 \begin{align*}
-v_k &amp;amp;= cA^kv_0 \\
-&amp;amp;= cA^k(a_1q_1 + \dots + a_mq_m)\\
-&amp;amp;= c(a_1\lambda_1^kq_1 + \dots a_m\lambda_m^kq_m)\\
-&amp;amp;= c\lambda_1^k(a_1q_1 + a_2(\lambda_2/\lambda_1)^kq_2 + \dots a_m(\lambda_m/\lambda_1)^kq_m)
+    v_k &amp;= cA^kv_0 \\\\
+    &amp;= cA^k(a_1q_1 + \dots + a_mq_m)\\\\
+    &amp;= c(a_1\lambda_1^kq_1 + \dots a_m\lambda_m^kq_m)\\\\
+    &amp;= c\lambda_1^k(a_1q_1 + a_2(\lambda_2/\lambda_1)^kq_2 + \dots a_m(\lambda_m/\lambda_1)^kq_m)
 \end{align*}
-$$
+$$&lt;p&gt;
 Because $\lambda_1$ is greater than all other eigenvalues, as $k \to \infty$, all
 but the first of the terms in the parentheses in the last line go to zero, so we have
 $v_k \to c_ka_1\lambda_1^kq_1$, which is a scalar multiple of $q_1$, the eigenvector
@@ -136,7 +139,7 @@ subspace spanned by the $v_k$ is the same as the one spanned by $q_1$.)&lt;/p&gt
 &lt;p&gt;Unfortunately, power iteration is not really used in practice for a couple of reasons.
 The first is that it only finds the eigenpair corresponding to the largest eigenvalue. The second
 is that the rate at which it converges depends on how much larger $\lambda_1$ is than $\lambda_j$
-for $j &amp;gt; 1$. If, for instance, $\lambda_1$ and $\lambda_2$ are close in magnitude,
+for $j &gt; 1$. If, for instance, $\lambda_1$ and $\lambda_2$ are close in magnitude,
 the convergence is very slow. There is a modification we can make to mitigate some of
 these issues, which we&amp;rsquo;ll discuss next.&lt;/p&gt;
 &lt;h2 id=&#34;inverse-iteration&#34;&gt;Inverse iteration&lt;/h2&gt;
@@ -144,12 +147,13 @@ these issues, which we&amp;rsquo;ll discuss next.&lt;/p&gt;
 that $\mu$ is a scalar that is &lt;em&gt;not&lt;/em&gt; an eigenvalue of $A$ and let $v$ be an eigenvector
 of $A$ with associated eigenvalue $\lambda$. We can show that $v$ is also an eigenvector
 of $(A - \mu I)^{-1}$ by
+&lt;/p&gt;
 $$
 \begin{align*}
-(A - \mu I)v &amp;amp;= Av - \mu v \\
-&amp;amp;= (\lambda - \mu) v
+    (A - \mu I)v &amp;= Av - \mu v \\\\
+    &amp;= (\lambda - \mu) v
 \end{align*}
-$$
+$$&lt;p&gt;
 If we multiply on the left by $(A - \mu I)^{-1}$ and then divide on both sides by
 $\lambda - \mu$, we have $(A - \mu I)^{-1}v = v / (\lambda - \mu)$. In other words,
 $1/(\lambda - \mu)$ is an eigenvalue of $(A - \mu I)^{-1}$. (The invertibility of
@@ -234,17 +238,19 @@ the individual parts.&lt;/p&gt;
 &lt;p&gt;This post was inspired by some conversations with my brother about concepts from linear algebra. I&amp;rsquo;m writing it mostly to better understand the idea myself, but hopefully some others will find it clear and useful too.&lt;/p&gt;
 &lt;p&gt;Generally speaking, a matrix decomposition usually starts with a matrix $A$ and asks how we can decompose it into some other matrices that have convenient properties. These algorithms are often useful in making certain common matrix-related tasks, such as solving (potentially large) systems of linear equations quickly much more computationally efficient. You can find a long list of decompositions &lt;a href=&#34;https://en.wikipedia.org/wiki/Matrix_decomposition&#34;&gt;here&lt;/a&gt;, but in this post we&amp;rsquo;re going to talk about one particular decomposition (or factorization): the QR factorization.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll begin by showing why the decomposition comes in handy for solving linear equations. Once we&amp;rsquo;ve convinced ourselves that the decomposition is useful, we will then discuss how we go about finding the components that the decomposition finds for us.&lt;/p&gt;
-&lt;h2 id=&#34;what-the-qr-factorization-does&#34;&gt;What the $QR$-factorization does&lt;/h2&gt;
+&lt;h2 id=&#34;what-the--factorization-does&#34;&gt;What the $QR$-factorization does&lt;/h2&gt;
 &lt;p&gt;Simply put, the $QR$ factorization algorithm takes as input a matrix A and outputs a pair of matrices, $Q$ and $R$, such that $Q$ is orthogonal and $R$ is upper triangular (which means that the elements of the matrix below the diagonal are all 0).&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s suppose that we&amp;rsquo;re interested in solving a system of linear equations given compactly in matrix-vector notation by $Ax = b$, where $A \in \mathbf{R}^{n\times k}$, $x \in \mathbf{R}^k$, and $b \in \mathbf{R}^n$. We will suppose that $A$ is tall or square and that it has full column rank (its columns are an independent set). We will also assume that $b$ is in the range of $A$, so that a solution exists. The variable here is $x$; that is, we want to find $x_1, \dots, x_k$ that simultaneously satisfy all of the equations in the system.&lt;/p&gt;
 &lt;p&gt;Now let&amp;rsquo;s magically decompose $A$ into the product of matrices $Q$ and $R$, where $Q$ is orthogonal and $R$ is upper triangular. Then we can rewrite the system we want to solve as $QRx = b$. We can solve the system in 3 steps:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Solve the system $Qz = b$ by left multiplying both sides by $Q^T$ (benefit of $Q$ being orthogonal).&lt;/li&gt;
 &lt;li&gt;Solve the system $Rx = z$. If you think about what it means for $R$ to be upper triangular, we can solve this part by first obtaining $x_k$ by
+
 \begin{equation}
-x_k = \frac{z_k}{R_{kk}},
+  x_k = \frac{z_k}{R_{kk}},
 \end{equation}
 then obtaining $x_{k-1}$ by
+
 \begin{equation}
 x_{k-1} = z_{k-1} - z_k\frac{R_{k-1,k}}{R_{kk}R_{k-1,k-1}},
 \end{equation}
@@ -252,28 +258,26 @@ then obtaining $x_{k-2}$, and so on, until we&amp;rsquo;ve computed all of the $
 &lt;/ol&gt;
 &lt;p&gt;This turns out to be much more efficient than solving the system in the naive way (e.g., computing this and left multiplying the original system by it).&lt;/p&gt;
 &lt;p&gt;The other great advantage of computing a factorization like the $QR$ factorization is that it can be cached and reused! Suppose that instead of a single system, you want to solve 1000 systems, with with different right hand sides (e.g., $Ax = b_1$, $Ax = b_2$, &amp;hellip;, $Ax = b_{1000}$. After computing the factorization once, you can reuse it to make all 1000 solves more efficient! In some sense, you can amortize the cost of the factorization over a bunch of reuses. In real applications that I&amp;rsquo;ve been a part of developing, using matrix decompositions in this way has resulted in noticeable and impactful speedups.&lt;/p&gt;
-&lt;h2 id=&#34;finding-q-and-r&#34;&gt;Finding $Q$ and $R$&lt;/h2&gt;
+&lt;h2 id=&#34;finding--and&#34;&gt;Finding $Q$ and $R$&lt;/h2&gt;
 &lt;p&gt;So how do we find $Q$ and $R$?&lt;/p&gt;
 &lt;p&gt;There are a few ways to compute $Q$ and $R$, but in this post I want to walk through the most intuitive of them: the Gram-Schmidt algorithm (GS).&lt;/p&gt;
-&lt;p&gt;We will describe GS when the input is a linearly independent set of $n$-vectors $a_1,\dots,a_k$ (this implies $k \leq n$). The general idea of the algorithm is that at the $i$th step we construct a vector $q_i$ using $a_i$ as a starting point and removing from it everything that $a_i$ shares with the vectors we&amp;rsquo;ve already computed in prior steps, i.e., $q_1$ through $q_{i-1}$. By construction, $q_i$ doesn&amp;rsquo;t have anything in common with any of the vectors computed before it, so the collection ${q_1,\dots,q_k}$ are orthogonal. If we divide each vector by its length at each step, the orthogonal collection becomes orthonormal. The vectors $q_i$ become the columns of $Q$.&lt;/p&gt;
+&lt;p&gt;We will describe GS when the input is a linearly independent set of $n$-vectors $a_1,\dots,a_k$ (this implies $k \leq n$). The general idea of the algorithm is that at the $i$th step we construct a vector $q_i$ using $a_i$ as a starting point and removing from it everything that $a_i$ shares with the vectors we&amp;rsquo;ve already computed in prior steps, i.e., $q_1$ through $q_{i-1}$. By construction, $q_i$ doesn&amp;rsquo;t have anything in common with any of the vectors computed before it, so the collection $\{q_1,\dots,q_k\}$ are orthogonal. If we divide each vector by its length at each step, the orthogonal collection becomes orthonormal. The vectors $q_i$ become the columns of $Q$.&lt;/p&gt;
 &lt;p&gt;In order to compute $R$, we need to make the idea of &amp;ldquo;removing&amp;rdquo; everything that $a_i$ shares with the vectors we&amp;rsquo;ve already computed in prior steps&amp;quot; more precise. Suppose we are part of the way through the algorithm. As we&amp;rsquo;re preparing for the $i$th step, we have the vector $a_i$ that we need to incorporate into our output and the orthonormal collection $q_1,\dots,q_{i-1}$ that we&amp;rsquo;ve built up so far. For some $1 \leq k \leq i-1$, let $v_k = (q_k^Ta_i)q_k$. If we subtract $v_k$ from $a_i$, let&amp;rsquo;s see what the result &amp;ldquo;has in common&amp;rdquo; with $q_k$ by taking the inner product:&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-(a_i - v_k)^Tq_k &amp;amp;= (a_i - (q_k^Ta_i)q_k)^T q_k \\
-&amp;amp;= a_i^Tq_k - q_k^Ta_i \\
-&amp;amp;= 0
+  (a_i - v_k)^Tq_k &amp;= (a_i - (q_k^Ta_i)q_k)^T q_k \\\\
+  &amp;= a_i^Tq_k - q_k^Ta_i \\\\
+  &amp;= 0
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;This means $a_i - v_k$ has nothing in common with, or in math parlance, is orthogonal to, $q_k$! Thus, to make $q_i$ orthogonal to all of the $q_k$, we just set $q_i = a_i - v_1 - v_2 - \dots - v_{i-1}$. The GS algorithm can thus be stated compactly:&lt;/p&gt;
+$$&lt;p&gt;This means $a_i - v_k$ has nothing in common with, or in math parlance, is orthogonal to, $q_k$! Thus, to make $q_i$ orthogonal to all of the $q_k$, we just set $q_i = a_i - v_1 - v_2 - \dots - v_{i-1}$. The GS algorithm can thus be stated compactly:&lt;/p&gt;
 &lt;p&gt;For $i = 1,\dots,k$, let $p_i = a_i - v_1 - \dots - v_{i-1}$. Then define $q_i = p_i / ||p_i||$. When you&amp;rsquo;ve cycled through all values of $i$, return the collection $q_1,\dots,q_k$.&lt;/p&gt;
 &lt;p&gt;With this in hand, we can now define the entries of $R$. If $p_i = a_i - v_1 - \dots - v_{i-1}$, then we can isolate $a_i$ and obtain&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-a_i &amp;amp;= |p_i|p_i + v_1 + \dots + v_{i-1} \\
-&amp;amp;= |p_i|p_i + (q_1^Ta_i)q_1 + \dots + (q_{i-1}^Ta_i)q_{i-1}.
+  a_i &amp;= \|p_i\|p_i + v_1 + \dots + v_{i-1} \\\\
+  &amp;= \|p_i\|p_i + (q_1^Ta_i)q_1 + \dots + (q_{i-1}^Ta_i)q_{i-1}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;We will choose $R_{ij} = q_j^Ta_i$ for $i&amp;lt;j$, $R_{ii} = |p_i|$ for $i=j$, and $R_{ij} = 0$ for $i&amp;gt;j$; in essence, we&amp;rsquo;re just picking our entries of $R$ right out of the expression for $a_i$ in terms of the $q_i$.&lt;/p&gt;
+$$&lt;p&gt;We will choose $R_{ij} = q_j^Ta_i$ for $i&lt;j$, $R_{ii} = \|p_i\|$ for $i=j$, and $R_{ij} = 0$ for $i&gt;j$; in essence, we&amp;rsquo;re just picking our entries of $R$ right out of the expression for $a_i$ in terms of the $q_i$.&lt;/p&gt;
 &lt;p&gt;By defining $Q$ and $R$ as such, we have $A = QR$, as we wanted.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The $QR$ factorization is very useful without being overly abstract. Ultimately, the insight that makes it possible is very intuitive (even though many symbols were harmed in the writing of this post). The method described above is by no means the only way to compute $QR$-factorization. I may go through some of the others in future posts.&lt;/p&gt;
@@ -297,50 +301,57 @@ post will be brief (as I&amp;rsquo;m a little busy at the moment), so if there&a
 incorrect, please do reach out and let me know.&lt;/p&gt;
 &lt;h2 id=&#34;fibonacci-matrix&#34;&gt;Fibonacci matrix&lt;/h2&gt;
 &lt;p&gt;The Fibonacci sequence can be viewed through the lens of matrices. In particular, if we start with the matrix
+&lt;/p&gt;
 $$
-A = \begin{bmatrix} 1 &amp;amp; 1 \ 1 &amp;amp; 0 \end{bmatrix},
-$$ we can see that the Fibonacci sequence can be materialized by repeatedly multiplying $A$ by itself.&lt;/p&gt;
+A = \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; 0 \end{bmatrix},
+$$&lt;p&gt; we can see that the Fibonacci sequence can be materialized by repeatedly multiplying $A$ by itself.&lt;/p&gt;
 &lt;p&gt;To see this, first notice that if we are considering the Fibonacci sequence that starts with $F_0 = 0$ and
 $F_1 = 1$, then we note that
+&lt;/p&gt;
 $$
-A = \begin{bmatrix} F_2 &amp;amp; F_1 \ F_1 &amp;amp; F_0 \end{bmatrix}.
-$$
+A = \begin{bmatrix} F_2 &amp; F_1 \\ F_1 &amp; F_0 \end{bmatrix}.
+$$&lt;p&gt;
 Suppose now that
+&lt;/p&gt;
 $$
-A^{n-1} = \begin{bmatrix} 1 &amp;amp; 1 \ 1 &amp;amp; 0 \end{bmatrix}^{n-1} = \begin{bmatrix} F_{n-1} &amp;amp; F_{n-2} \ F_{n-2} &amp;amp;
+A^{n-1} = \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; 0 \end{bmatrix}^{n-1} = \begin{bmatrix} F_{n-1} &amp; F_{n-2} \\ F_{n-2} &amp;
 F_{n-3} \end{bmatrix}
-$$ for $n \geq 3$. Then
+$$&lt;p&gt; for $n \geq 3$. Then
+&lt;/p&gt;
 $$
-A^n = A^{n-1}A = \begin{bmatrix} F_{n-1} + F_{n-2} &amp;amp; F_{n-2} + F_{n-3} \ F_{n-2} + F_{n-3} &amp;amp; F_{n-2}
-\end{bmatrix} = \begin{bmatrix} F_n &amp;amp; F_{n-1} \ F_{n-1} &amp;amp; F_{n-2} \end{bmatrix}.
-$$
+A^n = A^{n-1}A = \begin{bmatrix} F_{n-1} + F_{n-2} &amp; F_{n-2} + F_{n-3} \\ F_{n-2} + F_{n-3} &amp; F_{n-2}
+\end{bmatrix} = \begin{bmatrix} F_n &amp; F_{n-1} \\ F_{n-1} &amp; F_{n-2} \end{bmatrix}.
+$$&lt;p&gt;
 Thus, to get the $n$th element of the Fibonacci sequence, we need only get the upper left entry of $A^n$. If
 we had a fast way to obtain $A^n$ instead of actually carrying out iterated matrix multiplication, we could
 obtain the $n$th element without doing very much work.&lt;/p&gt;
-&lt;h2 id=&#34;diagonalizing-a&#34;&gt;Diagonalizing $A$&lt;/h2&gt;
+&lt;h2 id=&#34;diagonalizing&#34;&gt;Diagonalizing $A$&lt;/h2&gt;
 &lt;p&gt;To do this, we will look to diagonalize $A$. This means that we will try to write
+&lt;/p&gt;
 $$
 A = VDV^{-1}
-$$ where $D$ is a diagonal matrix and $V$ is a matrix with eigenvectors of $A$ as columns (we have to
+$$&lt;p&gt; where $D$ is a diagonal matrix and $V$ is a matrix with eigenvectors of $A$ as columns (we have to
 actually find $D$ and $V$ that work). What&amp;rsquo;s nice about a diagonal representation is that
+&lt;/p&gt;
 $$
 A^n = (VDV^{-1})^n = VDV^{-1}VDV^{-1}\dots VDV^{-1} = VD^nV^{-1}.
-$$
+$$&lt;p&gt;
 If $D$ is written as a matrix with $\lambda_1,\dots,\lambda_n$ on the diagonal, then $D^n$ is simply $D$ with
 the elements on the diagonal each taken to the $n$th power, like so:
+&lt;/p&gt;
 $$
-D = \begin{bmatrix} \lambda_1 &amp;amp; 0 \ 0 &amp;amp; \lambda_2 \end{bmatrix} \implies D^n = \begin{bmatrix} \lambda_1^n &amp;amp;
-0 \ 0 &amp;amp; \lambda_2^n \end{bmatrix}.
-$$&lt;/p&gt;
-&lt;p&gt;Now that we&amp;rsquo;ve laid out our approach, it&amp;rsquo;s time to carry it out. (I will spare the algebra required to keep this post brief.)&lt;/p&gt;
-&lt;h2 id=&#34;using-as-eigenvalues&#34;&gt;Using $A$&amp;rsquo;s eigenvalues&lt;/h2&gt;
+D = \begin{bmatrix} \lambda_1 &amp; 0 \\ 0 &amp; \lambda_2 \end{bmatrix} \implies D^n = \begin{bmatrix} \lambda_1^n &amp;
+0 \\ 0 &amp; \lambda_2^n \end{bmatrix}.
+$$&lt;p&gt;Now that we&amp;rsquo;ve laid out our approach, it&amp;rsquo;s time to carry it out. (I will spare the algebra required to keep this post brief.)&lt;/p&gt;
+&lt;h2 id=&#34;using-s-eigenvalues&#34;&gt;Using $A$&amp;rsquo;s eigenvalues&lt;/h2&gt;
 &lt;p&gt;The eigenvalues of $A$ (as you might expect if you read the earlier post about Fibonacci) are
 $\lambda_1,\lambda_2 = \frac{1 \pm \sqrt 5}{2}$, and the corresponding eigenvectors are $v_1, v_2 =
-\begin{bmatrix} \frac{1 \pm \sqrt 5}{2} \ 1 \end{bmatrix}$. Thus, we have
+\begin{bmatrix} \frac{1 \pm \sqrt 5}{2} \\ 1 \end{bmatrix}$. Thus, we have
+&lt;/p&gt;
 $$
-D = \begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp;amp; 0 \ 0 &amp;amp; \frac{1 - \sqrt 5}{2} \end{bmatrix} ~~~~ V =
-\begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp;amp; \frac{1 - \sqrt 5}{2} \ 1 &amp;amp; 1\end{bmatrix}.
-$$
+D = \begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp; 0 \\ 0 &amp; \frac{1 - \sqrt 5}{2} \end{bmatrix} ~~~~ V =
+\begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp; \frac{1 - \sqrt 5}{2} \\ 1 &amp; 1\end{bmatrix}.
+$$&lt;p&gt;
 With these in hand, we see that $A$ is indeed diagonalizable, so that $A^n$ can be written as $VD^nV^{-1}$,
 and voila! with two matrix multiplications and exponentiating the diagonal entries of $D$, we can very
 quickly and efficiently come up with large Fibonacci numbers quickly.&lt;/p&gt;
@@ -364,10 +375,11 @@ quickly and efficiently come up with large Fibonacci numbers quickly.&lt;/p&gt;
 &lt;p&gt;In English, (1) and (2) say that linear transformations must preserve addition and scalar multiplication &amp;ndash; that is, adding/scaling then mapping must produce the same result as mapping then adding/scaling. For this post, we’re going to focus our attention on linear &lt;em&gt;operators&lt;/em&gt;, or linear maps from $V$ to itself.&lt;/p&gt;
 &lt;h2 id=&#34;invariant-subspaces&#34;&gt;Invariant subspaces&lt;/h2&gt;
 &lt;p&gt;So suppose $T$ is an operator on $V$. It’s natural to wonder how $T$ behaves with respect to subspaces of $V$. In the case of an operator, it will always be the case that $T$ maps a subspace $U$ to some subspace of $V$, but &lt;em&gt;how&lt;/em&gt; $T$ transforms an arbitrary choice of subspace is unclear. Let’s simplify a little bit and think about the neatest-possible set of outputs that $T$ might produce as it acts on vectors from $U$; we are going to focus on subspaces which, with respect to $T$, are in some sense self-contained. In other words, let’s require that $T$ map every vector in $U$ get back into $U$ somewhere. (A more compact way of phrasing our requirement is that we want $T$ to be an operator on $U$.) If $T$ behaves this way with respect to $U$, we say that $U$ is &lt;em&gt;invariant&lt;/em&gt; under $T$. (In technical jargon, we say a subspace $U$ is invariant under $T$ if for every vector $u \in U$, $T(u) \in U$.)&lt;/p&gt;
-&lt;p&gt;I don’t know about you, but I still don’t feel on sure enough footing; let’s simplify further. Instead of letting our invariant subspaces get big and complicated, let’s restrict our focus to $T$’s invariant subspaces of the lowest possible dimension. As a brief aside, the dimension of a vector space is the smallest number of vectors, linear combinations of which can comprise an entire space. For example, consider $\mathbf{R}^2$ (the $(x,y)$ plane). It is a vector space of dimension 2. Why? Because I can make the two vectors $(0,1)$ and $(1,0)$ into any vector (coordinate pair) that I want! How? Notice that $(a,b) = a \times (1,0) + b \times (0,1)$. In the $\mathbf{R}^2$ example, we call ${(0,1), (1,0)}$ a basis (“a” basis because there are infinitely many others). A vector space&amp;rsquo;s dimension is defined as the size of any basis (all bases are the same size).&lt;/p&gt;
+&lt;p&gt;I don’t know about you, but I still don’t feel on sure enough footing; let’s simplify further. Instead of letting our invariant subspaces get big and complicated, let’s restrict our focus to $T$’s invariant subspaces of the lowest possible dimension. As a brief aside, the dimension of a vector space is the smallest number of vectors, linear combinations of which can comprise an entire space. For example, consider $\mathbf{R}^2$ (the $(x,y)$ plane). It is a vector space of dimension 2. Why? Because I can make the two vectors $(0,1)$ and $(1,0)$ into any vector (coordinate pair) that I want! How? Notice that $(a,b) = a \times (1,0) + b \times (0,1)$. In the $\mathbf{R}^2$ example, we call $\{(0,1), (1,0)\}$ a basis (“a” basis because there are infinitely many others). A vector space&amp;rsquo;s dimension is defined as the size of any basis (all bases are the same size).&lt;/p&gt;
 &lt;h2 id=&#34;eigenvalues&#34;&gt;Eigenvalues&lt;/h2&gt;
 &lt;p&gt;In light of our detour, what might a one-dimensional invariant subspace look like? Well, a one dimensional subspace has a basis of size one, which means that the subspace is made up of linear combinations of a single vector, i.e. its scalar multiples! In math terms &amp;ndash; and in this case, I actually think the symbols help &amp;ndash; a one dimensional subspace $U$ looks like
-$$U = { au &lt;del&gt;|&lt;/del&gt; a \in F },$$
+&lt;/p&gt;
+$$U = \{ au ~|~ a \in F \},$$&lt;p&gt;
 where $F$ is $V$’s underlying field.&lt;/p&gt;
 &lt;p&gt;Now let’s say this low-dimensional subspace is invariant under $T$. This would mean that $T(u)$ lands back in $U$, and
 given that $U$ is of dimension one, $T$ must send $u$ to a scalar multiple of itself. In other words, there is $\lambda \in
@@ -407,23 +419,26 @@ truly glad you stuck around.&lt;/p&gt;
 &lt;p&gt;In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.&lt;/p&gt;
 &lt;h2 id=&#34;approach-1&#34;&gt;Approach 1&lt;/h2&gt;
 &lt;p&gt;The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+&lt;/p&gt;
 $$
 \begin{align*}
-\cos\theta &amp;amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\
-\sin\theta &amp;amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
+\cos\theta &amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\\
+\sin\theta &amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
 \end{align*}
-$$
+$$&lt;p&gt;
 so
-$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$&lt;/p&gt;
-&lt;p&gt;Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
-$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$
+&lt;/p&gt;
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$&lt;p&gt;Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
+&lt;/p&gt;
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$&lt;p&gt;
 we have
+&lt;/p&gt;
 $$
 \begin{align*}
-e^{i\theta} &amp;amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\
-&amp;amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
+e^{i\theta} &amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\\
+&amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
 \end{align*}
-$$
+$$&lt;p&gt;
 which, miraculously, is exactly what we get if we interleave (sum up) the terms of $\cos\theta + i\sin\theta$.&lt;/p&gt;
 &lt;h2 id=&#34;approach-2&#34;&gt;Approach 2&lt;/h2&gt;
 &lt;p&gt;The next approach uses techniques from a first course in calculus. We first observe that if $e^{i\theta}$ is going to be the same as $\cos\theta + i\sin\theta$, then the fraction
@@ -431,33 +446,38 @@ $\frac{cos\theta + i\sin\theta}{e^{i\theta}} = (\cos\theta + i\sin\theta)e^{-i\t
 equality holds.&lt;/p&gt;
 &lt;p&gt;To do this, first define
 $f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta}$. Next, we take the (rather annoying) derivative of $f(\theta)$
+&lt;/p&gt;
 $$
 \begin{align*}
-f’(\theta) &amp;amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\
-&amp;amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\
-&amp;amp;= 0\dots
+f’(\theta) &amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\\
+&amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\\
+&amp;= 0\dots
 \end{align*}
-$$
+$$&lt;p&gt;
 If $f’(\theta) = 0$ at all values of $\theta$, $f$ is constant! Which constant? Let’s plug in $\theta = 0$ and find out!
-$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$
+&lt;/p&gt;
+$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$&lt;p&gt;
 If $f$ takes the value 1 when $\theta = 0$ and $f$ is constant, it must take the value 1 everywhere. To sum up, we have
-$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$
+&lt;/p&gt;
+$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$&lt;p&gt;
 Rearranging the second equality by cross multiplying, we see that
 Euler’s identity holds.&lt;/p&gt;
 &lt;h2 id=&#34;approach-3&#34;&gt;Approach 3&lt;/h2&gt;
 &lt;p&gt;The last technique is my favorite. It uses a bit of linear algebra in concert with differential equations to produce what I think is the most illuminating proof of Euler’s identity. First, consider the differential equation
-$$f’’ = -f.$$
+&lt;/p&gt;
+$$f’’ = -f.$$&lt;p&gt;
 A differential equation is what is a kind of functional equation.
 Rather than trying to find the value of a real-valued variable,
 we are trying to find a function whose derivatives satisfy a given relationship. In this case, we want to find a function $f$ such that
 $f$&amp;rsquo;s second derivative is the same as $f$.&lt;/p&gt;
 &lt;p&gt;We first note that $\cos\theta$ and $\sin\theta$ are both solutions to this equation:
+&lt;/p&gt;
 $$
 \begin{align*}
-(\sin\theta)’’ &amp;amp;= -\sin\theta \
-(\cos\theta)’’ &amp;amp;= -\cos\theta.
+(\sin\theta)’’ &amp;= -\sin\theta \\
+(\cos\theta)’’ &amp;= -\cos\theta.
 \end{align*}
-$$
+$$&lt;p&gt;
 Because our differential equation involves second derivatives, it&amp;rsquo;s
 solutions are sort of analogous to those of a quadratic equation:
 which is to say, there are two! Formally, we say that the solution
@@ -480,20 +500,23 @@ $\sin\theta$ and $\cos\theta$ are linearly independent. Because
 we said the solution space is of dimension 2, they are a basis for
 the solution space to our original equation.&lt;/p&gt;
 &lt;p&gt;We can separately observe that $e^{i\theta}$ is also a solution to our equation because
+&lt;/p&gt;
 $$
 \begin{align*}
-(e^{i\theta})’ &amp;amp;= ie^{i\theta}\
-(e^{i\theta})’’ &amp;amp;= -e^{i\theta}.
+(e^{i\theta})’ &amp;= ie^{i\theta}\\
+(e^{i\theta})’’ &amp;= -e^{i\theta}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
-$$e^{i\theta} = a\cos\theta + b\sin\theta.$$
+$$&lt;p&gt;Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
+&lt;/p&gt;
+$$e^{i\theta} = a\cos\theta + b\sin\theta.$$&lt;p&gt;
 for some yet unknown constants $a,b$. Now it just remains to figure out what $a$ and $b$ are. (Can you see what they should be?)&lt;/p&gt;
 &lt;p&gt;To find $a$ and $b$, we note that if $f(\theta) = e^{i\theta}$,
 then $f(0) = 1$ and $f’(0) = i$. Using the first condition, we have
-$$1 = a \cdot 1 + b \cdot 0 = a.$$
+&lt;/p&gt;
+$$1 = a \cdot 1 + b \cdot 0 = a.$$&lt;p&gt;
 Using the second (taking the derivative of both sides before plugging 0 in), we have
-$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$
+&lt;/p&gt;
+$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$&lt;p&gt;
 Putting these both together, we have
 $e^{i\theta} = \cos\theta + i\sin\theta,$
 which is what we wanted.&lt;/p&gt;
@@ -572,8 +595,8 @@ produce the same result as if you applied the transformation to each result and 
 added them in the target space. This looks kind of familiar, doesn’t it? Above, when
 we computed $D(p(x))$, we took $p(x)$ apart, applied $D$ to each part, and then put
 the results back together… In other words, we said that
-$$D(p(x)) = D(3x^2) + D(x) + D(7).$$&lt;/p&gt;
-&lt;p&gt;It’s easy to see that this rule, whereby we are allowed to decompose things, work on
+&lt;/p&gt;
+$$D(p(x)) = D(3x^2) + D(x) + D(7).$$&lt;p&gt;It’s easy to see that this rule, whereby we are allowed to decompose things, work on
 them, and put them back together, generally applies to the differentiation of any
 polynomial, so we’ve established that the polynomial differentiation operator $D$
 satisfies the first property of linear maps!&lt;/p&gt;
@@ -595,7 +618,7 @@ use?&lt;/p&gt;
 actually be infinite. The basis we choose is actually inherent in the general
 structure of polynomials. Can you see what it might be?
 Because polynomials of degree $n$ are just linear combinations of the infinite list
-${1, x, x^2, \dots}$ (e.g. $3x^2 + 4x + 3$ can be seen as $3 \cdot 1 + 4 \cdot x +
+$\{1, x, x^2, \dots\}$ (e.g. $3x^2 + 4x + 3$ can be seen as $3 \cdot 1 + 4 \cdot x +
 3 \cdot x^2 + 0 \cdot x^3 + 0 \cdot x^4 +\dots$), we will call this set our
 basis (verify span and linear independence!) and now use it to write down a(n
 infinite) matrix corresponding to $D$.&lt;/p&gt;
@@ -604,25 +627,29 @@ $i$th basis vector of our space. So, in order to write down the first column of
 $D$’s matrix, we need to know what $D(1)$ is written as in terms of $P$’s basis
 vectors. Well, if $D(1) = 0 = 0 \cdot 1 + 0 \cdot x + \dots$, then the first column
 of our matrix must be
-$$\begin{bmatrix} 0 \ 0 \ 0 \ \vdots \end{bmatrix}.$$&lt;/p&gt;
-&lt;p&gt;To determine the next column, we look at what $D$ does to our second basis vector,
+&lt;/p&gt;
+$$\begin{bmatrix} 0 \\ 0 \\ 0 \\ \vdots \end{bmatrix}.$$&lt;p&gt;To determine the next column, we look at what $D$ does to our second basis vector,
 $x$. $D(x) = 1 = 1 \cdot 1 + 0 \cdot x + \dots$, so the second column of our matrix
 would look like
-$$\begin{bmatrix} 1 \ 0 \ 0 \ \vdots \end{bmatrix}.$$
+&lt;/p&gt;
+$$\begin{bmatrix} 1 \\ 0 \\ 0 \\ \vdots \end{bmatrix}.$$&lt;p&gt;
 The last basis vector we need to look at before we can intuit the rest of the
 columns is $x^2$. $D(x^2) = 2x = 0 \cdot 1 + 2 \cdot x + 0 \cdot x^2 + \dots$, so
 the third column is
-$$\begin{bmatrix} 0 \ 2 \ 0 \ \vdots \end{bmatrix}.$$
+&lt;/p&gt;
+$$\begin{bmatrix} 0 \\ 2 \\ 0 \\ \vdots \end{bmatrix}.$$&lt;p&gt;
 You could probably guess the next column, and the one after that, and, most
 probably, all of the ones after that… we finally have this matrix for $D$ (note that
 it’s infinite):
-$$A = \begin{bmatrix} 0 &amp;amp; 1 &amp;amp; 0 &amp;amp; 0 &amp;amp; \dots \ 0 &amp;amp; 0 &amp;amp; 2 &amp;amp; 0 &amp;amp; \dots \ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 3
-&amp;amp; \dots \ \vdots &amp;amp; \vdots &amp;amp; \vdots &amp;amp; \vdots\end{bmatrix}.$$
+&lt;/p&gt;
+$$A = \begin{bmatrix} 0 &amp; 1 &amp; 0 &amp; 0 &amp; \dots \\ 0 &amp; 0 &amp; 2 &amp; 0 &amp; \dots \\ 0 &amp; 0 &amp; 0 &amp; 3
+&amp; \dots \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots\end{bmatrix}.$$&lt;p&gt;
 If you represent a polynomial as a(n infinitely long) vector of its coefficients,
 then you can actually do differentiation with this matrix. For example, if your
 polynomial was $p(x) = 4x^3 + 5x^2 + 29x + 9$, you would perform
-$$A\begin{bmatrix} 9 \ 29 \ 5 \ 4 \ 0 \ \vdots \end{bmatrix} = \begin{bmatrix}
-29 \ 10 \ 12 \ 0 \ 0 \ \vdots \end{bmatrix},$$
+&lt;/p&gt;
+$$A\begin{bmatrix} 9 \\ 29 \\ 5 \\ 4 \\ 0 \\ \vdots \end{bmatrix} = \begin{bmatrix}
+29 \\ 10 \\ 12 \\ 0 \\ 0 \\ \vdots \end{bmatrix},$$&lt;p&gt;
 i.e. your derivative is $12x^2 + 10x + 29$, which, using the rules you learned in
 calculus class, is demonstrably correct.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
@@ -694,14 +721,15 @@ how does it compare to the alternative at finding mistakes?&lt;/p&gt;
 &lt;p&gt;In the first case, there aren&amp;rsquo;t any mistakes to catch, so our analysis need only
 consider the second case. Define $D = C - AB$. What we are formally interested in is
 the probability that $ABr = Cr \iff (C - AB)r = Dr = 0$ when $AB \neq C \iff C - AB =
-D \neq 0$. In other words, we are interested in $\Pr[Dr = 0 &lt;del&gt;|&lt;/del&gt; D \neq 0]$. To
+D \neq 0$. In other words, we are interested in $\Pr[Dr = 0 ~|~ D \neq 0]$. To
 compute this probability, suppose there was indeed an entry of $C$ that was computed
 incorrectly. Without loss of generality, assume that $D_{11} \neq 0$. Note that this
-means that $(AB)&lt;em&gt;{11}$ and $C&lt;/em&gt;{11}$ are different, so $D_{11}$ is of interest to us &amp;mdash;
+means that $(AB)_{11}$ and $C_{11}$ are different, so $D_{11}$ is of interest to us &amp;mdash;
 it is the elusive mistake. To better understand what&amp;rsquo;s going on here, consider the
 following:
-$$\begin{bmatrix}D_{11} &amp;amp; \dots &amp;amp; D_{1n}\\vdots &amp;amp; \ddots &amp;amp;\&amp;amp;
-&amp;amp;\end{bmatrix}\begin{bmatrix}r_1\ r_2\ \vdots\end{bmatrix}=\begin{bmatrix}D_{11}r_1 + \dots + D_{1n}r_n\ \vdots\end{bmatrix}$$
+&lt;/p&gt;
+$$\begin{bmatrix}D_{11} &amp; \dots &amp; D_{1n}\\\vdots &amp; \ddots &amp;\\&amp;
+&amp;\end{bmatrix}\begin{bmatrix}r_1\\ r_2\\ \vdots\end{bmatrix}=\begin{bmatrix}D_{11}r_1 + \dots + D_{1n}r_n\\ \vdots\end{bmatrix}$$&lt;p&gt;
 (computation of $Dr$).&lt;/p&gt;
 &lt;p&gt;The only way the algorithm can be fooled is if, somehow, $D_{11}r_1 + \dots +
 D_{1n}r_n = 0$. That is, if the first entry of $Dr$ is $0$, we find ourselves in a
@@ -712,7 +740,7 @@ $D_{11}r_1 + \dots +D_{1n}r_n = 0$, or, equivalently, the odds that $r_1 = -
 \frac{D_{12}r_2 + \dots D_{1n}r_n}{D_{11}}$. Recall that $r_1 \in \{0,1\}$. If that
 ugly fraction is neither 0 nor 1, we&amp;rsquo;re good to go because $r_1$ cannot possibly take
 on that value. If, however, that fraction does equal 0 or 1, then there is a
-$\frac{1}{2}$ chance that we assigned $r_1$ that value. Thus, $\Pr[Dr = 0 &lt;del&gt;|&lt;/del&gt; D \neq
+$\frac{1}{2}$ chance that we assigned $r_1$ that value. Thus, $\Pr[Dr = 0 ~|~ D \neq
 0] \geq \frac{1}{2}$, which means that our algorithm will catch a mistake at least
 half of the time.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;

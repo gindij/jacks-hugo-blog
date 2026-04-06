@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,7 +32,7 @@ A theme of the many posts I’ve written over the last few years is that there a
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -41,12 +41,16 @@ A theme of the many posts I’ve written over the last few years is that there a
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -226,19 +230,25 @@ A theme of the many posts I’ve written over the last few years is that there a
 <h2 id="the-connection">The connection?</h2>
 <p>We can! What we’re going to do first is to define the relationship between $n$ and $p$. Above, we revealed the need to express that $p$ is small and $n$ is large. One way to do that is to enforce that $np$ be constant (there are other ways, but this is the one that will be useful here); we’ll name that constant $\lambda$. Why does this help us? Well, if I pick a value of $\lambda$, say 1, before I start, then once I choose $n$, I’ve determined $p$. As an example, if $n = 100$, then because $np = 1$, $p$ must be 1/100. Furthermore, as $n$ gets larger we see that $p$ has to get smaller to keep lambda constant, so if we let $n$ tend to $\infty$, we are implicitly forcing $p$ to tend to 0. Being able to write $p$ in terms of $n$ is going to be very helpful in what’s to come.</p>
 <p>With the relationship between $n$ and $p$ specified more precisely, we will now see what happens to the binomial PDF as $n$ grows. That is, we want to compute
-$$\lim_{n \to \infty} {n \choose k} p^k(1 - p)^{n - k}.$$
+</p>
+$$\lim_{n \to \infty} {n \choose k} p^k(1 - p)^{n - k}.$$<p>
 Because $p = \lambda / n$ we can rewrite all the $p$s in the above limit as $\frac{\lambda}{n}$s:
-$$\lim_{n \to \infty} {n \choose k} (\frac{\lambda}{n})^k(1 - \frac{\lambda}{n})^{n - k}.$$
+</p>
+$$\lim_{n \to \infty} {n \choose k} (\frac{\lambda}{n})^k(1 - \frac{\lambda}{n})^{n - k}.$$<p>
 Simplifying a little bit, the limit can be rewritten as
-$$\lim_{n \to \infty} \frac{n!}{k!(n-k)!} \frac{\lambda^k}{n^k}(1 - \frac{\lambda}{n})^{n - k} = \lim_{n \to \infty} \frac{n(n-1)(n-2)\dots(n-k+1)}{n^k} \cdot \frac{\lambda^k}{k!} \cdot (1 - \frac{\lambda}{n})^{n - k}.$$
+</p>
+$$\lim_{n \to \infty} \frac{n!}{k!(n-k)!} \frac{\lambda^k}{n^k}(1 - \frac{\lambda}{n})^{n - k} = \lim_{n \to \infty} \frac{n(n-1)(n-2)\dots(n-k+1)}{n^k} \cdot \frac{\lambda^k}{k!} \cdot (1 - \frac{\lambda}{n})^{n - k}.$$<p>
 We will look at each of term of the product one at a time. Provided that their limits all exist, we can glue them together.
 For the leftmost multiplicand, noting that $\frac{n-m}{n}$ for $m$ constant tends to 1 as $n$ tends to $\infty$, we observe that we have $k$ numerator-denominator pairs that all tend to 1. Multiplied together this shows us that the leftmost term tends to 1.
 We can pull $\frac{\lambda^k}{k!}$ out of the limit because $k$ is constant. Combined with our analysis of the first term, we need still need to solve
-$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^{n - k}.$$
+</p>
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^{n - k}.$$<p>
 Because $k$ is constant and $n$ is shooting off to $\infty$, $n-k$ behaves the same as $n$ in our case, so we can rewrite the limit as
-$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^n.$$
+</p>
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^n.$$<p>
 This limit is a thinly veiled version of a common exercise from standard first semester calculus courses. I challenge you to convince yourself that
-$$\lim_{n\to \infty} (1 + \frac{a}{n})^{bn} = e^{ab}.$$
+</p>
+$$\lim_{n\to \infty} (1 + \frac{a}{n})^{bn} = e^{ab}.$$<p>
 (Hint: Start by setting $y = \lim_{n\to \infty} (1 + \frac{a}{n})^{bn}$ and taking the natural log of both sides.)</p>
 <p>In our case, $a = -\lambda$ and $b = 1$, so our last piece evaluates to $e^{-\lambda}$. Gluing our pieces together, we have the PMF of the Poisson distribution: if $X$ is a Poisson random variable, $P(X = k) = \frac{e^{-\lambda}\lambda^k}{k!}$. (Check Wikipedia, I dare you.)</p>
 <h2 id="conclusion">Conclusion</h2>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,7 +32,7 @@ While I was in college, I spent a few semesters TAing Calc II (Calc BC if you do
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -41,12 +41,16 @@ While I was in college, I spent a few semesters TAing Calc II (Calc BC if you do
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -217,11 +221,13 @@ While I was in college, I spent a few semesters TAing Calc II (Calc BC if you do
 <p>If you are unfamiliar with what an infinite series is, see <a href="https://en.wikipedia.org/wiki/Series_(mathematics)">Series (mathematics) - Wikipedia</a>.</p>
 <h2 id="the-problem">The problem</h2>
 <p>Before we start, we should understand the problem we are trying to solve. Lets say we have some infinite series, and let’s write it down as
-$$\sum_{n = 1}^\infty a_n = a_1 + a_2 + a_3 + \dots.$$
+</p>
+$$\sum_{n = 1}^\infty a_n = a_1 + a_2 + a_3 + \dots.$$<p>
 The above series may converge or it may not. We can modify this rather plain series by adding together the terms of the
 same underlying sequence with alternating signs, forming what is known as an <strong>alternating series</strong>. Symbolically, an
 alternating series has the form
-$$\sum_{n=1}^\infty (-1)^{n-1}a_n = a_1 - a_2 + a_3 - \dots.$$
+</p>
+$$\sum_{n=1}^\infty (-1)^{n-1}a_n = a_1 - a_2 + a_3 - \dots.$$<p>
 (Notice that the alternation comes from the fact that -1 to an even power is 1 and -1 to an odd power is -1.)
 If the non-alternating series converges to a finite sum, then the alternating series clearly does as well.* If not,
 though, would introducing alternation maybe force convergence? If so, we say that $\sum (-1)^{n-1}a_n$ <strong>converges  conditionally</strong>;
@@ -287,7 +293,8 @@ With this in mind, we’re ready for the main result.</p>
 <h2 id="proof">Proof</h2>
 <p>Now, for the proof.</p>
 <p>The odd subsequence looks like:
-$$a_1, a_1 - a_2 + a_3, a_1 - a_2 + a_3 - a_4 + a_5, \dots$$
+</p>
+$$a_1, a_1 - a_2 + a_3, a_1 - a_2 + a_3 - a_4 + a_5, \dots$$<p>
 Recall that the $a_n$ are decreasing. This means that subtracting $a_2$ and then adding back a little less than $a_2$ to
 $a_1$ is going to leave you slightly short of $a_1$. When you subtract $a_4$ from and then add $a_5$ to $a_1 - a_2 +
 a_3$, you’re going to end up slightly short of $a_1 - a_2 + a_3$. Extending this logic, we arrive at two conclusions.
@@ -298,7 +305,8 @@ we can bound the odd partial sums by $a_1$.</p>
 <p>(There are formal, symbolic ways of representing all of this, but if you understand the above line of reasoning, you’ve
 understood the gist, IMO.)</p>
 <p>Next, we note that for each $k$, the partial sum $s_{2k} \leq s_{2k+1}$ because the last term of every odd partial sum adds some small positive amount to the previous sum, which was made up of an even number of terms. For example, when $k = 1$, we have
-$$s_2 = s_{2 \times 1} = a_1 - a_2 + a_3 - a_4 \leq a_1 - a_2 + a_3 - a_4 + a_5 = s_{2 \times 1 + 1} = s_3.$$
+</p>
+$$s_2 = s_{2 \times 1} = a_1 - a_2 + a_3 - a_4 \leq a_1 - a_2 + a_3 - a_4 + a_5 = s_{2 \times 1 + 1} = s_3.$$<p>
 Thus, the even partial sums must be bounded too!</p>
 <p>Further, notice that the even partial sums monotonically increase. We can see this by observing that each time we tack a
 pair of $a_i$, we add a little bit and then subtract a little bit less. When we go from
@@ -307,7 +315,8 @@ $s_2 = a_1 - a_2$ to $s_4 = a_1 - a_2 + a_3 - a_4$, we take $a_1 - a_2$ and chan
 Let’s call the limit of the sequence of odd partial sums $L_1$ and the limit of the even partial sums $L_2$. To prove
 that $L_1$ and $L_2$ are the same, all we need to do is show that the difference between them is 0. To see this, we
 simply observe that
-$$\lim_{k \to \infty} s_{2k+1} - s_{2k} = \lim_{k \to \infty} a_{2k+1} =  0.$$
+</p>
+$$\lim_{k \to \infty} s_{2k+1} - s_{2k} = \lim_{k \to \infty} a_{2k+1} =  0.$$<p>
 Thus $L_1 = L_2$; we will henceforth refer to the limit as $L$.</p>
 <p>We can reconstruct the sequence of partial sums representing our original series by interleaving terms of the odd and
 even subsequences. Because both subsequences tend to $L$, we can conclude that the sequence constructed from the

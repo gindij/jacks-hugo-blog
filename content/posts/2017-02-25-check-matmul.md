@@ -45,7 +45,7 @@ else might we go about this?...
 
 Consider the following algorithm:
 1. Generate an $n$-bit vector $r$ where each component of the vector is selected
-   uniformly at random from $\\{0,1\\}$.
+   uniformly at random from $\{0,1\}$.
 2. Compute $ABr$ and $Cr$.
 3. If $ABr = Cr$, return true, else return false.
 
@@ -78,7 +78,7 @@ potential case wherein $Dr = 0$ even though $D \neq 0$ --- in English, we find
 ourselves in a case, when $ABr = Cr$ even though $AB \neq C$. What is the probability
 of this happening? Some thought suggests that we are looking for the probability that
 $D_{11}r_1 + \dots +D_{1n}r_n = 0$, or, equivalently, the odds that $r_1 = -
-\frac{D_{12}r_2 + \dots D_{1n}r_n}{D_{11}}$. Recall that $r_1 \in \\{0,1\\}$. If that
+\frac{D_{12}r_2 + \dots D_{1n}r_n}{D_{11}}$. Recall that $r_1 \in \{0,1\}$. If that
 ugly fraction is neither 0 nor 1, we're good to go because $r_1$ cannot possibly take
 on that value. If, however, that fraction does equal 0 or 1, then there is a
 $\frac{1}{2}$ chance that we assigned $r_1$ that value. Thus, $\Pr[Dr = 0 ~|~ D \neq

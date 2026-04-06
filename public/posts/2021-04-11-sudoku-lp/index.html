@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -37,7 +37,7 @@ an interesting, nonstandard way to set up and solve a different, far more popula
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -46,12 +46,16 @@ an interesting, nonstandard way to set up and solve a different, far more popula
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -295,12 +299,13 @@ are set to 1 and the other coefficients in that row are all set to 0. Because
 all of our constraints have 1s on their right hand sides, we have $b = \mathbf 1$.</p>
 <h2 id="formulating-and-solving-the-problem">Formulating and solving the problem</h2>
 <p>We can now formulate our optimization problem:
+</p>
 $$
 \begin{align*}
-&amp;\underset{x \in {0, 1}^{729}}{\text{minimize}} ~~ 0\
-&amp;\text{subject to} ~~ Ax = \mathbf 1.
+  &\underset{x \in \{0, 1\}^{729}}{\text{minimize}} ~~ 0\\
+  &\text{subject to} ~~ Ax = \mathbf 1.
 \end{align*}
-$$
+$$<p>
 Because sudokus have unique solutions, we just need to find the $x$ that satisfies
 our constraints &ndash; there will only be one such $x$! Because we just need to find that
 $x$, the objective value doesn&rsquo;t have to help us discriminate between competing feasible

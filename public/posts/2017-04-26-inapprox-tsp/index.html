@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,7 +38,7 @@ pathological inputs on which whatever heuristic you design performs horribly.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -47,12 +47,16 @@ pathological inputs on which whatever heuristic you design performs horribly.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -236,7 +240,7 @@ answer. To be a bit more precise about it:</p>
 <h2 id="inapproximability">Inapproximability</h2>
 <p>There are myriad approximation algorithms out there for a bunch of different
 problems; I may make them the subject of a future blog post… but in the remainder of
-this post, I want to actually show that for any $\varepsilon &gt; 0$, it is impossible
+this post, I want to actually show that for any $\varepsilon > 0$, it is impossible
 to come up with a $(1-\varepsilon)$-approximation for TSP unless $P = NP$ (in which
 case we wouldn’t need approximations, we would have a polynomial time algorithm to
 solve the problem exactly!). In other words, unless $P = NP$, not only do we not
@@ -261,14 +265,14 @@ until there are edges between every pair of vertices in $V$).</li>
 <li>Give the edges in $E$ weights of 0, and give those in $E’ - E$ weights of 1. (Note
 that $G’$ is an instance of TSP.)</li>
 <li>Use $A$ to approximate the least cost tour $T$ in $G’$.</li>
-<li>Output NO if $T$ has weight $&gt; 0$ and YES otherwise.</li>
+<li>Output NO if $T$ has weight $> 0$ and YES otherwise.</li>
 </ol>
 <p>We just need to argue that $A$ outputs a tour of weight 0 if and only if there is a
 hamiltonian cycle in $G$. To see this, note that by definition, $A$ finds a tour
 whose combined weight is within some factor of the optimal tour on $G’$. If the
 optimal tour on $G’$ can indeed be made up only of edges from $G$, it has weight 0,
 in which case $A$ would have to return an answer within some factor of 0… namely 0.
-If the A finds a tour with weight $&gt; 0$, then it must not have been able to find a
+If the A finds a tour with weight $> 0$, then it must not have been able to find a
 tour using only edges of $G$, in which case we can safely output that there is no
 hamiltonian cycle in $G$. <strong>QED.</strong></p>
 <h2 id="conclusion">Conclusion</h2>

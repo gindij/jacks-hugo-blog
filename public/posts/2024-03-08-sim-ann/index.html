@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,7 +38,7 @@ interestingly, inspired by a physical process from material science.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -47,12 +47,16 @@ interestingly, inspired by a physical process from material science.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -276,29 +280,31 @@ one of the most difficult discrete optimization problems we have.</p>
 <h1 id="acceptance-probability">Acceptance probability</h1>
 <p>The key detail that I want to make more precise is how we formulate the probability of accepting a
 transition from one state to another. In terms of notation, $\mathcal S$ is the entire state
-space, $s \in \mathcal S$ refers to the current state, $s&rsquo; \in \mathcal S$ refers
+space, $s \in \mathcal S$ refers to the current state, $s' \in \mathcal S$ refers
 to the candidate state, $E:\mathcal S \to \mathbb R$ is the objective function (lower is better) that we want
 to minimize, and $T_k$ is the temperature parameter value on the $k$th step (a real number). Our objective
 is to find the state $s^\star$ that minimizes $E$. In other words, we want to find
+</p>
 $$
-s^\star := \underset{s \in \mathcal S}{\text{argmin}} ~ E(s).
-$$
+   s^\star := \underset{s \in \mathcal S}{\text{argmin}} ~ E(s).
+$$<p>
 (The &ldquo;$:=$&rdquo; symbol means that the right hand side is the definition of $s^\star$, rather than some
 equation to prove or solve.)</p>
-<p>For simplicity, define $e = E(s)$ and $e&rsquo; = E(s&rsquo;)$. If we are currently in state $s_k$,
-and $e&rsquo; &lt; e$, we automatically transition to $s&rsquo;$. If $e&rsquo; &gt; e$, then we transition
+<p>For simplicity, define $e = E(s)$ and $e' = E(s')$. If we are currently in state $s_k$,
+and $e' < e$, we automatically transition to $s'$. If $e' > e$, then we transition
 with probability
+</p>
 $$
-P_{\rm acc}(e, e&rsquo;; T_k) = \exp(-(e&rsquo; - e) / T_k).
-$$
+P_{\rm acc}(e, e'; T_k) = \exp(-(e' - e) / T_k).
+$$<p>
 (Note: This is not a probability distribution over states. Instead, here, $P_{\rm acc}$ is used to make a decision about
 whether to transition to a <em>particular</em> successor state. For this purpose, after we compute
-$p = P_{\rm acc}(e, e&rsquo;; T_k)$, we can use a random number generator to generate a random
-number $r$. If $r &lt; p$, we transition. To sample a state from the entire state space, we would need the
+$p = P_{\rm acc}(e, e'; T_k)$, we can use a random number generator to generate a random
+number $r$. If $r < p$, we transition. To sample a state from the entire state space, we would need the
 transition probabilities for each possible transition to sum to 1.)</p>
 <p>Let&rsquo;s take a minute to think through why this acceptance probability works the way we want it to:</p>
 <ul>
-<li>Since we would have accepted if $e&rsquo; &lt; e$, we can assume that $e&rsquo; - e &gt; 0$. If
+<li>Since we would have accepted if $e' < e$, we can assume that $e' - e > 0$. If
 this difference is very positive, the negative sign and the exponential around it makes
 $P_{\rm acc}$ very small. This means that the probability of accepting a transition
 exponentially decays for less desirable candidates.</li>

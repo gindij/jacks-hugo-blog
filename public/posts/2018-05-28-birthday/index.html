@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -35,7 +35,7 @@ there to be a 50% chance that two of them share a birthday. (Assume every year h
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -44,12 +44,16 @@ there to be a 50% chance that two of them share a birthday. (Assume every year h
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -231,8 +235,9 @@ a room of $k$ people. If we call the aforementioned event $A$, we want an expres
 can come up with an expression for $P(A^C)$, then we’ve effectively determined our expression for $P(A)$.
 In our case, the event $A^C$ is the event that in a room of $k$ people, no two share a birthday. The probability of that
 event is given by:
+</p>
 $$P(A^C) = \frac{\text{number of ways to assign unique birthdays to } k \text{ people}}{\text{number of ways to assign
-birthdays to } k \text{ people}}$$
+birthdays to } k \text{ people}}$$<p>
 For the numerator, if we have are looking at a room with 10 people in it, we have 365 birthdays to choose from for the
 first, 364 for the second, and so on, until you’ve assigned birthdays to all 10 people. The total number of ways is thus
 $365 \cdot 364 \cdot \dots \cdot 356$.</p>
@@ -243,9 +248,11 @@ birthdays to people anymore. In our room of 10 people, this means we have 365 bi
 also have 365 for the second, third, fourth, fifth and so on. Thus, the total number of ways to assign birthdays to 10
 people is $365^{10}$. For a room with $k$ people, this turns into $365^k$.</p>
 <p>Now that we have the numerator and denominator, we can write down $P(A^C)$:
-$$P(A^C) = \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}$$
+</p>
+$$P(A^C) = \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}$$<p>
 With this in hand, we can now use the fact that $P(A) = 1 - P(A^C)$ to express
-$$P(A) = 1 - \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}.$$
+</p>
+$$P(A) = 1 - \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}.$$<p>
 Now we just start trying values of $k$ until $P(A) \geq 1/2$. This first occurs when $k = 23$.</p>
 <h2 id="intuition">Intuition</h2>
 <p>One explanation for why this number is so intuition-defyingly low is that when people first think about this problem, they
@@ -253,7 +260,8 @@ usually think that $k$ has to do with the number of people in the room, instead 
 problem is actually the number of <em>pairs</em> of people in the room. While 23 people doesn’t seem like much, 23 people
 furnishes you with <em>253 pairs</em>! Each pair has probability 364/365 of <em>not</em> having the same birthday, so the probability
 that none of the 253 pairs shares a birthday is
-$$(\frac{364}{365})^{253} \approx 0.4995.$$
+</p>
+$$(\frac{364}{365})^{253} \approx 0.4995.$$<p>
 This means that the probability that some pair shares a birthday is approximately $1–0.4995 = 0.5005$.
 To see that the number of pairs is what matters, note that if we increase $k$ to 50, the probability that some pair shares
 a birthday is roughly 97%. By the time you have 75 at your party, the probability jumps to 99.9%.</p>

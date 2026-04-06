@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,7 +38,7 @@ Much of machine learning and statistical modeling can be roughly characterized b
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -47,12 +47,16 @@ Much of machine learning and statistical modeling can be roughly characterized b
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -96,7 +100,7 @@ Linear models What are they? Much of machine learning and statistical modeling c
 Linear models What are they? Much of machine learning and statistical modeling can be roughly characterized by the following sequence of steps:">
   <meta itemprop="datePublished" content="2023-12-22T00:00:00+00:00">
   <meta itemprop="dateModified" content="2023-12-22T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1555">
+  <meta itemprop="wordCount" content="1554">
   <meta itemprop="keywords" content="Machine-Learning,Computer-Science">
 
   
@@ -180,7 +184,7 @@ Linear models What are they? Much of machine learning and statistical modeling c
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1555 words
+          1554 words
         </span>
       
       
@@ -257,20 +261,21 @@ $y_i$ are real numbers ($y_i \in \mathbf{R}$). Using a linear model to model the
 relationship is equivalent to making the assumption that there is a vector of
 parameters $\theta \in \mathbf{R}^d$ (the slope) and an intercept $b \in \mathbf{R}$
 such that
+</p>
 $$
 \begin{align*}
-y_i = \theta^\top x_i + b + \varepsilon_i
+    y_i = \theta^\top x_i + b + \varepsilon_i
 \end{align*}
-$$
+$$<p>
 where $\varepsilon_i$ is some randomness that our model doesn&rsquo;t capture.</p>
 <p>The mathematical characterization of the problem of finding the optimal parameters $\theta^\star$
 and $b^\star$ is
+</p>
 $$
 \begin{align}
-\theta^\star, b^\star := \underset{\theta, b}{\text{arg min}} ~| \theta^\top X + b\mathbf{1} - y |_2^2
+    \theta^\star, b^\star := \underset{\theta, b}{\text{arg min}} ~\| \theta^\top X + b\mathbf{1} - y \|_2^2
 \end{align}
-$$</p>
-<p>Before continuing, let&rsquo;s break down those symbols:</p>
+$$<p>Before continuing, let&rsquo;s break down those symbols:</p>
 <ul>
 <li>&ldquo;$\theta^\star, b^\star :=$&rdquo;: We typically use the $\star$ superscript to indicate the best or optimal
 choice. We use the $:=$ symbol to indicate that we are not writing out any mathematical equivalence, just a definition.

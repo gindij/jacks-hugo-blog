@@ -72,29 +72,31 @@ one of the most difficult discrete optimization problems we have.&lt;/p&gt;
 &lt;h1 id=&#34;acceptance-probability&#34;&gt;Acceptance probability&lt;/h1&gt;
 &lt;p&gt;The key detail that I want to make more precise is how we formulate the probability of accepting a
 transition from one state to another. In terms of notation, $\mathcal S$ is the entire state
-space, $s \in \mathcal S$ refers to the current state, $s&amp;rsquo; \in \mathcal S$ refers
+space, $s \in \mathcal S$ refers to the current state, $s&#39; \in \mathcal S$ refers
 to the candidate state, $E:\mathcal S \to \mathbb R$ is the objective function (lower is better) that we want
 to minimize, and $T_k$ is the temperature parameter value on the $k$th step (a real number). Our objective
 is to find the state $s^\star$ that minimizes $E$. In other words, we want to find
+&lt;/p&gt;
 $$
-s^\star := \underset{s \in \mathcal S}{\text{argmin}} ~ E(s).
-$$
+   s^\star := \underset{s \in \mathcal S}{\text{argmin}} ~ E(s).
+$$&lt;p&gt;
 (The &amp;ldquo;$:=$&amp;rdquo; symbol means that the right hand side is the definition of $s^\star$, rather than some
 equation to prove or solve.)&lt;/p&gt;
-&lt;p&gt;For simplicity, define $e = E(s)$ and $e&amp;rsquo; = E(s&amp;rsquo;)$. If we are currently in state $s_k$,
-and $e&amp;rsquo; &amp;lt; e$, we automatically transition to $s&amp;rsquo;$. If $e&amp;rsquo; &amp;gt; e$, then we transition
+&lt;p&gt;For simplicity, define $e = E(s)$ and $e&#39; = E(s&#39;)$. If we are currently in state $s_k$,
+and $e&#39; &lt; e$, we automatically transition to $s&#39;$. If $e&#39; &gt; e$, then we transition
 with probability
+&lt;/p&gt;
 $$
-P_{\rm acc}(e, e&amp;rsquo;; T_k) = \exp(-(e&amp;rsquo; - e) / T_k).
-$$
+P_{\rm acc}(e, e&#39;; T_k) = \exp(-(e&#39; - e) / T_k).
+$$&lt;p&gt;
 (Note: This is not a probability distribution over states. Instead, here, $P_{\rm acc}$ is used to make a decision about
 whether to transition to a &lt;em&gt;particular&lt;/em&gt; successor state. For this purpose, after we compute
-$p = P_{\rm acc}(e, e&amp;rsquo;; T_k)$, we can use a random number generator to generate a random
-number $r$. If $r &amp;lt; p$, we transition. To sample a state from the entire state space, we would need the
+$p = P_{\rm acc}(e, e&#39;; T_k)$, we can use a random number generator to generate a random
+number $r$. If $r &lt; p$, we transition. To sample a state from the entire state space, we would need the
 transition probabilities for each possible transition to sum to 1.)&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s take a minute to think through why this acceptance probability works the way we want it to:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;Since we would have accepted if $e&amp;rsquo; &amp;lt; e$, we can assume that $e&amp;rsquo; - e &amp;gt; 0$. If
+&lt;li&gt;Since we would have accepted if $e&#39; &lt; e$, we can assume that $e&#39; - e &gt; 0$. If
 this difference is very positive, the negative sign and the exponential around it makes
 $P_{\rm acc}$ very small. This means that the probability of accepting a transition
 exponentially decays for less desirable candidates.&lt;/li&gt;
@@ -198,9 +200,10 @@ thought of in an interesting statistical way.&lt;/p&gt;
 $b$ represents the number of bedrooms in the house, we &lt;em&gt;assume&lt;/em&gt; (more on this in a second)
 that the relationship between the number of bedrooms and the price of the house
 is linear:
+&lt;/p&gt;
 $$
-p(b) = \theta b + \epsilon.
-$$
+  p(b) = \theta b + \epsilon.
+$$&lt;p&gt;
 Here, $p$ is price, $b$ is the number of bedrooms in the house, and $\epsilon$
 is a random number that represents the error in our model, or the part of our model that
 the data we are using do not explain. What the formula above says is that &lt;em&gt;we believe&lt;/em&gt;
@@ -219,15 +222,17 @@ and a current guess at a parameter $\theta$. To evaluate $\theta$, a natural mea
 well $\theta$ fits is to find the average (square) error, where the error for each example
 can be expressed as the difference between $\theta b_i$ (our prediction) and $y_i$
 (the actual price). Mathematically, we can write this measure down as
+&lt;/p&gt;
 $$
-J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
-$$
+  J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
+$$&lt;p&gt;
 Now that we&amp;rsquo;ve decided what constitutes a good choice of parameter, we can employ
 tools provided by calculus to actually calculate what value of $\theta$ is best
 by solving the optimization problem (replacing 100 with the more general $m$) given by
+&lt;/p&gt;
 $$
-\text{argmin}&lt;em&gt;\theta \sum&lt;/em&gt;{i=1}^m (\theta b_i - y_i)^2.
-$$
+  \text{argmin}_\theta \sum_{i=1}^m (\theta b_i - y_i)^2.
+$$&lt;p&gt;
 (This is the value of $\theta$ that minimizes $J$. Without going into detail,
 in this case, it turns out that the best value is $\theta = \frac{\mathbf y^T \mathbf b}{\mathbf b^T \mathbf b}$,
 where $\mathbf b = (b_1,\dots, b_m)$ and $\mathbf y = (y_1,\dots,y_m)$.)&lt;/p&gt;
@@ -245,10 +250,10 @@ of the features have parameters that are too large, i.e., that their impact is o
 in the model. As such, rather than just finding the parameters that minimize the least
 squares objective, we want to find &lt;em&gt;small&lt;/em&gt; parameters that minimize the objective.
 For the simple regression case, we would add a term to the objective:
+&lt;/p&gt;
 $$
-\text{argmin}&lt;em&gt;\theta ~~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
-$$&lt;/p&gt;
-&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
+\text{argmin}_\theta ~~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+$$&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
 will also be large, so the optimizer will not be encouraged to pick that value of $\theta$,
 even it fits the data pretty well. Adding this term causes the optimizer to trade off
 goodness of fit and simplicity (in the sense of parameters that aren&amp;rsquo;t too large).
@@ -264,18 +269,20 @@ $1/\lambda$ (we can tune $\lambda$ to change the width of the bell curve). Makin
 essentially pins down a probability density function for the parameter $\theta$:
 $P(\theta) = \frac{\sqrt{\lambda}}{\sqrt{2\pi}}\exp(-\lambda(\theta - 0)^2/2)$.
 Taking $\log$s (this doesn&amp;rsquo;t affect the optimization problem we need to solve), we have
+&lt;/p&gt;
 $$
-\log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
-$$
+  \log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
+$$&lt;p&gt;
 Adding this assumption about the prior distribution over $\theta$ and ignoring
 constants (with respect to $\theta$), we would need to solve the modified MLE problem:
+&lt;/p&gt;
 $$
 \begin{align}
-\text{argmax}&lt;em&gt;\theta~ \log(P(\mathbf y &lt;del&gt;|&lt;/del&gt; \mathbf b, \theta)P(\theta))
-&amp;amp;= \text{argmax}&lt;/em&gt;\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\
-&amp;amp;= \text{argmin}&lt;em&gt;\theta ~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+  \text{argmax}_\theta~ \log(P(\mathbf y ~|~ \mathbf b, \theta)P(\theta))
+  &amp;= \text{argmax}_\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\\
+  &amp;= \text{argmin}_\theta ~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
 \end{align}
-$$
+$$&lt;p&gt;
 which is exactly what we had intuitively motivated in the previous section!&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ve just uncovered the statistical interpretation of regularization!* Using (this flavor
 of) regularization is actually imposing a Gaussian prior onto $\theta$. As we force the
@@ -370,12 +377,13 @@ are set to 1 and the other coefficients in that row are all set to 0. Because
 all of our constraints have 1s on their right hand sides, we have $b = \mathbf 1$.&lt;/p&gt;
 &lt;h2 id=&#34;formulating-and-solving-the-problem&#34;&gt;Formulating and solving the problem&lt;/h2&gt;
 &lt;p&gt;We can now formulate our optimization problem:
+&lt;/p&gt;
 $$
 \begin{align*}
-&amp;amp;\underset{x \in {0, 1}^{729}}{\text{minimize}} ~~ 0\
-&amp;amp;\text{subject to} ~~ Ax = \mathbf 1.
+  &amp;\underset{x \in \{0, 1\}^{729}}{\text{minimize}} ~~ 0\\
+  &amp;\text{subject to} ~~ Ax = \mathbf 1.
 \end{align*}
-$$
+$$&lt;p&gt;
 Because sudokus have unique solutions, we just need to find the $x$ that satisfies
 our constraints &amp;ndash; there will only be one such $x$! Because we just need to find that
 $x$, the objective value doesn&amp;rsquo;t have to help us discriminate between competing feasible

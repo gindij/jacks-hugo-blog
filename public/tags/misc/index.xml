@@ -73,24 +73,26 @@ talk about some of the features I built, what the experience of leaning heavily 
 &lt;p&gt;Establishing the fact that $S$ is finite just required a simple test. Producing the actual sum, however, took almost 85 years! This is weird! Next, we&amp;rsquo;ll look at an example from number theory where the difficulty of construction is the foundation upon which cybersecurity rests.&lt;/p&gt;
 &lt;h1 id=&#34;primality-testing-vs-integer-factorization&#34;&gt;Primality Testing vs. Integer Factorization&lt;/h1&gt;
 &lt;p&gt;One of the most deeply studied parts of number theory &amp;ndash; the study of properties of the positive whole numbers &amp;ndash; is the prime numbers. A number $p$ is prime if its only divisors are $p$ and $1$. So how do we tell if a number is prime?&lt;/p&gt;
-&lt;p&gt;The simplest algorithm is to enumerate the numbers between $2$ and $p - 1$. If one of them divides $p$ evenly, the number is not prime. A slightly better way to do it is based on the fact that if $p = ab$, then unless $p$ is a perfect square, then either $a &amp;lt; \sqrt{p}$ and $b &amp;gt; \sqrt{p}$ or vice versa. Thus, instead of searching all the way up to $p$, we can search up to $\sqrt{p}$. But we&amp;rsquo;re not done! Another observation we can make is that since, at bottom, all numbers are products of primes, we only need to search the &lt;em&gt;primes&lt;/em&gt; up to $\sqrt{p}$.&lt;/p&gt;
+&lt;p&gt;The simplest algorithm is to enumerate the numbers between $2$ and $p - 1$. If one of them divides $p$ evenly, the number is not prime. A slightly better way to do it is based on the fact that if $p = ab$, then unless $p$ is a perfect square, then either $a &lt; \sqrt{p}$ and $b &gt; \sqrt{p}$ or vice versa. Thus, instead of searching all the way up to $p$, we can search up to $\sqrt{p}$. But we&amp;rsquo;re not done! Another observation we can make is that since, at bottom, all numbers are products of primes, we only need to search the &lt;em&gt;primes&lt;/em&gt; up to $\sqrt{p}$.&lt;/p&gt;
 &lt;p&gt;Much more (very sophisticated) work has been done improving these methods (and some of these improvements may at some point be the subject of another post), but the important thing to say here is that we now have algorithms that run relatively quickly for establishing the primality of a natural number. These efficient methods are often unlike the methods I mentioned earlier, since they do not rely on &amp;ldquo;trial divisions&amp;rdquo; (where we check different candidate divisors by dividing $p$ by them).&lt;/p&gt;
 &lt;p&gt;Suppose now that instead of deciding if a number is prime, we change the problem statement slightly to: Find the prime factors of $p$. While it seems like being able to efficiently answer the &amp;ldquo;Is it prime?&amp;rdquo; question should require finding the factors along the way, once again, this turns out not to be the case. As of now, there are no published &amp;ldquo;efficient&amp;rdquo; integer factorization algorithms, though there are algorithms that are &amp;ldquo;almost efficient&amp;rdquo;. (Here, efficiency is a measure of how long it takes to factor an integer $n$ as a function of $n$&amp;rsquo;s size.)&lt;/p&gt;
 &lt;p&gt;Many of the cryptographic protocols responsible for securing data on the internet rely on the (likely) computational hardness of factoring numbers efficiently. If an efficient algorithm were to be found, the internet could become a far less safe place to entrust with our credit card information.&lt;/p&gt;
 &lt;h1 id=&#34;the-probabilistic-method&#34;&gt;The Probabilistic Method&lt;/h1&gt;
 &lt;p&gt;The probabilistic method, often used when studying finite structures, is a very interesting and general technique that manages to cleverly prove that an object with certain (rare) properties exists without actually finding one. The method does this by using randomness in the following ingenious way. First, we construct a &amp;ldquo;random&amp;rdquo; instance of the object. Then, we show that the object has the desired property with nonzero probability. Since, if we sample an object at random, the &amp;ldquo;probability&amp;rdquo; of drawing the object with the properties we care about is
+&lt;/p&gt;
 $$
-\frac{\text{# of configurations with property}}{\text{# of configurations}},
-$$
+    \frac{\text{\# of configurations with property}}{\text{\# of configurations}},
+$$&lt;p&gt;
 if the probability is nonzero, it means there must be at least one instance that has our property. Without using the method to actually carry out a proof here, I&amp;rsquo;ll set a problem up to give a &amp;ldquo;concrete&amp;rdquo; sense of a problem we can solve with this.&lt;/p&gt;
-&lt;p&gt;A graph is a collection of nodes connected to one another by edges. A &lt;em&gt;complete&lt;/em&gt; graph is a graph where every node is connected to all of the other nodes. If such a graph has $n$ nodes, then it has $n(n - 1) / 2$ edges. Examples of complete graphs on $n = 2, &amp;hellip;, 7$ vertices are shown below. We typically refer to the complete graph on $n$ vertices as $K_n$.&lt;/p&gt;
+&lt;p&gt;A graph is a collection of nodes connected to one another by edges. A &lt;em&gt;complete&lt;/em&gt; graph is a graph where every node is connected to all of the other nodes. If such a graph has $n$ nodes, then it has $n(n - 1) / 2$ edges. Examples of complete graphs on $n = 2, ..., 7$ vertices are shown below. We typically refer to the complete graph on $n$ vertices as $K_n$.&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/posts/exist-vs-construct/complete.png&#34; alt=&#34;drawing&#34; width=&#34;550&#34; height=&#34;400&#34;/&gt;
-&lt;p&gt;The question we care about here is: Given a complete graph with $n$ vertices ($K_n$) and an integer $r$ (where $r &amp;lt; n$), is it possible to color each edge either red or blue in such a way that no group of $r$ vertices ($K_r$) has monochromatic connecting edges?&lt;/p&gt;
+&lt;p&gt;The question we care about here is: Given a complete graph with $n$ vertices ($K_n$) and an integer $r$ (where $r &lt; n$), is it possible to color each edge either red or blue in such a way that no group of $r$ vertices ($K_r$) has monochromatic connecting edges?&lt;/p&gt;
 &lt;p&gt;(Read that again if you need to.)&lt;/p&gt;
 &lt;p&gt;The proof begins by constructing a &amp;ldquo;random&amp;rdquo; graph where each edge is colored red or blue independently at random. Using the fact that the graph is random (in the edge-coloring sense) and skipping over some details, it turns out that if for a particular choice of $n$ and $r$,
+&lt;/p&gt;
 $$
-\frac{n!}{r!(n-r)!} 2^{1 - r(r - 1) / 2} &amp;lt; 1,
-$$
+\frac{n!}{r!(n-r)!} 2^{1 - r(r - 1) / 2} &lt; 1,
+$$&lt;p&gt;
 then such an edge-coloring exists. In other words, given our initial question with some specific values of $n$ and $r$, you can determine if such an edge-coloring exists just by plugging those values into the left side of the inequality and seeing whether the result is smaller than 1. Note, however, that this plug-and-chug way of answering the question gives us &lt;em&gt;no information&lt;/em&gt; about &lt;em&gt;how&lt;/em&gt; to color the edges to see the actual coloring!&lt;/p&gt;
 &lt;p&gt;Here, again, we have some clever way to answer the existence question while still being at square zero in terms of how we might go about construction.&lt;/p&gt;
 &lt;p&gt;For this and other combinatorial problems, one can imagine sitting down and drawing some small examples to try to gain an intuition for what a valid coloring might look like. Maybe you draw a few examples for $n=5$ vertices (ten edges) or $n = 10$ vertices (45 edges). Then you pick a few values of $r$ and realize (if you&amp;rsquo;re lucky and persistent) that a few values of $r$ work while others don&amp;rsquo;t, and you start to feel like getting intuition for this problem from examples might be more difficult than you thought. The probabilistic method allows us to sidestep the problem of construction and instead prove existence in a way that highlights the surprising power of abstract reasoning in tackling what are otherwise mind-crushingly complex combinatorial problems.&lt;/p&gt;
@@ -292,9 +294,10 @@ below.&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/posts/interp/interp-1d.png&#34; alt=&#34;drawing&#34; width=&#34;400&#34; height=&#34;300&#34;/&gt;
 &lt;p&gt;It turns out that by rearranging the expression $f(x) = mx + b$ (with $m$ and $b$
 expanded as shown in the figure), we can actually express $f(x)$ in a different way:
+&lt;/p&gt;
 $$
-f(x) = \theta f(x_2) + (1 - \theta)f(x_1),
-$$
+  f(x) = \theta f(x_2) + (1 - \theta)f(x_1),
+$$&lt;p&gt;
 where $\theta = \frac{x - x_1}{x_2 - x_1}$ is the fraction of the total distance
 between $x_1$ and $x_2$ that is between $x$ and $x_1$. This formulation furnishes
 another way to think about what linear interpolation does: it estimates $f(x)$ by
@@ -343,12 +346,13 @@ drawing some pictures might be a great way to get the juices flowing.&lt;/p&gt;
 is to first interpolate in one of the variables and then the other. Just to give a sense
 for the way that this get&amp;rsquo;s pretty cumbersome, we will briefly show how to do it.
 First we compute $f(x_1, y)$ and $f(x_2, y)$
+&lt;/p&gt;
 $$
 \begin{align}
-f(x_1,y) &amp;amp;= \frac{y-y_1}{y_2 - y_1}f(x_1, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_1, y_1)\
-f(x_2,y) &amp;amp;= \frac{y-y_1}{y_2 - y_1}f(x_2, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_2, y_1)
+  f(x_1,y) &amp;= \frac{y-y_1}{y_2 - y_1}f(x_1, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_1, y_1)\\
+  f(x_2,y) &amp;= \frac{y-y_1}{y_2 - y_1}f(x_2, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_2, y_1)
 \end{align}
-$$
+$$&lt;p&gt;
 Then we compute $f(x,y) = \frac{x-x_1}{x_2 - x_1} f(x_2, y) + \frac{x_2-x}{x_2 - x_1}f(x_1, y)$,
 plugging in (1) and (2). In my opinion this in more dimensions quickly becomes unwieldy,
 and the intuition becomes less clear the more dimensions you try to think about.&lt;/p&gt;
@@ -408,19 +412,20 @@ both legs of the trip. Is the first trip longer than, shorter than, or the same 
 &lt;p&gt;Let $d$ be the distance from A to B. If $r \cdot t = d$ (rate x time = distance), then $t = d/r$. What we are going to do
 is write equations for $t$ in each of the wind and no-wind cases and see if we can determine the relationship between them.
 In the no-wind case, if the plane’s constant speed is given by $r$, then $t_1 = 2d / r$.
-In the wind case, let’s say the wind speed is given by some $w &amp;gt; 0$. Then the plane travels at a rate of $r + w$ on the way
+In the wind case, let’s say the wind speed is given by some $w &gt; 0$. Then the plane travels at a rate of $r + w$ on the way
 from A to B and at a rate of $r - w$ on the way back. Thus, the total round trip time is given by
+&lt;/p&gt;
 $$
 \begin{align*}
-t_2 &amp;amp;= \frac{d}{r + w} + \frac{d}{r - w} \\
-&amp;amp;= \frac{d(r - w) + d(r + w)}{r^2 - w^2} \\
-&amp;amp;= \frac{2dr}{r^2 - w^2}
+t_2 &amp;= \frac{d}{r + w} + \frac{d}{r - w} \\\\
+&amp;= \frac{d(r - w) + d(r + w)}{r^2 - w^2} \\\\
+&amp;= \frac{2dr}{r^2 - w^2}
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Notice that because $w &amp;gt; 0$, $w^2 &amp;gt; 0$, so that
+$$&lt;p&gt;Notice that because $w &gt; 0$, $w^2 &gt; 0$, so that
+&lt;/p&gt;
 $$
-t_2 = \frac{2dr}{r^2 - w^2} &amp;gt; \frac{2dr}{r^2} = \frac{2d}{r} = t_1,
-$$
+t_2 = \frac{2dr}{r^2 - w^2} &gt; \frac{2dr}{r^2} = \frac{2d}{r} = t_1,
+$$&lt;p&gt;
 showing us that the trip with wind takes longer.&lt;/p&gt;
 &lt;h2 id=&#34;cornerless-chessboard&#34;&gt;Cornerless chessboard&lt;/h2&gt;
 &lt;h3 id=&#34;problem-1&#34;&gt;Problem&lt;/h3&gt;
@@ -514,15 +519,16 @@ for some server $A$, $\text{hash}(A)$ gives a remainder of $a$ modulo $2^s$, it 
 ring.&lt;/p&gt;
 &lt;p&gt;Next, in order to make accesses fast, we introduce a clever data structure called a finger table at each node. Each finger table maintains $s$ pointers to other nodes on the ring as follows. For $i$ between $0$ and $s - 1$ (inclusive), the $i$th finger table entry for a node at ring position $N$ is the first node whose position is greater than or equal to $(N + 2^i) \pmod {2^s}$. Let’s look at a quick example.&lt;/p&gt;
 &lt;p&gt;Suppose that $s = 5$ and we had nodes at positions 3, 7, 16, and 27 on our logical ring. To compute 3’s finger table, we compute
+&lt;/p&gt;
 $$
 \begin{align*}
-3 + 2^0 &amp;amp;= 3 + 1 &amp;amp;&amp;amp;= 4 &amp;amp;&amp;amp;&amp;amp;\pmod{32} \\
-3 + 2^1 &amp;amp;= 3 + 2 &amp;amp;&amp;amp;= 5 &amp;amp;&amp;amp;&amp;amp;\pmod{32} \\
-3 + 2^2 &amp;amp;= 3 + 4 &amp;amp;&amp;amp;= 7 &amp;amp;&amp;amp;&amp;amp;\pmod {32} \\
-3 + 2^3 &amp;amp;= 3 + 8 &amp;amp;&amp;amp;= 11 &amp;amp;&amp;amp;&amp;amp;\pmod {32} \\
-3 + 2^4 &amp;amp;= 3 + 16 &amp;amp;&amp;amp;= 19 &amp;amp;&amp;amp;&amp;amp;\pmod {32}
+3 + 2^0 &amp;= 3 + 1 &amp;&amp;= 4 &amp;&amp;&amp;\pmod{32} \\\\
+3 + 2^1 &amp;= 3 + 2 &amp;&amp;= 5 &amp;&amp;&amp;\pmod{32} \\\\
+3 + 2^2 &amp;= 3 + 4 &amp;&amp;= 7 &amp;&amp;&amp;\pmod {32} \\\\
+3 + 2^3 &amp;= 3 + 8 &amp;&amp;= 11 &amp;&amp;&amp;\pmod {32} \\\\
+3 + 2^4 &amp;= 3 + 16 &amp;&amp;= 19 &amp;&amp;&amp;\pmod {32}
 \end{align*}
-$$
+$$&lt;p&gt;
 The first node larger than or equal to the first entry in the finger table is 7, so the first finger pointer is to 7. The same goes for the second and third entries. The fourth entry would point to 16 and the final entry would point to 27. So for node 3, the finger table would look like $(7, 7, 7, 16, 27)$.&lt;/p&gt;
 &lt;p&gt;Each node also maintains pointers to the nodes to its right and left along the ring. The &lt;strong&gt;successor&lt;/strong&gt; of 3 is 7 and the &lt;strong&gt;predecessor&lt;/strong&gt; of 3 is 27. In a similar vein, can more generally refer to predecessors and successors of any slot on the ring.&lt;/p&gt;
 &lt;p&gt;To perform a lookup, we make use of both the logical ring we introduced and the per-node finger tables. Let’s say that machine 7 wants to make a query for a key that hashes to 2 (and would thus reside on node 3 — the first node to its right on the ring). It would look in its finger table for the largest node that is to the left of the key’s position — this would be node 27 — and then route the query there. Node 27 would then route the query to its successor (because it is greater than the key we’re looking for), which would then be able to send the data associated with the requested key back to 7.&lt;/p&gt;
@@ -578,28 +584,32 @@ So how might I prove that there is some real number whose square is 2 without as
 &lt;li&gt;If $\gamma$ is an upper bound of $S$, $\beta \leq \gamma$.
 Look at the above for a second and make sure they jive with your intuition about what a least upper bound is. It’ll make the rest of this much easier to understand.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Now, given the completeness of $\mathbb{R}$, consider the set $S = \{t \in \mathbb{R} | t^2 &amp;lt; 2\} \subseteq \mathbb{R}$.
+&lt;p&gt;Now, given the completeness of $\mathbb{R}$, consider the set $S = \{t \in \mathbb{R} | t^2 &lt; 2\} \subseteq \mathbb{R}$.
 It is clear that this set is bounded above by 2. By completeness, this tells us that there is some real number $\alpha =
 \sup S$ that is $S$’s &lt;em&gt;least&lt;/em&gt; upper bound. To show that there is a real number that you can square to get 2, we just need
-to show that $\alpha^2 = 2$. We will do this by ruling out the possibilities that $\alpha^2 &amp;gt; 2$ and that $\alpha^2 &amp;lt; 2$.&lt;/p&gt;
+to show that $\alpha^2 = 2$. We will do this by ruling out the possibilities that $\alpha^2 &gt; 2$ and that $\alpha^2 &lt; 2$.&lt;/p&gt;
 &lt;h2 id=&#34;ruling-things-out&#34;&gt;Ruling things out&lt;/h2&gt;
-&lt;p&gt;If $\alpha^2 &amp;lt; 2$, then consider the number (we will discuss what $n$ to pick in a second):
-$$(\alpha + \frac{1}{n})^2 = \alpha^2 + \frac{2\alpha}{n} + \frac{1}{n^2} &amp;lt; \alpha^2 + \frac{2\alpha + 1}{n}.$$
-What value of $n$ suits our needs here? Well, what we *would like *to show here is that $(\alpha +\frac{1}{n})^2 &amp;lt; 2$, thus contradicting property (1) of least upper bounds that $\alpha$ must satisfy. As such, we need to pick an $n$ such that $\frac{2\alpha + 1}{n}$ fits in the gap between $\alpha^2$ and 2. Put mathematically, we want
-$\frac{2\alpha + 1}{n} &amp;lt; 2 - \alpha^2$.&lt;/p&gt;
+&lt;p&gt;If $\alpha^2 &lt; 2$, then consider the number (we will discuss what $n$ to pick in a second):
+&lt;/p&gt;
+$$(\alpha + \frac{1}{n})^2 = \alpha^2 + \frac{2\alpha}{n} + \frac{1}{n^2} &lt; \alpha^2 + \frac{2\alpha + 1}{n}.$$&lt;p&gt;
+What value of $n$ suits our needs here? Well, what we *would like *to show here is that $(\alpha +\frac{1}{n})^2 &lt; 2$, thus contradicting property (1) of least upper bounds that $\alpha$ must satisfy. As such, we need to pick an $n$ such that $\frac{2\alpha + 1}{n}$ fits in the gap between $\alpha^2$ and 2. Put mathematically, we want
+$\frac{2\alpha + 1}{n} &lt; 2 - \alpha^2$.&lt;/p&gt;
 &lt;p&gt;Rearranging a bit, we see that for the above to be true, we need
-$\frac{1}{n} &amp;lt; \frac{2 - \alpha^2}{2\alpha + 1}$.
+$\frac{1}{n} &lt; \frac{2 - \alpha^2}{2\alpha + 1}$.
 Such an $n$ surely exists (for more technically inclined readers, this follows from the archimedeanity of $\mathbb{R}$), so we now would like to show that $\alpha + \frac{1}{n} \in S$. This is now simple, because with the value of $n$ we’ve chosen, we have
-$$\alpha^2 + \frac{2\alpha + 1}{n} &amp;lt; \alpha^2 + (2 - \alpha^2) = 2.$$
-Thus, if $\alpha^2 &amp;lt; 2$, $\alpha + \frac{1}{n} &amp;gt; \alpha$ is a member of $S$. This directly contradicts our supposition that $\alpha$ is the least &lt;em&gt;upper bound&lt;/em&gt; of $S$ — we’ve found a number larger than $\alpha$ that is in $S$.
-Now, if $\alpha^2 &amp;gt; 2$, we proceed by a similar argument. Consider the number
-$(\alpha - \frac{1}{n})^2 = \alpha^2 - {2\alpha}{n} + \frac{1}{n^2} &amp;gt; \alpha^2 - {2\alpha}{n}$
+&lt;/p&gt;
+$$\alpha^2 + \frac{2\alpha + 1}{n} &lt; \alpha^2 + (2 - \alpha^2) = 2.$$&lt;p&gt;
+Thus, if $\alpha^2 &lt; 2$, $\alpha + \frac{1}{n} &gt; \alpha$ is a member of $S$. This directly contradicts our supposition that $\alpha$ is the least &lt;em&gt;upper bound&lt;/em&gt; of $S$ — we’ve found a number larger than $\alpha$ that is in $S$.
+Now, if $\alpha^2 &gt; 2$, we proceed by a similar argument. Consider the number
+$(\alpha - \frac{1}{n})^2 = \alpha^2 - {2\alpha}{n} + \frac{1}{n^2} &gt; \alpha^2 - {2\alpha}{n}$
 This time, we want to show that $\alpha - \frac{1}{n}$ is an upper bound for $S$, thus contradicting the supposition that $\alpha$ is the &lt;em&gt;least&lt;/em&gt; upper bound of $S$. To this end, again, choose $n$ so that $\frac{2\alpha}{n}$ fits in the gap between $\alpha^2$ and 2. Mathematically, we want
-$\frac{2\alpha}{n} &amp;lt; \alpha^2 - 2$,
+$\frac{2\alpha}{n} &lt; \alpha^2 - 2$,
 so we choose $n$ so that
-$$\frac{1}{n} &amp;gt; \frac{\alpha^2 - 2}{2\alpha}.$$
+&lt;/p&gt;
+$$\frac{1}{n} &gt; \frac{\alpha^2 - 2}{2\alpha}.$$&lt;p&gt;
 By doing this, we get that
-$$(\alpha - \frac{1}{n})^2 &amp;gt; \alpha^2 - {2\alpha}{n} &amp;gt; \alpha^2 - (\alpha^2 - 2) = 2$$
+&lt;/p&gt;
+$$(\alpha - \frac{1}{n})^2 &gt; \alpha^2 - {2\alpha}{n} &gt; \alpha^2 - (\alpha^2 - 2) = 2$$&lt;p&gt;
 But this contradicts the supposition that $\alpha$ was $S$’s *least *upper bound!
 Thus, $\alpha^2 = 2$, so we can rigorously associate the symbol $\sqrt{2}$ with $\alpha$.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
@@ -623,17 +633,18 @@ fame in 1734.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
 &lt;p&gt;Before we attack the Basel Problem itself, I want to set the stage. Students who have
 taken an introductory course in calculus are familiar with the harmonic series:
+&lt;/p&gt;
 $$\sum_{n=1}^\infty \frac{1}{n} = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} +
-\dots.$$
+\dots.$$&lt;p&gt;
 This series is the first example students are usually given of a series that diverges
 even when its individual terms tend to 0. The fact that the harmonic series diverges
 was originally proved by Oresme in the 15th century, but his work was lost. About 250
 years later, in the mid 17th century, the Bernoulli brothers re-proved the result.
 Their success sparked their interest in the convergence/divergence of other infinite
 series, one of which happened to be a natural extension of the harmonic series:
+&lt;/p&gt;
 $$\sum_{n=1}^\infty \frac{1}{n^2} = 1 + \frac{1}{4} + \frac{1}{9} + \frac{1}{16} +
-\dots.$$&lt;/p&gt;
-&lt;p&gt;The Basel Problem was to find the sum of this series. As a note before we see how
+\dots.$$&lt;p&gt;The Basel Problem was to find the sum of this series. As a note before we see how
 Euler did it, figuring out &lt;em&gt;whether&lt;/em&gt; an infinite sum converges is typically a &lt;em&gt;much&lt;/em&gt;
 easier problem than &lt;em&gt;computing&lt;/em&gt; the sum. It’s easy to show that $\sum \frac{1}{n^2}$
 converges using any one of a number of simple convergence tests (e.g. comparison,
@@ -645,38 +656,44 @@ to our main result.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Theorem:&lt;/strong&gt; $\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Euler started off by considering the infinite polynomial
+&lt;/p&gt;
 $$f(x) = 1 - \frac{x^2}{3!} + \frac{x^4}{5!} - \dots + \frac{(-1)^k x^{2k}}{(2k +
-1)!} + \dots.$$
+  1)!} + \dots.$$&lt;p&gt;
 For $x \neq 0$,
+&lt;/p&gt;
 $$f(x) = \frac{xf(x)}{x} = \frac{x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots +
-\frac{(-1)^k x^{2k + 1}}{(2k + 1)!} + \dots}{x}.$$
+\frac{(-1)^k x^{2k + 1}}{(2k + 1)!} + \dots}{x}.$$&lt;p&gt;
 Note that the numerator of $f(x)$ is actually the Taylor expansion of $\sin(x)$, so
 we can actually (for $x \neq 0$) write
-$$f(x) = \frac{\sin(x)}{x}.$$
+&lt;/p&gt;
+$$f(x) = \frac{\sin(x)}{x}.$$&lt;p&gt;
 Provided that we can find the roots of $f(x)$, we can factor it. In our case, $f(x) =
 0$ when $\sin(x) = 0$, so the infinitely many roots $f$ are $k\pi$ for all integers
 $k$. We can thus factor $f$ as:
+&lt;/p&gt;
 $$f(x) = (1 - \frac{x}{\pi})(1 + \frac{x}{\pi})(1 - \frac{x}{2\pi})(1 +
-\frac{x}{2\pi})\dots.$$&lt;/p&gt;
-&lt;p&gt;(This factorization comes from a theorem in algebra that states that for a polynomial
+\frac{x}{2\pi})\dots.$$&lt;p&gt;(This factorization comes from a theorem in algebra that states that for a polynomial
 $p(x)$, if the roots of $p$ are $a_1, a_2,\dots, a_n$ and $p(0) = 1$, then you can
 factor $p(x) = (1 - x/a_1)(1 - x/a_2)\dots(1-x/a_n)$.)&lt;/p&gt;
 &lt;p&gt;Next, we observe that each pair of factors of the form $(1 - \frac{x}{k\pi})(1 +
 \frac{x}{k\pi})$ can be combined into $1 - \frac{x^2}{k^2\pi^2}$, so f now looks
 like
-$$f(x) = (1 - \frac{x^2}{\pi^2})(1 - \frac{x^2}{2^2\pi^2})(1 - \frac{x^2}{3^2\pi^2})\dots$$
+&lt;/p&gt;
+$$f(x) = (1 - \frac{x^2}{\pi^2})(1 - \frac{x^2}{2^2\pi^2})(1 - \frac{x^2}{3^2\pi^2})\dots$$&lt;p&gt;
 Okay… this is good, because $f$ smells of both $\pi$ and the squares of natural numbers…&lt;/p&gt;
 &lt;p&gt;To force these pieces into place, Euler then multiplied out our factorization and collected the coefficients of like powers of $x$. In particular, as it pertains to the our problem, he only cared about the coefficient on the $x^2$ term of $f$. The only $x^2$ terms in $f$ are those that are produced by multiplying an $x^2$ term with a 1. Adding up these terms, we get the following sum:
-$$-\frac{x^2}{\pi^2} - \frac{x^2}{4\pi^2} - \frac{x^2}{9\pi^2} - \dots = x^2\biggr[-\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr)\biggr],$$
+&lt;/p&gt;
+$$-\frac{x^2}{\pi^2} - \frac{x^2}{4\pi^2} - \frac{x^2}{9\pi^2} - \dots = x^2\biggr[-\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr)\biggr],$$&lt;p&gt;
 so the coefficient is
-$$-\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr).$$&lt;/p&gt;
-&lt;p&gt;From our original representation of $f$ (before we multiplied it by $\frac{x}{x}$),
+&lt;/p&gt;
+$$-\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr).$$&lt;p&gt;From our original representation of $f$ (before we multiplied it by $\frac{x}{x}$),
 we know what the coefficient should be, namely $-\frac{1}{3!}$. Equating the
 coefficient we found with what we know it should be, we have
-$$-\frac{1}{3!} = -\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr).$$
+&lt;/p&gt;
+$$-\frac{1}{3!} = -\frac{1}{\pi^2}\biggr(1 + \frac{1}{4} + \frac{1}{9} +\dots\biggr).$$&lt;p&gt;
 which, rearranged a bit, solves the Basel problem because it means that
-$$\frac{\pi^2}{6} = 1 + \frac{1}{4} + \frac{1}{9} + \frac{1}{16} + \dots.$$&lt;/p&gt;
-&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;/p&gt;
+$$\frac{\pi^2}{6} = 1 + \frac{1}{4} + \frac{1}{9} + \frac{1}{16} + \dots.$$&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Before I conclude, I want to clarify that this argument was not entirely rigorous.
 Without justification, he produced much of his argument by extending finite results
 to the infinite.&lt;/p&gt;

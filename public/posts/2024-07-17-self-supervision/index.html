@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -37,7 +37,7 @@ In theory, the benefit of this approach is that once you have a powerful pre-tra
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -46,12 +46,16 @@ In theory, the benefit of this approach is that once you have a powerful pre-tra
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -94,7 +98,7 @@ Pre-training: A model learns generally useful representations (e.g., of language
 Pre-training: A model learns generally useful representations (e.g., of language or images) without reference to any particular task (e.g., sentiment analysis or image classification). Fine-tuning: Using the pre-trained model as a starting point, we fine-tune the model to accomplish some additional objective, such as safety or the ability to perform some downstream task. In theory, the benefit of this approach is that once you have a powerful pre-trained model, you can build many different task-specific and/or fine-tuned models on top of it with relatively little additional effort. But this benefit is only realized if our pre-trained model has comprehensively discovered useful features of language, images, or both, which requires TONS of diverse, carefully curated data. From a machine learning perspective, this presents some thorny questions:">
   <meta itemprop="datePublished" content="2024-07-17T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-07-17T00:00:00+00:00">
-  <meta itemprop="wordCount" content="2103">
+  <meta itemprop="wordCount" content="2101">
   <meta itemprop="keywords" content="Machine-Learning">
 
   
@@ -178,7 +182,7 @@ Pre-training: A model learns generally useful representations (e.g., of language
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          2103 words
+          2101 words
         </span>
       
       
@@ -239,7 +243,7 @@ Pre-training: A model learns generally useful representations (e.g., of language
 <li>A decoder $D$: this piece maps from the embedding space back into the input space.</li>
 </ol>
 <p>(Note: Both $E$ and $D$ are smaller neural networks whose parameters are updated during training. Once the system has been trained, we typically throw out $D$ and just use $E$ to generate embeddings.)</p>
-<p>During training, the model is shown many examples $x$. For each one, it computes $e = E(x)$, and then $x&rsquo; = D(e)$. Here, $e$ is what we call the <em>embedding</em> of the object. With autoencoders, we use the original $x$ as our &ldquo;label&rdquo;! The way we determine whether or not our embedding $e$ is good is by whether it contains enough information to be re-expanded back into $x$! Mathematically, our representation is good if $\text{distance}(x, x&rsquo;)$ is small.</p>
+<p>During training, the model is shown many examples $x$. For each one, it computes $e = E(x)$, and then $x' = D(e)$. Here, $e$ is what we call the <em>embedding</em> of the object. With autoencoders, we use the original $x$ as our &ldquo;label&rdquo;! The way we determine whether or not our embedding $e$ is good is by whether it contains enough information to be re-expanded back into $x$! Mathematically, our representation is good if $\text{distance}(x, x')$ is small.</p>
 <img src="/posts/self-supervision/autoencoder.png" alt="drawing" width="550" height="300"/>
 <p>This is our first example of actually manufacturing a supervised problem from unlabeled data by cleverly defining our objective. In this case, we define our training objective to be that our reproductions of inputs (images, for instance) should be as close as possible to the original inputs themselves. By using this training task, we obviate the need for labels, but are nonetheless able to learn something useful.</p>
 <p>Next, we&rsquo;ll look at a pair of training tasks used in conjunction to train a model called BERT, a precursor to many of the large language models available today.</p>
@@ -326,18 +330,17 @@ Pre-training: A model learns generally useful representations (e.g., of language
 <p>Suppose that we want to train a model $M$ to produce generic image embeddings. One way we can do this is as follows. First, we produce a triplet of embeddings:</p>
 <ol>
 <li>Select an image $x_1$ and compute its embedding $e_1 = M(x_1)$ .</li>
-<li>Apply an augmentation to $x_1$ and compute the embedding of the augmented image $e_1&rsquo; = M(x_1&rsquo;)$. (There are a wide variety of augmentations we can apply, including crops, rotations, or color inversions.)</li>
+<li>Apply an augmentation to $x_1$ and compute the embedding of the augmented image $e_1' = M(x_1')$. (There are a wide variety of augmentations we can apply, including crops, rotations, or color inversions.)</li>
 <li>Choose another random image $x_2$ from the dataset and compute its embedding $e_2 = M(x_2)$.</li>
 </ol>
 <p>Contrastive objectives try to push embeddings of similar objects (e.g., an image and its crop) closer together, while pushing embeddings of unrelated objects (e.g., two random images) apart. We can set up an objective to do this using our three embeddings as follows:</p>
-<p>$$
-\mathcal L(e_1, e_1&rsquo;, e_2; M) = \max(\text{distance}(e_1, e_1&rsquo;) - \text{distance}(e_1, e_2) + \alpha, 0)
-$$</p>
-<p>Let&rsquo;s have a think about what&rsquo;s going on here. The function $\mathcal L$ takes positive values when
 $$
-\text{distance}(e_1, e_1&rsquo;) - \text{distance}(e_1, e_2) &gt; \alpha.
-$$</p>
-<p>That is, when the distance between embeddings similar objects is larger than the distance between embeddings of unrelated objects by more than $\alpha$ (we choose $\alpha$), the model needs to be adjusted. We would take that positive loss and make updates to $M$&rsquo;s parameters proportionally to how much each contributed to the loss.</p>
+    \mathcal L(e_1, e_1', e_2; M) = \max(\text{distance}(e_1, e_1') - \text{distance}(e_1, e_2) + \alpha, 0)
+$$<p>Let&rsquo;s have a think about what&rsquo;s going on here. The function $\mathcal L$ takes positive values when
+</p>
+$$
+\text{distance}(e_1, e_1') - \text{distance}(e_1, e_2) > \alpha.
+$$<p>That is, when the distance between embeddings similar objects is larger than the distance between embeddings of unrelated objects by more than $\alpha$ (we choose $\alpha$), the model needs to be adjusted. We would take that positive loss and make updates to $M$&rsquo;s parameters proportionally to how much each contributed to the loss.</p>
 <p>With a large enough dataset of diverse images and enough training, this leads to image embeddings that can be applied to a range of downstream applications and tasks.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>The shift from relying solely on traditional supervised learning to pre-training using self-supervision marks a significant evolution in machine learning, offering solutions to the challenges of scale imposed by the costs obtaining high-quality labeled data. By creatively designing training tasks that derive supervision from the data itself, we can harness the power of large, unlabeled datasets to pre-train models that can then be fine-tuned for specific applications.</p>

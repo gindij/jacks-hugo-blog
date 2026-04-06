@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -39,7 +39,7 @@ figure out what it would mean to linearly interpolate in two dimensions.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -48,12 +48,16 @@ figure out what it would mean to linearly interpolate in two dimensions.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -235,9 +239,10 @@ below.</p>
 <img src="/posts/interp/interp-1d.png" alt="drawing" width="400" height="300"/>
 <p>It turns out that by rearranging the expression $f(x) = mx + b$ (with $m$ and $b$
 expanded as shown in the figure), we can actually express $f(x)$ in a different way:
+</p>
 $$
-f(x) = \theta f(x_2) + (1 - \theta)f(x_1),
-$$
+  f(x) = \theta f(x_2) + (1 - \theta)f(x_1),
+$$<p>
 where $\theta = \frac{x - x_1}{x_2 - x_1}$ is the fraction of the total distance
 between $x_1$ and $x_2$ that is between $x$ and $x_1$. This formulation furnishes
 another way to think about what linear interpolation does: it estimates $f(x)$ by
@@ -286,12 +291,13 @@ drawing some pictures might be a great way to get the juices flowing.</p>
 is to first interpolate in one of the variables and then the other. Just to give a sense
 for the way that this get&rsquo;s pretty cumbersome, we will briefly show how to do it.
 First we compute $f(x_1, y)$ and $f(x_2, y)$
+</p>
 $$
 \begin{align}
-f(x_1,y) &amp;= \frac{y-y_1}{y_2 - y_1}f(x_1, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_1, y_1)\
-f(x_2,y) &amp;= \frac{y-y_1}{y_2 - y_1}f(x_2, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_2, y_1)
+  f(x_1,y) &= \frac{y-y_1}{y_2 - y_1}f(x_1, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_1, y_1)\\
+  f(x_2,y) &= \frac{y-y_1}{y_2 - y_1}f(x_2, y_2) + \frac{y_2 - y}{y_2 - y_1}f(x_2, y_1)
 \end{align}
-$$
+$$<p>
 Then we compute $f(x,y) = \frac{x-x_1}{x_2 - x_1} f(x_2, y) + \frac{x_2-x}{x_2 - x_1}f(x_1, y)$,
 plugging in (1) and (2). In my opinion this in more dimensions quickly becomes unwieldy,
 and the intuition becomes less clear the more dimensions you try to think about.</p>

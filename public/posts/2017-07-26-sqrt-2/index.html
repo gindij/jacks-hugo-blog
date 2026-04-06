@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -43,7 +43,7 @@ So how might I prove that there is some real number whose square is 2 without as
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -52,12 +52,16 @@ So how might I prove that there is some real number whose square is 2 without as
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -240,28 +244,32 @@ So how might I prove that there is some real number whose square is 2 without as
 <li>If $\gamma$ is an upper bound of $S$, $\beta \leq \gamma$.
 Look at the above for a second and make sure they jive with your intuition about what a least upper bound is. It’ll make the rest of this much easier to understand.</li>
 </ol>
-<p>Now, given the completeness of $\mathbb{R}$, consider the set $S = \{t \in \mathbb{R} | t^2 &lt; 2\} \subseteq \mathbb{R}$.
+<p>Now, given the completeness of $\mathbb{R}$, consider the set $S = \{t \in \mathbb{R} | t^2 < 2\} \subseteq \mathbb{R}$.
 It is clear that this set is bounded above by 2. By completeness, this tells us that there is some real number $\alpha =
 \sup S$ that is $S$’s <em>least</em> upper bound. To show that there is a real number that you can square to get 2, we just need
-to show that $\alpha^2 = 2$. We will do this by ruling out the possibilities that $\alpha^2 &gt; 2$ and that $\alpha^2 &lt; 2$.</p>
+to show that $\alpha^2 = 2$. We will do this by ruling out the possibilities that $\alpha^2 > 2$ and that $\alpha^2 < 2$.</p>
 <h2 id="ruling-things-out">Ruling things out</h2>
-<p>If $\alpha^2 &lt; 2$, then consider the number (we will discuss what $n$ to pick in a second):
-$$(\alpha + \frac{1}{n})^2 = \alpha^2 + \frac{2\alpha}{n} + \frac{1}{n^2} &lt; \alpha^2 + \frac{2\alpha + 1}{n}.$$
-What value of $n$ suits our needs here? Well, what we *would like *to show here is that $(\alpha +\frac{1}{n})^2 &lt; 2$, thus contradicting property (1) of least upper bounds that $\alpha$ must satisfy. As such, we need to pick an $n$ such that $\frac{2\alpha + 1}{n}$ fits in the gap between $\alpha^2$ and 2. Put mathematically, we want
-$\frac{2\alpha + 1}{n} &lt; 2 - \alpha^2$.</p>
+<p>If $\alpha^2 < 2$, then consider the number (we will discuss what $n$ to pick in a second):
+</p>
+$$(\alpha + \frac{1}{n})^2 = \alpha^2 + \frac{2\alpha}{n} + \frac{1}{n^2} < \alpha^2 + \frac{2\alpha + 1}{n}.$$<p>
+What value of $n$ suits our needs here? Well, what we *would like *to show here is that $(\alpha +\frac{1}{n})^2 < 2$, thus contradicting property (1) of least upper bounds that $\alpha$ must satisfy. As such, we need to pick an $n$ such that $\frac{2\alpha + 1}{n}$ fits in the gap between $\alpha^2$ and 2. Put mathematically, we want
+$\frac{2\alpha + 1}{n} < 2 - \alpha^2$.</p>
 <p>Rearranging a bit, we see that for the above to be true, we need
-$\frac{1}{n} &lt; \frac{2 - \alpha^2}{2\alpha + 1}$.
+$\frac{1}{n} < \frac{2 - \alpha^2}{2\alpha + 1}$.
 Such an $n$ surely exists (for more technically inclined readers, this follows from the archimedeanity of $\mathbb{R}$), so we now would like to show that $\alpha + \frac{1}{n} \in S$. This is now simple, because with the value of $n$ we’ve chosen, we have
-$$\alpha^2 + \frac{2\alpha + 1}{n} &lt; \alpha^2 + (2 - \alpha^2) = 2.$$
-Thus, if $\alpha^2 &lt; 2$, $\alpha + \frac{1}{n} &gt; \alpha$ is a member of $S$. This directly contradicts our supposition that $\alpha$ is the least <em>upper bound</em> of $S$ — we’ve found a number larger than $\alpha$ that is in $S$.
-Now, if $\alpha^2 &gt; 2$, we proceed by a similar argument. Consider the number
-$(\alpha - \frac{1}{n})^2 = \alpha^2 - {2\alpha}{n} + \frac{1}{n^2} &gt; \alpha^2 - {2\alpha}{n}$
+</p>
+$$\alpha^2 + \frac{2\alpha + 1}{n} < \alpha^2 + (2 - \alpha^2) = 2.$$<p>
+Thus, if $\alpha^2 < 2$, $\alpha + \frac{1}{n} > \alpha$ is a member of $S$. This directly contradicts our supposition that $\alpha$ is the least <em>upper bound</em> of $S$ — we’ve found a number larger than $\alpha$ that is in $S$.
+Now, if $\alpha^2 > 2$, we proceed by a similar argument. Consider the number
+$(\alpha - \frac{1}{n})^2 = \alpha^2 - {2\alpha}{n} + \frac{1}{n^2} > \alpha^2 - {2\alpha}{n}$
 This time, we want to show that $\alpha - \frac{1}{n}$ is an upper bound for $S$, thus contradicting the supposition that $\alpha$ is the <em>least</em> upper bound of $S$. To this end, again, choose $n$ so that $\frac{2\alpha}{n}$ fits in the gap between $\alpha^2$ and 2. Mathematically, we want
-$\frac{2\alpha}{n} &lt; \alpha^2 - 2$,
+$\frac{2\alpha}{n} < \alpha^2 - 2$,
 so we choose $n$ so that
-$$\frac{1}{n} &gt; \frac{\alpha^2 - 2}{2\alpha}.$$
+</p>
+$$\frac{1}{n} > \frac{\alpha^2 - 2}{2\alpha}.$$<p>
 By doing this, we get that
-$$(\alpha - \frac{1}{n})^2 &gt; \alpha^2 - {2\alpha}{n} &gt; \alpha^2 - (\alpha^2 - 2) = 2$$
+</p>
+$$(\alpha - \frac{1}{n})^2 > \alpha^2 - {2\alpha}{n} > \alpha^2 - (\alpha^2 - 2) = 2$$<p>
 But this contradicts the supposition that $\alpha$ was $S$’s *least *upper bound!
 Thus, $\alpha^2 = 2$, so we can rigorously associate the symbol $\sqrt{2}$ with $\alpha$.</p>
 <h2 id="conclusion">Conclusion</h2>

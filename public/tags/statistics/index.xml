@@ -21,12 +21,11 @@
 &lt;p&gt;We are going to develop the k-means algorithm in a somewhat non-standard way, but first we need to review a few preliminaries.&lt;/p&gt;
 &lt;h2 id=&#34;mixtures-of-gaussians&#34;&gt;Mixtures of Gaussians&lt;/h2&gt;
 &lt;p&gt;A mixture of Gaussians model can be succinctly expressed as follows:&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 p(x) = \sum_{i=1}^k \pi_i N(x | \mu_i, \Sigma_i).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.&lt;/p&gt;
+$$&lt;p&gt;This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.&lt;/p&gt;
 &lt;p&gt;One way to interpret this model that I find intuitively appealing is as an assumption that each point in your dataset is generated from one of $k$ distinct (Gaussian) generating processes. To sample a new point from this distribution, you can first sample a value $i$ using the $\pi_i$, and then subsequently sample a point from the corresponding Gaussian. (Note that this assumption may or may not be suitable for a particular dataset or application. As George Box has famously said: &amp;ldquo;All models are wrong, but some are useful.&amp;rdquo;)&lt;/p&gt;
 &lt;h2 id=&#34;em-algorithm&#34;&gt;EM algorithm&lt;/h2&gt;
 &lt;p&gt;The EM algorithm is a way of carrying out &lt;a href=&#34;https://en.wikipedia.org/wiki/Maximum_likelihood_estimation&#34;&gt;maximum likelihood estimation&lt;/a&gt; in cases where the model is constructed with &lt;strong&gt;latent variables&lt;/strong&gt;. Latent variables are often used to account for or represent characteristics of a population that cannot be directly observed. As an example, someone&amp;rsquo;s political orientation might not be directly observable, but if you ask questions about certain issues, you might be able to infer it.&lt;/p&gt;
@@ -34,52 +33,46 @@ $$&lt;/p&gt;
 &lt;h3 id=&#34;expectation-step&#34;&gt;Expectation step&lt;/h3&gt;
 &lt;p&gt;The output of this step is a &lt;em&gt;function&lt;/em&gt; that takes a potential parameter setting (i.e., a model) $\theta$, and outputs a score. (Higher scores are better.) The obvious question: How do we compute that score? Let&amp;rsquo;s say that $z$ is a possible latent variable setting. The score corresponding to $z$ is $\log p(x, z | \theta)$, i.e., the (log) likelihood of observing the data $x$ and $z$ assuming the model $\theta$. Since a &amp;ldquo;probable&amp;rdquo; setting of $z$ depends on the parameters we&amp;rsquo;ve estimated so far and the observed data $x$, the overall score for $\theta$ takes a weighted average of the scores across possible values of $z$, where the weights are the likelihood of observing $z$ given the latest parameters and the data $x$.&lt;/p&gt;
 &lt;p&gt;To summarize using notation we&amp;rsquo;ll refer to in the next section, the output of this step is a function we&amp;rsquo;ll call $Q$. To formalize the idea in the previous paragraph, we define $Q$ as follows:&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 Q(\theta; x, \theta^{(t)}) = E_{z \sim p(\cdot | x, \theta^{(t)})} [\log p(x, z | \theta)].
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting &lt;em&gt;that we are constructing $Q$ to evaluate&lt;/em&gt;. In the same way that when we define $f(x)$, we don&amp;rsquo;t know anything about $x$ except that it&amp;rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&amp;rsquo;t know anything about $\theta$ except that it&amp;rsquo;s a potential parameter setting we might want to test.&lt;/p&gt;
+$$&lt;p&gt;Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting &lt;em&gt;that we are constructing $Q$ to evaluate&lt;/em&gt;. In the same way that when we define $f(x)$, we don&amp;rsquo;t know anything about $x$ except that it&amp;rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&amp;rsquo;t know anything about $\theta$ except that it&amp;rsquo;s a potential parameter setting we might want to test.&lt;/p&gt;
 &lt;p&gt;The semicolon in the definition of $Q$ is just a way of indicating that the function also depends on the data $x$ and the latest parameter setting $\theta^{(t)}$, but that we&amp;rsquo;re treating these as known (whereas $\theta$ is a variable).&lt;/p&gt;
 &lt;h3 id=&#34;maximization-step&#34;&gt;Maximization step&lt;/h3&gt;
 &lt;p&gt;Once we have the function $Q$, we simply maximize the function over $\theta$. The concrete update rule depends on the model we&amp;rsquo;re working with, but the general idea is to find the parameter setting that makes the data most likely. In general mathematical terms we are looking for&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 \theta^{(t+1)} = \arg\max_{\theta} Q(\theta; x, \theta^{(t)}).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.&lt;/p&gt;
+$$&lt;p&gt;We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.&lt;/p&gt;
 &lt;h1 id=&#34;k-means--em--mixture-of-gaussians--a-limit&#34;&gt;K-means = EM + mixture of Gaussians + a limit&lt;/h1&gt;
 &lt;p&gt;For each point $x_i$, we can imagine that there is a true, but latent, cluster assignment vector $z_i \in \text{one-hot}(k)$. Each entry $z_{ic}$ of $z_i$ is 1 if $x_i$ is a member of cluster $c$ and 0 otherwise. (Note that only one component of $z_i$ can be 1 for each $i$.) In our setup, since the cluster assignment is latent, $x_i$&amp;rsquo;s cluster membership is smeared across the different clusters probabilistically. We express this idea of a &lt;strong&gt;soft assignment&lt;/strong&gt; by saying that there is a probability, $\gamma(z_{ic})$, that the point $x_i$ is in cluster $c$. (In contrast, k-means makes a &lt;strong&gt;hard assignment&lt;/strong&gt;, where each point is assigned to &lt;em&gt;exactly one&lt;/em&gt; cluster, in which case $\gamma$&amp;rsquo;s output would be binary. We&amp;rsquo;ll get to that in a moment.)&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s assume that the $x_i$ are drawn from a mixture of Gaussians with mixture coefficients $\pi_i$ for $i = 1,\dots, k$, but with the additional assumption that for each $i$, $\Sigma_i = \sigma I$. That is, assume that the covariance matrices for each Gaussian are all diagonal and have the same value $\sigma$ on their diagonals.&lt;/p&gt;
 &lt;p&gt;The entries of the $\gamma(z_i)$ (the vector of $\gamma(z_{ic})$ for $c = 1, \dots, k$) can be expressed as&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-\gamma(z_{ij}; \theta^{(t)}) &amp;amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \
-&amp;amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} |x_i - \mu_j|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} |x_i - \mu_l|^2\right)}.
+\gamma(z_{ij}; \theta^{(t)}) &amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \\
+&amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_j\|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_l\|^2\right)}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&amp;rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.&lt;/p&gt;
+$$&lt;p&gt;We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&amp;rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.&lt;/p&gt;
 &lt;p&gt;The denominator here looks complicated, but it&amp;rsquo;s just there to make sure that the entries of $\gamma(z_i)$ sum to 1. The numerator is roughly the probability that $x_i$ was generated by the $j$th Gaussian. (The exact expression is a bit more complicated, but this is the intuition.)&lt;/p&gt;
 &lt;p&gt;The k-means algorithm can be seen as a limiting case of the EM algorithm applied to this mixture of Gaussians setup.&lt;/p&gt;
 &lt;h2 id=&#34;the-e-step&#34;&gt;The E-step&lt;/h2&gt;
 &lt;p&gt;The TL;DR is that the E-step of the EM algorithm computes the $\gamma(z_i)$ for each $x_i$ using the existing $\mu_j$s and $\pi_j$s. I want to be slightly more precise, though, about how this fits within the abstract framework of the EM algorithm that we outlined earlier.&lt;/p&gt;
 &lt;p&gt;The E-step computes $\gamma(z_i)$ as above. To map this onto the abstract definition of the E-step, we can first note that for a particular example $x_i$, we can compute the (log) likelihood of $x_i$ being generated by the $j$th Gaussian as&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \log p(x_i, z_{ij} = 1 | \theta) = \log \pi_j N(x_i | \mu_j, \sigma I).
-$$&lt;/p&gt;
-&lt;p&gt;Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:&lt;/p&gt;
-&lt;p&gt;$$
+$$&lt;p&gt;Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:&lt;/p&gt;
+$$
 \begin{align*}
-Q(\theta; x_i, \theta^{(t)}) &amp;amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \
-&amp;amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
+Q(\theta; x_i, \theta^{(t)}) &amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \\
+&amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:&lt;/p&gt;
-&lt;p&gt;$$
+$$&lt;p&gt;To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:&lt;/p&gt;
+$$
 Q(\theta; x, \theta^{(t)}) = \sum_{i=1}^n \sum_{j=1}^k \gamma(z_{ij}; \theta^{(t)}) \log \pi_j N(x_i | \mu_j, \sigma I).
-$$&lt;/p&gt;
-&lt;p&gt;Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&amp;rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.&lt;/p&gt;
+$$&lt;p&gt;Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&amp;rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.&lt;/p&gt;
 &lt;h2 id=&#34;the-m-step&#34;&gt;The M-step&lt;/h2&gt;
 &lt;p&gt;Since we&amp;rsquo;ve fixed the covariances, i.e. are not parameters that need to be found, the M-step updates the $\mu_j$ to be the weighted average of all of the $x_i$. Each point&amp;rsquo;s contribution to the computation of $\mu_j$ is weighted by the corresponding $\gamma(z_{ij})$, or how strongly it is attracted to $\mu_j$. This makes intuitive sense; the farther away a point is from a given mean, the (exponentially) less impact it has on that mean&amp;rsquo;s update.&lt;/p&gt;
 &lt;h2 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h2&gt;
@@ -112,9 +105,10 @@ thought of in an interesting statistical way.&lt;/p&gt;
 $b$ represents the number of bedrooms in the house, we &lt;em&gt;assume&lt;/em&gt; (more on this in a second)
 that the relationship between the number of bedrooms and the price of the house
 is linear:
+&lt;/p&gt;
 $$
-p(b) = \theta b + \epsilon.
-$$
+  p(b) = \theta b + \epsilon.
+$$&lt;p&gt;
 Here, $p$ is price, $b$ is the number of bedrooms in the house, and $\epsilon$
 is a random number that represents the error in our model, or the part of our model that
 the data we are using do not explain. What the formula above says is that &lt;em&gt;we believe&lt;/em&gt;
@@ -133,15 +127,17 @@ and a current guess at a parameter $\theta$. To evaluate $\theta$, a natural mea
 well $\theta$ fits is to find the average (square) error, where the error for each example
 can be expressed as the difference between $\theta b_i$ (our prediction) and $y_i$
 (the actual price). Mathematically, we can write this measure down as
+&lt;/p&gt;
 $$
-J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
-$$
+  J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
+$$&lt;p&gt;
 Now that we&amp;rsquo;ve decided what constitutes a good choice of parameter, we can employ
 tools provided by calculus to actually calculate what value of $\theta$ is best
 by solving the optimization problem (replacing 100 with the more general $m$) given by
+&lt;/p&gt;
 $$
-\text{argmin}&lt;em&gt;\theta \sum&lt;/em&gt;{i=1}^m (\theta b_i - y_i)^2.
-$$
+  \text{argmin}_\theta \sum_{i=1}^m (\theta b_i - y_i)^2.
+$$&lt;p&gt;
 (This is the value of $\theta$ that minimizes $J$. Without going into detail,
 in this case, it turns out that the best value is $\theta = \frac{\mathbf y^T \mathbf b}{\mathbf b^T \mathbf b}$,
 where $\mathbf b = (b_1,\dots, b_m)$ and $\mathbf y = (y_1,\dots,y_m)$.)&lt;/p&gt;
@@ -159,10 +155,10 @@ of the features have parameters that are too large, i.e., that their impact is o
 in the model. As such, rather than just finding the parameters that minimize the least
 squares objective, we want to find &lt;em&gt;small&lt;/em&gt; parameters that minimize the objective.
 For the simple regression case, we would add a term to the objective:
+&lt;/p&gt;
 $$
-\text{argmin}&lt;em&gt;\theta ~~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
-$$&lt;/p&gt;
-&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
+\text{argmin}_\theta ~~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+$$&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
 will also be large, so the optimizer will not be encouraged to pick that value of $\theta$,
 even it fits the data pretty well. Adding this term causes the optimizer to trade off
 goodness of fit and simplicity (in the sense of parameters that aren&amp;rsquo;t too large).
@@ -178,18 +174,20 @@ $1/\lambda$ (we can tune $\lambda$ to change the width of the bell curve). Makin
 essentially pins down a probability density function for the parameter $\theta$:
 $P(\theta) = \frac{\sqrt{\lambda}}{\sqrt{2\pi}}\exp(-\lambda(\theta - 0)^2/2)$.
 Taking $\log$s (this doesn&amp;rsquo;t affect the optimization problem we need to solve), we have
+&lt;/p&gt;
 $$
-\log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
-$$
+  \log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
+$$&lt;p&gt;
 Adding this assumption about the prior distribution over $\theta$ and ignoring
 constants (with respect to $\theta$), we would need to solve the modified MLE problem:
+&lt;/p&gt;
 $$
 \begin{align}
-\text{argmax}&lt;em&gt;\theta~ \log(P(\mathbf y &lt;del&gt;|&lt;/del&gt; \mathbf b, \theta)P(\theta))
-&amp;amp;= \text{argmax}&lt;/em&gt;\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\
-&amp;amp;= \text{argmin}&lt;em&gt;\theta ~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+  \text{argmax}_\theta~ \log(P(\mathbf y ~|~ \mathbf b, \theta)P(\theta))
+  &amp;= \text{argmax}_\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\\
+  &amp;= \text{argmin}_\theta ~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
 \end{align}
-$$
+$$&lt;p&gt;
 which is exactly what we had intuitively motivated in the previous section!&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ve just uncovered the statistical interpretation of regularization!* Using (this flavor
 of) regularization is actually imposing a Gaussian prior onto $\theta$. As we force the
@@ -206,7 +204,7 @@ actually be interpreted as imposing a Laplacian (rather than a Gaussian) prior.&
     </item>
     
     <item>
-      <title>Understanding mean squared error</title>
+      <title>MSE = Bias² &#43; Variance</title>
       <link>http://localhost:1313/posts/2019-09-23-mse/</link>
       <pubDate>Mon, 23 Sep 2019 00:00:00 +0000</pubDate>
       
@@ -240,22 +238,22 @@ of $X$ - in our case, the function is $f(X) = (X - 3.5)^2$. To compute the expec
 average of all possible values $X$ can take and weight each one by the probability of seeing that outcome.
 (Don’t worry too much about why we&amp;rsquo;re squaring; it makes calculus easier.)&lt;/p&gt;
 &lt;p&gt;Mathematically, we write
+&lt;/p&gt;
 $$
 \text{MSE}(\hat y) = E_y((\hat y - y)^2)
-$$
+$$&lt;p&gt;
 where $\hat y$ is the estimator and $y$ is the true parameter value.&lt;/p&gt;
 &lt;p&gt;Intuitively, if we expect the estimator to, on average, stray far from the true value of the parameter, the
 estimator is probably not very good. Alternatively, if that expected value is close to 0, it means that the
 estimator deviates very little from the actual parameter, i.e. it’s a great estimator! With some tedious
 algebra, we can actually show that&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align}
-\text{MSE}(\hat y) &amp;amp;= E_y((\hat y - y)^2) \
-&amp;amp;= \dots \ &amp;amp;= E((\hat y - E(\hat y))^2) + (E(\hat y) - \hat y)^2 \
-&amp;amp;= \text{Var}_y(\hat y) + (\text{Bias}_y(\hat y))^2
+\text{MSE}(\hat y) &amp;= E_y((\hat y - y)^2) \\
+&amp;= \dots \\ &amp;= E((\hat y - E(\hat y))^2) + (E(\hat y) - \hat y)^2 \\
+&amp;= \text{Var}_y(\hat y) + (\text{Bias}_y(\hat y))^2
 \end{align}
-$$&lt;/p&gt;
-&lt;p&gt;Bias and variance are two very important qualities of estimators that help us understand how they relate to
+$$&lt;p&gt;Bias and variance are two very important qualities of estimators that help us understand how they relate to
 the real value you’re attempting to estimate:&lt;/p&gt;
 &lt;h3 id=&#34;bias&#34;&gt;Bias&lt;/h3&gt;
 &lt;p&gt;Bias tells you the difference between the expected value of your estimator and that actual value of the
@@ -338,7 +336,7 @@ ourselves here with the Weak Law of Large Numbers (the Strong Law is harder to p
 similar in spirit). Mathematically, we would state it as follows (don’t worry &amp;ndash; we’ll break each piece of
 this down momentarily): Let $X_1, \dots, X_n$ be independent and identically distributed random
 variables all having finite average value $m$. Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$. Then for any
-$\varepsilon &amp;gt; 0$, $P(|\bar X_n - m| &amp;lt; \varepsilon) \to 1$ as $n \to \infty$.&lt;/p&gt;
+$\varepsilon &gt; 0$, $P(|\bar X_n - m| &lt; \varepsilon) \to 1$ as $n \to \infty$.&lt;/p&gt;
 &lt;p&gt;Let’s dissect this piece by piece and make sure it makes sense:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;“Let $X_1, \dots, X_n$ be independent and identically distributed random variables”: This means that each
@@ -348,11 +346,11 @@ probability distribution. Each number the box spits out would be represented by 
 going to say what we can infer about the average of the black box distribution’s average value once we’ve
 made a sufficiently large number of observations.)&lt;/li&gt;
 &lt;li&gt;“Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$”: $\bar X_n$ is the average value of the observations.&lt;/li&gt;
-&lt;li&gt;“Then for any $\varepsilon &amp;gt; 0$”: This is a math trick students usually first come across in real
+&lt;li&gt;“Then for any $\varepsilon &gt; 0$”: This is a math trick students usually first come across in real
 analysis. You basically pick some arbitrarily small value of $\varepsilon$ and then show that some quantity
 can always be made smaller than the value you chose. (In our case, that value will be the difference
 between the average value of the observations and the true average $m$.)&lt;/li&gt;
-&lt;li&gt;“$P(|\bar X_n - m| &amp;lt; \varepsilon) \to 1$ as $n \to \infty$”: The probability that the average value of
+&lt;li&gt;“$P(|\bar X_n - m| &lt; \varepsilon) \to 1$ as $n \to \infty$”: The probability that the average value of
 the observations and the true mean of the underlying distribution differ by less than $\varepsilon$ becomes
 more and more certain as you take more and more observations.&lt;/li&gt;
 &lt;/ul&gt;
@@ -366,36 +364,33 @@ assumption is not necessary. (It’s just that if we don’t make that assumptio
 complicated.)
 First, let’s compute the mean and variance of $\bar X_n$. Because expectation is linear, and $\bar X_n$ is
 just a sum of RVs each having mean $m$, we have&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-E(\bar X_n) &amp;amp;= \frac{1}{n}\sum_{i=1}^n E(X_i) \\
-&amp;amp;= \frac{1}{n}\sum_{i=1}^n m \\
-&amp;amp;= mn/n \\
-&amp;amp;= m.
+E(\bar X_n) &amp;= \frac{1}{n}\sum_{i=1}^n E(X_i) \\\\
+&amp;= \frac{1}{n}\sum_{i=1}^n m \\\\
+&amp;= mn/n \\\\
+&amp;= m.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;To compute the variance, we use the independence of the $X_i$ to write that&lt;/p&gt;
-&lt;p&gt;$$
+$$&lt;p&gt;To compute the variance, we use the independence of the $X_i$ to write that&lt;/p&gt;
+$$
 \begin{align*}
-\text{Var}(\bar X_n) &amp;amp;= \text{Var}(\frac{1}{n}\sum X_i) \\
-&amp;amp;= \frac{1}{n^2}\text{Var}(\sum X_i) \\
-&amp;amp;= \frac{1}{n^2}\sum \text{Var}(X_i) \\
-&amp;amp;= \frac{1}{n^2}n\sigma^2 \\
-&amp;amp;= \sigma^2/n.
+\text{Var}(\bar X_n) &amp;= \text{Var}(\frac{1}{n}\sum X_i) \\\\
+&amp;= \frac{1}{n^2}\text{Var}(\sum X_i) \\\\
+&amp;= \frac{1}{n^2}\sum \text{Var}(X_i) \\\\
+&amp;= \frac{1}{n^2}n\sigma^2 \\\\
+&amp;= \sigma^2/n.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Before we continue note that the fact that variance is a decreasing function of $n$ just about makes sense.
+$$&lt;p&gt;Before we continue note that the fact that variance is a decreasing function of $n$ just about makes sense.
 The more observations I take, the smaller my variance should intuitively be.&lt;/p&gt;
 &lt;p&gt;Next, we use Chebyshev’s inequality with $\mu = m$, $k = \varepsilon$ and $X = \bar X_n$ to say that&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-P(|\bar X_n - m| &amp;lt; \varepsilon) &amp;amp;= 1 - P(|\bar X_n - m| &amp;gt; \varepsilon) \\
-&amp;amp;\geq 1 - \frac{\sigma^2/
-n}{\varepsilon^2} \\
-&amp;amp;= 1 -\frac{\sigma^2}{n\varepsilon^2}.
+P(|\bar X_n - m| &lt; \varepsilon) &amp;= 1 - P(|\bar X_n - m| &gt; \varepsilon) \\\\
+&amp;\geq 1 - \frac{\sigma^2/
+  n}{\varepsilon^2} \\\\
+&amp;= 1 -\frac{\sigma^2}{n\varepsilon^2}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;(The inequality sign is flipped because we have that $1  - \dots$ in there. Otherwise, it’s just plug and play Chebyshev.)&lt;/p&gt;
+$$&lt;p&gt;(The inequality sign is flipped because we have that $1  - \dots$ in there. Otherwise, it’s just plug and play Chebyshev.)&lt;/p&gt;
 &lt;p&gt;As $n$ gets larger and larger, that rightmost term tends to 0, so the probability of interest is bounded below by 1, and voila! We’re done.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;This law is intuitive, deep &lt;em&gt;and&lt;/em&gt; also deeply embedded in the way that we as human beings trying to navigate the world deal with uncertainty, so I thought it deserved a post.&lt;/p&gt;
@@ -412,7 +407,7 @@ $$&lt;/p&gt;
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Very often, finding exact answers is a pain; ballpark estimates usually suffice. When you’re nervous to board
 a plane, you don’t care to calculate the exact probability that the plane will land safely; you only care
-that it’s over $99.99%$. When you’re trying to figure out how long a project will take your team at work,
+that it’s over $99.99\%$. When you’re trying to figure out how long a project will take your team at work,
 you use approximations throughout your calculation because there are far too many unknowns and variable to
 compute the exact answer. Will a member of your team get sick and have to take time off? How quickly will
 your team members learn a new technology? How productive will the new-hire be? Across computer science, there
@@ -430,31 +425,26 @@ present itself.&lt;/p&gt;
 &lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
 &lt;p&gt;As we often do when probability is concerned, let’s think about a sequence of coin flips. Instead of the usual unbiased coin, though, let’s say the coin falls heads with probability $p=1/3$ (and tails with probability $1 - p = 2/3$). In a sequence of 100 flips, what is the probability that greater than or equal to half of them fall heads?&lt;/p&gt;
 &lt;p&gt;The distribution one would use to model this question is most probably the binomial distribution. If we let the random variable $X =$ # of heads in 100 flips, we would say that $X \sim \text{Bin}(100, 1/3)$ ($X$ represents the number of times a head will fall in 100 flips when the probability of heads on each independent toss is 1/3). In the case of this particular problem, we can calculate the exact probability of 50 or more heads. The formula that computes the exact solution looks like (don’t worry about what the symbols mean — not important, but if you’re interested, take a look at this (&lt;a href=&#34;https://en.wikipedia.org/wiki/Binomial_distribution))&#34;&gt;https://en.wikipedia.org/wiki/Binomial_distribution))&lt;/a&gt;:&lt;/p&gt;
-&lt;p&gt;$$\sum_{k=50}^{100} {100 \choose k}(\frac{1}{3})^k(\frac{2}{3})^{100-k} \approx 0.00042.$$&lt;/p&gt;
-&lt;p&gt;Without a bunch of cleverness or a computer, it would be very hard, if not impossible, to carry out that computation by hand. Let’s see if those probability bounds I talked about can lend us a hand. Before we do, we need to introduce two facts about binomial random variables. If $X \sim \text{Bin}(n, p)$, the expected value (average value) of $X$, written $E(X)$, is equal to $np$ (the number of trials times the individual probability of success), and the variance of $X$ (a measure of how much $X$ deviates from its average value), written $\text{Var}(X)$, is equal to $np(1-p)$. With that in mind, follow me.&lt;/p&gt;
+$$\sum_{k=50}^{100} {100 \choose k}(\frac{1}{3})^k(\frac{2}{3})^{100-k} \approx 0.00042.$$&lt;p&gt;Without a bunch of cleverness or a computer, it would be very hard, if not impossible, to carry out that computation by hand. Let’s see if those probability bounds I talked about can lend us a hand. Before we do, we need to introduce two facts about binomial random variables. If $X \sim \text{Bin}(n, p)$, the expected value (average value) of $X$, written $E(X)$, is equal to $np$ (the number of trials times the individual probability of success), and the variance of $X$ (a measure of how much $X$ deviates from its average value), written $\text{Var}(X)$, is equal to $np(1-p)$. With that in mind, follow me.&lt;/p&gt;
 &lt;h2 id=&#34;markovs-inequality&#34;&gt;Markov&amp;rsquo;s inequality&lt;/h2&gt;
-&lt;p&gt;The first probability bound we’re going to look at is known as &lt;em&gt;Markov’s inequality&lt;/em&gt;. Before we technically state it, in plain English, Markov’s inequality tells us about the probability of a random variable exceeding some value. Formally, if $X$ is a positive random variable (the outcomes of your experiments are strictly positive values), then for any real number $a &amp;gt; 0$,&lt;/p&gt;
-&lt;p&gt;$$P(X \geq a) \leq \frac{E(X)}{a}.$$&lt;/p&gt;
-&lt;p&gt;Before we prove this, I want to explicitly state that the primary advantage of Markov’s inequality is its generality. It usually doesn’t furnish the most useful bounds, but notice that in order to apply Markov, all we need to know that is that $X$ is a positive random variable. As we will see below, it is also an important building block with which we will come up with better probability bounds. Before we see what it would tell us about the problem we started with, let’s prove it.&lt;/p&gt;
+&lt;p&gt;The first probability bound we’re going to look at is known as &lt;em&gt;Markov’s inequality&lt;/em&gt;. Before we technically state it, in plain English, Markov’s inequality tells us about the probability of a random variable exceeding some value. Formally, if $X$ is a positive random variable (the outcomes of your experiments are strictly positive values), then for any real number $a &gt; 0$,&lt;/p&gt;
+$$P(X \geq a) \leq \frac{E(X)}{a}.$$&lt;p&gt;Before we prove this, I want to explicitly state that the primary advantage of Markov’s inequality is its generality. It usually doesn’t furnish the most useful bounds, but notice that in order to apply Markov, all we need to know that is that $X$ is a positive random variable. As we will see below, it is also an important building block with which we will come up with better probability bounds. Before we see what it would tell us about the problem we started with, let’s prove it.&lt;/p&gt;
 &lt;h3 id=&#34;proof&#34;&gt;Proof&lt;/h3&gt;
 &lt;p&gt;Let the random variable $I = 1$ if $X \geq a$ and $0$ otherwise. The proof is mostly complete when you notice this convenient, but somewhat subtle fact:&lt;/p&gt;
-&lt;p&gt;$$I \leq \frac{X}{a}.$$&lt;/p&gt;
-&lt;p&gt;Why? Let’s think about it. If $I = 1$, then, by definition, $X \geq a$. Dividing by $a$ on both sides of $X \geq a$ gives us $\frac{X}{a} \geq 1 = I$. If $I = 0$, the above inequality holds because both $X$ and $a$
+$$I \leq \frac{X}{a}.$$&lt;p&gt;Why? Let’s think about it. If $I = 1$, then, by definition, $X \geq a$. Dividing by $a$ on both sides of $X \geq a$ gives us $\frac{X}{a} \geq 1 = I$. If $I = 0$, the above inequality holds because both $X$ and $a$
 are positive. Taking the expectation of both sides (don’t worry — expectation doesn’t change the sign of the
 inequality), the above inequality turns into $E(I) \leq E(\frac{X}{a})$. We can pull $\frac{1}{a}$ out of the
 right hand term because you can pull constants out of expectation. Further, by the definition of expected
 value, $E(I) = 1 \times P(I = 1) + 0 \times P(I = 0) = P(I = 1)$ is just the probability that $X \geq a$ (by
 our definition of $I$), so the above expression can be rewritten as&lt;/p&gt;
-&lt;p&gt;$$P(X \geq a) \leq \frac{E(X)}{a},$$&lt;/p&gt;
-&lt;p&gt;so we’ve finished the proof.&lt;/p&gt;
+$$P(X \geq a) \leq \frac{E(X)}{a},$$&lt;p&gt;so we’ve finished the proof.&lt;/p&gt;
 &lt;h3 id=&#34;a-bound-on-the-example-using-markov&#34;&gt;A bound on the example using Markov&lt;/h3&gt;
 &lt;p&gt;Now that we know that Markov’s inequality holds, let’s see what it can tell us about our problem. Recall that
 we defined $X$ to be the number of flips that fall heads in a sequence of $100$ tosses. In particular, we
 wanted to know what the odds were that there were more than or equal to $50$ heads, i.e. the probability that
 $X \geq 50$. Noting that the expected value of our particular $X$ (with $n = 100$ and $p = 1/3$) is $np = 100
 \times 1/3$, we can plug these numbers into Markov and see that&lt;/p&gt;
-&lt;p&gt;$$P(X \geq 50) \leq \frac{100 \times \frac{1}{3}}{50} \approx 0.67.$$&lt;/p&gt;
-&lt;p&gt;This tells us that the probability that the number of heads we see exceeds $50$ is at most $0.67$. Not so
+$$P(X \geq 50) \leq \frac{100 \times \frac{1}{3}}{50} \approx 0.67.$$&lt;p&gt;This tells us that the probability that the number of heads we see exceeds $50$ is at most $0.67$. Not so
 useful, but do you see how simple that was to compute? Given the exact answer we computed above, this
 estimate doesn’t tell us very much, but the computation was so easy.&lt;/p&gt;
 &lt;h2 id=&#34;chebyshevs-inequality&#34;&gt;Chebyshev&amp;rsquo;s inequality&lt;/h2&gt;
@@ -463,18 +453,15 @@ from Markov, it’s spirit is similar. Chebyshev is a statement about the probab
 deviates from its average by a certain amount. Its formal statement is: if $X$ is a random variable with
 finite expected value $\mu$ and finite variance $\sigma^2$ (those two conditions hold enough of the time),
 then&lt;/p&gt;
-&lt;p&gt;$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;/p&gt;
-&lt;p&gt;In English, the probability that $X$ deviates from its mean by at least $k$ is at most $X$’s variance divided by $k^2$.
+$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;p&gt;In English, the probability that $X$ deviates from its mean by at least $k$ is at most $X$’s variance divided by $k^2$.
 We will find this bound a bit more useful when we apply it to our problem, but before we do that, we need to prove it.&lt;/p&gt;
 &lt;h3 id=&#34;proof-1&#34;&gt;Proof&lt;/h3&gt;
 &lt;p&gt;If $X$ is a random variable, then $X - \mu$ is a random variable. Furthermore, if $X - \mu$ is a random variable,
 then so is $(X - \mu)^2$. Now we apply Markov with $X$ replaced by $(X - \mu)^2$ and $a$ replaced by $k^2$, and we have:&lt;/p&gt;
-&lt;p&gt;$$P((X - \mu)^2 \geq k^2) \leq \frac{E((X - \mu)^2)}{k^2}.$$&lt;/p&gt;
-&lt;p&gt;The expression in the parentheses on the left side is equivalent to the expression $|X - \mu| \geq k$ (take the square
+$$P((X - \mu)^2 \geq k^2) \leq \frac{E((X - \mu)^2)}{k^2}.$$&lt;p&gt;The expression in the parentheses on the left side is equivalent to the expression $|X - \mu| \geq k$ (take the square
 root of both sides). Replacing what’s in parentheses with the equivalent formulation and recognizing the numerator on
 the right side as the very definition of variance completes the proof because we can rewrite the above as&lt;/p&gt;
-&lt;p&gt;$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;/p&gt;
-&lt;p&gt;That proof might have actually been mechanically easier than Markov! In addition, Chebyshev’s inequality is usually more
+$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;p&gt;That proof might have actually been mechanically easier than Markov! In addition, Chebyshev’s inequality is usually more
 informative and almost as general as Markov, so let’s take a look at what it can tell us about our problem.&lt;/p&gt;
 &lt;h3 id=&#34;a-bound-on-the-example-using-chebyshev&#34;&gt;A bound on the example using Chebyshev&lt;/h3&gt;
 &lt;p&gt;Recall that $\mu = np$ in our problem is approximately $33.3$ and that the variance is $\sigma^2 = np(1-p) = 100 \times 1/
@@ -485,8 +472,7 @@ that is more than $16.7$ away from $\mu$ in either direction. More directly, we 
 probability that $X$ takes a value less than or equal to $33.3 - 16.7 = 16.6$ and greater than or equal to $33.3 + 16.7 =
 50$. The probability that $X$ is less than or equal to $16.6$ is superfluous, but it doesn’t affect the correctness of our
 upper bound. By Chebyshev, we can conclude that&lt;/p&gt;
-&lt;p&gt;$$P(|X - \mu| \geq 16.7) \leq \frac{22.2}{16.7^2} \approx 0.079,$$&lt;/p&gt;
-&lt;p&gt;so our upper bound is now around $8%$. Given the result of the explicit calculation we computed first, this isn’t especially tight either, but it’s much better than Markov and it was almost as easy to compute!&lt;/p&gt;
+$$P(|X - \mu| \geq 16.7) \leq \frac{22.2}{16.7^2} \approx 0.079,$$&lt;p&gt;so our upper bound is now around $8\%$. Given the result of the explicit calculation we computed first, this isn’t especially tight either, but it’s much better than Markov and it was almost as easy to compute!&lt;/p&gt;
 &lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
 &lt;p&gt;There are other, more powerful bounds that I won’t go into here because they’re more involved and this post is already long, but hopefully you’ve gotten an idea about where these sorts of things might be useful.&lt;/p&gt;
 </description>
@@ -515,19 +501,25 @@ upper bound. By Chebyshev, we can conclude that&lt;/p&gt;
 &lt;h2 id=&#34;the-connection&#34;&gt;The connection?&lt;/h2&gt;
 &lt;p&gt;We can! What we’re going to do first is to define the relationship between $n$ and $p$. Above, we revealed the need to express that $p$ is small and $n$ is large. One way to do that is to enforce that $np$ be constant (there are other ways, but this is the one that will be useful here); we’ll name that constant $\lambda$. Why does this help us? Well, if I pick a value of $\lambda$, say 1, before I start, then once I choose $n$, I’ve determined $p$. As an example, if $n = 100$, then because $np = 1$, $p$ must be 1/100. Furthermore, as $n$ gets larger we see that $p$ has to get smaller to keep lambda constant, so if we let $n$ tend to $\infty$, we are implicitly forcing $p$ to tend to 0. Being able to write $p$ in terms of $n$ is going to be very helpful in what’s to come.&lt;/p&gt;
 &lt;p&gt;With the relationship between $n$ and $p$ specified more precisely, we will now see what happens to the binomial PDF as $n$ grows. That is, we want to compute
-$$\lim_{n \to \infty} {n \choose k} p^k(1 - p)^{n - k}.$$
+&lt;/p&gt;
+$$\lim_{n \to \infty} {n \choose k} p^k(1 - p)^{n - k}.$$&lt;p&gt;
 Because $p = \lambda / n$ we can rewrite all the $p$s in the above limit as $\frac{\lambda}{n}$s:
-$$\lim_{n \to \infty} {n \choose k} (\frac{\lambda}{n})^k(1 - \frac{\lambda}{n})^{n - k}.$$
+&lt;/p&gt;
+$$\lim_{n \to \infty} {n \choose k} (\frac{\lambda}{n})^k(1 - \frac{\lambda}{n})^{n - k}.$$&lt;p&gt;
 Simplifying a little bit, the limit can be rewritten as
-$$\lim_{n \to \infty} \frac{n!}{k!(n-k)!} \frac{\lambda^k}{n^k}(1 - \frac{\lambda}{n})^{n - k} = \lim_{n \to \infty} \frac{n(n-1)(n-2)\dots(n-k+1)}{n^k} \cdot \frac{\lambda^k}{k!} \cdot (1 - \frac{\lambda}{n})^{n - k}.$$
+&lt;/p&gt;
+$$\lim_{n \to \infty} \frac{n!}{k!(n-k)!} \frac{\lambda^k}{n^k}(1 - \frac{\lambda}{n})^{n - k} = \lim_{n \to \infty} \frac{n(n-1)(n-2)\dots(n-k+1)}{n^k} \cdot \frac{\lambda^k}{k!} \cdot (1 - \frac{\lambda}{n})^{n - k}.$$&lt;p&gt;
 We will look at each of term of the product one at a time. Provided that their limits all exist, we can glue them together.
 For the leftmost multiplicand, noting that $\frac{n-m}{n}$ for $m$ constant tends to 1 as $n$ tends to $\infty$, we observe that we have $k$ numerator-denominator pairs that all tend to 1. Multiplied together this shows us that the leftmost term tends to 1.
 We can pull $\frac{\lambda^k}{k!}$ out of the limit because $k$ is constant. Combined with our analysis of the first term, we need still need to solve
-$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^{n - k}.$$
+&lt;/p&gt;
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^{n - k}.$$&lt;p&gt;
 Because $k$ is constant and $n$ is shooting off to $\infty$, $n-k$ behaves the same as $n$ in our case, so we can rewrite the limit as
-$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^n.$$
+&lt;/p&gt;
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^n.$$&lt;p&gt;
 This limit is a thinly veiled version of a common exercise from standard first semester calculus courses. I challenge you to convince yourself that
-$$\lim_{n\to \infty} (1 + \frac{a}{n})^{bn} = e^{ab}.$$
+&lt;/p&gt;
+$$\lim_{n\to \infty} (1 + \frac{a}{n})^{bn} = e^{ab}.$$&lt;p&gt;
 (Hint: Start by setting $y = \lim_{n\to \infty} (1 + \frac{a}{n})^{bn}$ and taking the natural log of both sides.)&lt;/p&gt;
 &lt;p&gt;In our case, $a = -\lambda$ and $b = 1$, so our last piece evaluates to $e^{-\lambda}$. Gluing our pieces together, we have the PMF of the Poisson distribution: if $X$ is a Poisson random variable, $P(X = k) = \frac{e^{-\lambda}\lambda^k}{k!}$. (Check Wikipedia, I dare you.)&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
@@ -562,8 +554,9 @@ a room of $k$ people. If we call the aforementioned event $A$, we want an expres
 can come up with an expression for $P(A^C)$, then we’ve effectively determined our expression for $P(A)$.
 In our case, the event $A^C$ is the event that in a room of $k$ people, no two share a birthday. The probability of that
 event is given by:
+&lt;/p&gt;
 $$P(A^C) = \frac{\text{number of ways to assign unique birthdays to } k \text{ people}}{\text{number of ways to assign
-birthdays to } k \text{ people}}$$
+birthdays to } k \text{ people}}$$&lt;p&gt;
 For the numerator, if we have are looking at a room with 10 people in it, we have 365 birthdays to choose from for the
 first, 364 for the second, and so on, until you’ve assigned birthdays to all 10 people. The total number of ways is thus
 $365 \cdot 364 \cdot \dots \cdot 356$.&lt;/p&gt;
@@ -574,9 +567,11 @@ birthdays to people anymore. In our room of 10 people, this means we have 365 bi
 also have 365 for the second, third, fourth, fifth and so on. Thus, the total number of ways to assign birthdays to 10
 people is $365^{10}$. For a room with $k$ people, this turns into $365^k$.&lt;/p&gt;
 &lt;p&gt;Now that we have the numerator and denominator, we can write down $P(A^C)$:
-$$P(A^C) = \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}$$
+&lt;/p&gt;
+$$P(A^C) = \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}$$&lt;p&gt;
 With this in hand, we can now use the fact that $P(A) = 1 - P(A^C)$ to express
-$$P(A) = 1 - \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}.$$
+&lt;/p&gt;
+$$P(A) = 1 - \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}.$$&lt;p&gt;
 Now we just start trying values of $k$ until $P(A) \geq 1/2$. This first occurs when $k = 23$.&lt;/p&gt;
 &lt;h2 id=&#34;intuition&#34;&gt;Intuition&lt;/h2&gt;
 &lt;p&gt;One explanation for why this number is so intuition-defyingly low is that when people first think about this problem, they
@@ -584,7 +579,8 @@ usually think that $k$ has to do with the number of people in the room, instead 
 problem is actually the number of &lt;em&gt;pairs&lt;/em&gt; of people in the room. While 23 people doesn’t seem like much, 23 people
 furnishes you with &lt;em&gt;253 pairs&lt;/em&gt;! Each pair has probability 364/365 of &lt;em&gt;not&lt;/em&gt; having the same birthday, so the probability
 that none of the 253 pairs shares a birthday is
-$$(\frac{364}{365})^{253} \approx 0.4995.$$
+&lt;/p&gt;
+$$(\frac{364}{365})^{253} \approx 0.4995.$$&lt;p&gt;
 This means that the probability that some pair shares a birthday is approximately $1–0.4995 = 0.5005$.
 To see that the number of pairs is what matters, note that if we increase $k$ to 50, the probability that some pair shares
 a birthday is roughly 97%. By the time you have 75 at your party, the probability jumps to 99.9%.&lt;/p&gt;
@@ -631,15 +627,18 @@ did not occur (i.e. $B^C$ occurred). Because $B$ either occurred or didn’t, th
 $A$. We are going to apply similar logic to our problem.&lt;/p&gt;
 &lt;p&gt;As is obvious, at the outset, the car is either behind door 1, door 2 or door 3. Let $D_i$ be the event that the car is
 behind door $i$. Because the $D_i$ are a partition of the sample space, I can use the LoTP, so that
-$$P(S) = P(S|D_1)P(D_1) + P(S|D_2)P(D_2) + P(S|D_3)P(D_3)$$
+&lt;/p&gt;
+$$P(S) = P(S|D_1)P(D_1) + P(S|D_2)P(D_2) + P(S|D_3)P(D_3)$$&lt;p&gt;
 At the beginning of the game, the car had an equal likelihood of being behind any of the three doors, we can fill in the
 right multiplicands in the sum above:
-$$P(S) = P(S|D_1)\cdot \frac{1}{3} + P(S|D_2)\cdot \frac{1}{3} + P(S|D_3)\cdot \frac{1}{3}$$
+&lt;/p&gt;
+$$P(S) = P(S|D_1)\cdot \frac{1}{3} + P(S|D_2)\cdot \frac{1}{3} + P(S|D_3)\cdot \frac{1}{3}$$&lt;p&gt;
 Next, observe that $P(S|D_1)$ is the probability that switching wins given that the car is behind the door you initially
 chose. This probability is 0, because you would be switching away from the winning door. If the car is behind door 2 (note
 that in this case, door 3 was opened and is no longer in contention), switching always gets you the car, i.e. $P(S|D_2) =
 1$. The same is true if the car is behind door 3 (and door 2 was opened). Hence
-$$P(S) = 0 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} = \frac{2}{3}.$$
+&lt;/p&gt;
+$$P(S) = 0 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} = \frac{2}{3}.$$&lt;p&gt;
 In other words, switching wins the game for you with probability $2/3$!&lt;/p&gt;
 &lt;h2 id=&#34;intuition&#34;&gt;Intuition&lt;/h2&gt;
 &lt;p&gt;Let’s see if we can understand this a bit better without appealing to symbols. When you first chose door 1, you had a $1/3$
@@ -664,9 +663,9 @@ case, after opening $m$ doors, the $(n-1)/n$ probability that you were initially
 $n - 1 - m$ remaining doors, so that each door carries a probability of $(n-1)/(n(n - 1 - m))$. We complete the argument by
 verifying that this quantity is always bigger than $1/n$.
 To do this, note that showing
-$1/n &amp;lt; (n-1)/(n(n - 1 - m))$
+$1/n &lt; (n-1)/(n(n - 1 - m))$
 is the same as showing
-$1 &amp;lt; (n-1)/(n - 1 - m)$, which is clear.&lt;/p&gt;
+$1 &lt; (n-1)/(n - 1 - m)$, which is clear.&lt;/p&gt;
 </description>
     </item>
     

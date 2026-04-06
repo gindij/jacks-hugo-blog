@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,7 +33,7 @@ In mathematics, existence is a more abstract concept. Under certain assumptions 
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -42,12 +42,16 @@ In mathematics, existence is a more abstract concept. Under certain assumptions 
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -212,24 +216,26 @@ In mathematics, existence is a more abstract concept. Under certain assumptions 
 <p>Establishing the fact that $S$ is finite just required a simple test. Producing the actual sum, however, took almost 85 years! This is weird! Next, we&rsquo;ll look at an example from number theory where the difficulty of construction is the foundation upon which cybersecurity rests.</p>
 <h1 id="primality-testing-vs-integer-factorization">Primality Testing vs. Integer Factorization</h1>
 <p>One of the most deeply studied parts of number theory &ndash; the study of properties of the positive whole numbers &ndash; is the prime numbers. A number $p$ is prime if its only divisors are $p$ and $1$. So how do we tell if a number is prime?</p>
-<p>The simplest algorithm is to enumerate the numbers between $2$ and $p - 1$. If one of them divides $p$ evenly, the number is not prime. A slightly better way to do it is based on the fact that if $p = ab$, then unless $p$ is a perfect square, then either $a &lt; \sqrt{p}$ and $b &gt; \sqrt{p}$ or vice versa. Thus, instead of searching all the way up to $p$, we can search up to $\sqrt{p}$. But we&rsquo;re not done! Another observation we can make is that since, at bottom, all numbers are products of primes, we only need to search the <em>primes</em> up to $\sqrt{p}$.</p>
+<p>The simplest algorithm is to enumerate the numbers between $2$ and $p - 1$. If one of them divides $p$ evenly, the number is not prime. A slightly better way to do it is based on the fact that if $p = ab$, then unless $p$ is a perfect square, then either $a < \sqrt{p}$ and $b > \sqrt{p}$ or vice versa. Thus, instead of searching all the way up to $p$, we can search up to $\sqrt{p}$. But we&rsquo;re not done! Another observation we can make is that since, at bottom, all numbers are products of primes, we only need to search the <em>primes</em> up to $\sqrt{p}$.</p>
 <p>Much more (very sophisticated) work has been done improving these methods (and some of these improvements may at some point be the subject of another post), but the important thing to say here is that we now have algorithms that run relatively quickly for establishing the primality of a natural number. These efficient methods are often unlike the methods I mentioned earlier, since they do not rely on &ldquo;trial divisions&rdquo; (where we check different candidate divisors by dividing $p$ by them).</p>
 <p>Suppose now that instead of deciding if a number is prime, we change the problem statement slightly to: Find the prime factors of $p$. While it seems like being able to efficiently answer the &ldquo;Is it prime?&rdquo; question should require finding the factors along the way, once again, this turns out not to be the case. As of now, there are no published &ldquo;efficient&rdquo; integer factorization algorithms, though there are algorithms that are &ldquo;almost efficient&rdquo;. (Here, efficiency is a measure of how long it takes to factor an integer $n$ as a function of $n$&rsquo;s size.)</p>
 <p>Many of the cryptographic protocols responsible for securing data on the internet rely on the (likely) computational hardness of factoring numbers efficiently. If an efficient algorithm were to be found, the internet could become a far less safe place to entrust with our credit card information.</p>
 <h1 id="the-probabilistic-method">The Probabilistic Method</h1>
 <p>The probabilistic method, often used when studying finite structures, is a very interesting and general technique that manages to cleverly prove that an object with certain (rare) properties exists without actually finding one. The method does this by using randomness in the following ingenious way. First, we construct a &ldquo;random&rdquo; instance of the object. Then, we show that the object has the desired property with nonzero probability. Since, if we sample an object at random, the &ldquo;probability&rdquo; of drawing the object with the properties we care about is
+</p>
 $$
-\frac{\text{# of configurations with property}}{\text{# of configurations}},
-$$
+    \frac{\text{\# of configurations with property}}{\text{\# of configurations}},
+$$<p>
 if the probability is nonzero, it means there must be at least one instance that has our property. Without using the method to actually carry out a proof here, I&rsquo;ll set a problem up to give a &ldquo;concrete&rdquo; sense of a problem we can solve with this.</p>
-<p>A graph is a collection of nodes connected to one another by edges. A <em>complete</em> graph is a graph where every node is connected to all of the other nodes. If such a graph has $n$ nodes, then it has $n(n - 1) / 2$ edges. Examples of complete graphs on $n = 2, &hellip;, 7$ vertices are shown below. We typically refer to the complete graph on $n$ vertices as $K_n$.</p>
+<p>A graph is a collection of nodes connected to one another by edges. A <em>complete</em> graph is a graph where every node is connected to all of the other nodes. If such a graph has $n$ nodes, then it has $n(n - 1) / 2$ edges. Examples of complete graphs on $n = 2, ..., 7$ vertices are shown below. We typically refer to the complete graph on $n$ vertices as $K_n$.</p>
 <img src="/posts/exist-vs-construct/complete.png" alt="drawing" width="550" height="400"/>
-<p>The question we care about here is: Given a complete graph with $n$ vertices ($K_n$) and an integer $r$ (where $r &lt; n$), is it possible to color each edge either red or blue in such a way that no group of $r$ vertices ($K_r$) has monochromatic connecting edges?</p>
+<p>The question we care about here is: Given a complete graph with $n$ vertices ($K_n$) and an integer $r$ (where $r < n$), is it possible to color each edge either red or blue in such a way that no group of $r$ vertices ($K_r$) has monochromatic connecting edges?</p>
 <p>(Read that again if you need to.)</p>
 <p>The proof begins by constructing a &ldquo;random&rdquo; graph where each edge is colored red or blue independently at random. Using the fact that the graph is random (in the edge-coloring sense) and skipping over some details, it turns out that if for a particular choice of $n$ and $r$,
+</p>
 $$
-\frac{n!}{r!(n-r)!} 2^{1 - r(r - 1) / 2} &lt; 1,
-$$
+\frac{n!}{r!(n-r)!} 2^{1 - r(r - 1) / 2} < 1,
+$$<p>
 then such an edge-coloring exists. In other words, given our initial question with some specific values of $n$ and $r$, you can determine if such an edge-coloring exists just by plugging those values into the left side of the inequality and seeing whether the result is smaller than 1. Note, however, that this plug-and-chug way of answering the question gives us <em>no information</em> about <em>how</em> to color the edges to see the actual coloring!</p>
 <p>Here, again, we have some clever way to answer the existence question while still being at square zero in terms of how we might go about construction.</p>
 <p>For this and other combinatorial problems, one can imagine sitting down and drawing some small examples to try to gain an intuition for what a valid coloring might look like. Maybe you draw a few examples for $n=5$ vertices (ten edges) or $n = 10$ vertices (45 edges). Then you pick a few values of $r$ and realize (if you&rsquo;re lucky and persistent) that a few values of $r$ work while others don&rsquo;t, and you start to feel like getting intuition for this problem from examples might be more difficult than you thought. The probabilistic method allows us to sidestep the problem of construction and instead prove existence in a way that highlights the surprising power of abstract reasoning in tackling what are otherwise mind-crushingly complex combinatorial problems.</p>

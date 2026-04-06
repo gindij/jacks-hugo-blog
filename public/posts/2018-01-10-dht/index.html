@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -39,7 +39,7 @@ a pretty efficient distributed hash table.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -48,12 +48,16 @@ a pretty efficient distributed hash table.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -295,15 +299,16 @@ for some server $A$, $\text{hash}(A)$ gives a remainder of $a$ modulo $2^s$, it 
 ring.</p>
 <p>Next, in order to make accesses fast, we introduce a clever data structure called a finger table at each node. Each finger table maintains $s$ pointers to other nodes on the ring as follows. For $i$ between $0$ and $s - 1$ (inclusive), the $i$th finger table entry for a node at ring position $N$ is the first node whose position is greater than or equal to $(N + 2^i) \pmod {2^s}$. Let’s look at a quick example.</p>
 <p>Suppose that $s = 5$ and we had nodes at positions 3, 7, 16, and 27 on our logical ring. To compute 3’s finger table, we compute
+</p>
 $$
 \begin{align*}
-3 + 2^0 &amp;= 3 + 1 &amp;&amp;= 4 &amp;&amp;&amp;\pmod{32} \\
-3 + 2^1 &amp;= 3 + 2 &amp;&amp;= 5 &amp;&amp;&amp;\pmod{32} \\
-3 + 2^2 &amp;= 3 + 4 &amp;&amp;= 7 &amp;&amp;&amp;\pmod {32} \\
-3 + 2^3 &amp;= 3 + 8 &amp;&amp;= 11 &amp;&amp;&amp;\pmod {32} \\
-3 + 2^4 &amp;= 3 + 16 &amp;&amp;= 19 &amp;&amp;&amp;\pmod {32}
+3 + 2^0 &= 3 + 1 &&= 4 &&&\pmod{32} \\\\
+3 + 2^1 &= 3 + 2 &&= 5 &&&\pmod{32} \\\\
+3 + 2^2 &= 3 + 4 &&= 7 &&&\pmod {32} \\\\
+3 + 2^3 &= 3 + 8 &&= 11 &&&\pmod {32} \\\\
+3 + 2^4 &= 3 + 16 &&= 19 &&&\pmod {32}
 \end{align*}
-$$
+$$<p>
 The first node larger than or equal to the first entry in the finger table is 7, so the first finger pointer is to 7. The same goes for the second and third entries. The fourth entry would point to 16 and the final entry would point to 27. So for node 3, the finger table would look like $(7, 7, 7, 16, 27)$.</p>
 <p>Each node also maintains pointers to the nodes to its right and left along the ring. The <strong>successor</strong> of 3 is 7 and the <strong>predecessor</strong> of 3 is 27. In a similar vein, can more generally refer to predecessors and successors of any slot on the ring.</p>
 <p>To perform a lookup, we make use of both the logical ring we introduced and the per-node finger tables. Let’s say that machine 7 wants to make a query for a key that hashes to 2 (and would thus reside on node 3 — the first node to its right on the ring). It would look in its finger table for the largest node that is to the left of the key’s position — this would be node 27 — and then route the query there. Node 27 would then route the query to its successor (because it is greater than the key we’re looking for), which would then be able to send the data associated with the requested key back to 7.</p>

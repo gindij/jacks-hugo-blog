@@ -17,12 +17,12 @@
 &lt;p&gt;This will be a quick one. From the very beginning of our mathematical educations, there is a
 fundamental fact of which we are made aware: If $a$ and $b$ are numbers of any
 kind (natural numbers, integers, rationals, reals, complex), then &amp;ndash; now hold on to your hats &amp;ndash;
+&lt;/p&gt;
 $$
 \begin{align*}
-a + b = b + a.
+    a + b = b + a.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Earth-shattering &amp;ndash; I know. As some of you are likely already aware, I find infinity fascinating. In this post,
+$$&lt;p&gt;Earth-shattering &amp;ndash; I know. As some of you are likely already aware, I find infinity fascinating. In this post,
 I want to briefly discuss how infinity can mess with some of our most basic assumptions
 about the nature of one of our most basic arithmetic operations. Without further ado, let&amp;rsquo;s dive
 in.&lt;/p&gt;
@@ -30,18 +30,19 @@ in.&lt;/p&gt;
 &lt;p&gt;In our everyday lives (unless you&amp;rsquo;re a mathematician), we only ever consider what it means to carry
 out arithmetic operations on finite collections of numbers. A first course in calculus challenges us
 to think about the nature of infinite sums, objects like:
+&lt;/p&gt;
 $$
 \begin{align*}
-1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots
+    1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots
 \end{align*}
-$$
+$$&lt;p&gt;
 or
+&lt;/p&gt;
 $$
 \begin{align*}
-1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots
+    1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;But what &amp;ndash; you might ask &amp;ndash; is so interesting about these sums? Don&amp;rsquo;t an infinite number of numbers
+$$&lt;p&gt;But what &amp;ndash; you might ask &amp;ndash; is so interesting about these sums? Don&amp;rsquo;t an infinite number of numbers
 added together have to add up to $\infty$?&lt;/p&gt;
 &lt;p&gt;(Mathmatical aside &amp;ndash; feel free to skip:
 Before answering that question, it is worth considering what mathmeticians even mean when they ask
@@ -58,24 +59,26 @@ the ones with finite sums &lt;strong&gt;convergent&lt;/strong&gt; and the ones w
 is an example of a series whose underlying sequence has terms that get smaller and smaller, but
 which, despite that fact, diverges. For full effect, let&amp;rsquo;s briefly have a look at why it diverges.&lt;/p&gt;
 &lt;p&gt;Let $H$ denote the sum of the Harmonic Series, and let&amp;rsquo;s compare $H$ to the sum of another,
-similar-looking series $H&amp;rsquo;$:
+similar-looking series $H&#39;$:
+&lt;/p&gt;
 $$
 \begin{align*}
-H &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{3} + \frac{1}{4}\biggr) + \biggr(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\biggr) + \dots \
-H&amp;rsquo; &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{4} + \frac{1}{4}\biggr) + \biggr(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\biggr) + \dots
+    H &amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{3} + \frac{1}{4}\biggr) + \biggr(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\biggr) + \dots \\
+    H&#39; &amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{4} + \frac{1}{4}\biggr) + \biggr(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\biggr) + \dots
 \end{align*}
-$$
-Notice that (1) each of the parenthesized groups of terms in $H&amp;rsquo;$ sum to $1/2$, and (2) each of the corresponding groups of terms
+$$&lt;p&gt;
+Notice that (1) each of the parenthesized groups of terms in $H&#39;$ sum to $1/2$, and (2) each of the corresponding groups of terms
 in $H$ sums to a number that is &lt;em&gt;greater&lt;/em&gt; than $1/2$. One of the rules one learns in calculus is (informally) that if you are
-comparing two sums and the smaller of them is infinite, the larger one must be infinite too. Since $H &amp;gt; H&amp;rsquo;$ because of (1), and
-$H&amp;rsquo; = \infty$ because it is a sum of infinitely many $1/2$s, $H$ must be infinite too.&lt;/p&gt;
+comparing two sums and the smaller of them is infinite, the larger one must be infinite too. Since $H &gt; H&#39;$ because of (1), and
+$H&#39; = \infty$ because it is a sum of infinitely many $1/2$s, $H$ must be infinite too.&lt;/p&gt;
 &lt;h1 id=&#34;can-we-make-it-converge&#34;&gt;Can we make it converge?&lt;/h1&gt;
 &lt;p&gt;Even though $H$ diverges, we can make it converge by changing half of the additions into subtractions like so:
+&lt;/p&gt;
 $$
 \begin{align*}
-1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots \
+    1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots \\
 \end{align*}
-$$
+$$&lt;p&gt;
 It turns out that this modified series converges! (We will not spend time proving that this series converges, but if you&amp;rsquo;re interested, I wrote another post a while ago covering that; you can check it out &lt;a href=&#34;https://www.jgindi.me/posts/alternating/&#34;&gt;here&lt;/a&gt;.)
 To make things even weirder, if you group the terms with even denominators together, the sum of their absolute values diverges. (The same applies to the group of terms with odd denominators, as you might expect.)&lt;/p&gt;
 &lt;p&gt;For visual intuition that this series converges (in lieu of a proof), this image should help
@@ -133,7 +136,8 @@ picture, imagine the following. You have two points on the $x$-axis that are pre
 and the other $c = x + \text{a little bit}$. If our curve is given by $f(x)$, we can denote the slope of the line through
 $(x,f(x))$ and $(c, f(c))$ as the change in $y$ values divided by the change in $x$ values (aka rise over run). In other
 words, the slope $m$ of the line would be given by
-$$m = \frac{f(c) - f(x)}{c - x}.$$
+&lt;/p&gt;
+$$m = \frac{f(c) - f(x)}{c - x}.$$&lt;p&gt;
 This isn’t anything new. You’ve known how to calculate slopes since middle school. The question of slope becomes more difficult, however, when you try to modify the usual notion of slope of a line through &lt;em&gt;two&lt;/em&gt; points to come up with an analogous description for the slope of tangent line to a curve at &lt;em&gt;one&lt;/em&gt; point.&lt;/p&gt;
 &lt;p&gt;(Note: I will assume for the remainder of this post that you have some familiarity with limits and continuity. If you
 don’t, you might want to browse the web and review those briefly. Even if you don’t have the requisite background, I’ll
@@ -143,7 +147,8 @@ get smaller and smaller, so that $x$ and $c$ get closer and closer together. As 
 smaller, the slope of the secant line through $(x,f(x))$ and $(c,f(c))$ approximates the slope of the tangent line at $x$.
 Put succinctly, &lt;strong&gt;the slope of the tangent line of a curve at a point $c$ is the limit of the slopes of secant lines
 between $(c,f(c))$ and points $(x, f(x))$ where $x$ gets arbitrarily close to $c$.&lt;/strong&gt; Put mathematically
-$$f’(c) := \lim_{x \to c} \frac{f(c) - f(x)}{c - x}.$$
+&lt;/p&gt;
+$$f’(c) := \lim_{x \to c} \frac{f(c) - f(x)}{c - x}.$$&lt;p&gt;
 We say that the function $f$ is differentiable at $c$ if the limit above exists. This idea of differentiability at a point
 can be extended naturally to a set of points.&lt;/p&gt;
 &lt;p&gt;In a typical real analysis course, after laying definitions down, you get familiar with the definitions by proving some of
@@ -162,16 +167,18 @@ our main result via a few intermediate ones, starting with the interior extremum
 minimum) on $(a,b)$ at some point $c$, then $f’(c) = 0$.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; Because $c$ is in the open interval $(a,b)$, we can find two sequences, $x_n$ and $y_n$, such that both
-converge to $c$ and $x_n &amp;lt; c &amp;lt; y_n$ for all $n$. Given these sequences, we have
-$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(x_n)}{c - x_n} \geq 0,$$
+converge to $c$ and $x_n &lt; c &lt; y_n$ for all $n$. Given these sequences, we have
+&lt;/p&gt;
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(x_n)}{c - x_n} \geq 0,$$&lt;p&gt;
 because $f(c) - f(x_n)$ is nonnegative (because $f(c)$ is a maximum value of $f$ on $(a,b)$) and $c - x_n$ is positive for
-all $n$ (because $x_n &amp;lt; c$). On the other hand, we also see that
-$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(y_n)}{c - y_n} \leq 0,$$
+all $n$ (because $x_n &lt; c$). On the other hand, we also see that
+&lt;/p&gt;
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(y_n)}{c - y_n} \leq 0,$$&lt;p&gt;
 because the numerator is again nonnegative, but this time the denominator is negative for all $n$. Thus, we have $0 \leq
 f’(c) \leq 0, $ so $ f’(c) = 0$. &lt;strong&gt;QED.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Note that the converse is not necessarily true. It isn’t necessarily the case that if the derivative is 0 at a point $c$,
 then $f(c)$ is maximum or a minimum of $f$ on $(a,b)$. Consider the function $f(x) = x^3$ on the interval $(-1,1)$. By the
-power rule, $f’(x)=3x^2$ (and it is defined on $(-1,1)$). At $x = 0$,$ f’(x) = 0$, but $-1 = f(-1) &amp;lt; f(0) &amp;lt; f(1) = 1$,
+power rule, $f’(x)=3x^2$ (and it is defined on $(-1,1)$). At $x = 0$,$ f’(x) = 0$, but $-1 = f(-1) &lt; f(0) &lt; f(1) = 1$,
 whence $f$ takes neither a minimum nor a maximum value at 0 even though the derivative vanishes there. Although its
 converse doesn’t hold, the IET does furnish us with a pretty powerful computational tool with which to solve optimization
 problems, the solutions to which often begin with “First take the derivative of the function you want to optimize and find
@@ -206,9 +213,11 @@ before reading the proof below.)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; Let’s first write down what the equation of the line through $(a, f(a))$ and $(b, f(b))$ would look like. On the one hand, we know that the slope of the line is $\frac{f(a) - f(b)}{a - b}$. On the other, because we are talking about a line, that the slope of the same line through any $(x, y(x))$ and $(a, y(a) = f(a))$ should be the same, so we have
 $\frac{f(a) - f(b)}{a - b} = \frac{y(x) - f(a)}{x - a}.$
 We can get a general equation of the line by solving for f(x) (multiply both sides by $x - a$ and then add $f(a)$ to both sides). Doing so, we see that
-$$y(x) = \frac{f(a) - f(b)}{a - b}(x - a) + f(a).$$
+&lt;/p&gt;
+$$y(x) = \frac{f(a) - f(b)}{a - b}(x - a) + f(a).$$&lt;p&gt;
 In order to transform this into an instance of Rolle’s theorem, what we’re going to do is build a new function $d$ that represents the differences between the curve and the line. Namely, we have
-$$d(x) = f(x) - y(x) = f(x) - \biggr[ \frac{f(a) - f(b)}{a - b}(x - a) + f(a) \biggr].$$
+&lt;/p&gt;
+$$d(x) = f(x) - y(x) = f(x) - \biggr[ \frac{f(a) - f(b)}{a - b}(x - a) + f(a) \biggr].$$&lt;p&gt;
 Clearly, $d(a) = d(b) = 0$. By the rules about combining continuous functions, $d(x)$ is continuous on $[a,b]$ and by rules for combining differentiable functions, $d(x)$ is differentiable on $(a,b)$. This means that we can apply Rolle’s Theorem to $d(x)$ so that we have a $c \in (a,b)$ such that $d’(c) = 0$. That is, there is a $c$ such that $d’(c) = f’(c) - \frac{f(a) - f(b)}{a - b} = 0$. Rearranging a bit, we see that at that $c$, we have $f’(c) = \frac{f(a) - f(b)}{a - b}$, proving the theorem. &lt;strong&gt;QED.&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Several of the important results (e.g. L’Hosptial’s Rule for solving limits) that you learn about later on in calculus and real analysis courses use the Mean Value Theorem as their driving force. I haven’t seen many theorems that are both simple to conceptually grasp and also fundamental building blocks of important areas of mathematics. I think the derivative is a phenomenal example of the power and necessity of good definitions and the type of ingenuity that appears all across mathematics, albeit more subtly sometimes.&lt;/p&gt;
@@ -225,23 +234,26 @@ Clearly, $d(a) = d(b) = 0$. By the rules about combining continuous functions, $
 &lt;p&gt;In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.&lt;/p&gt;
 &lt;h2 id=&#34;approach-1&#34;&gt;Approach 1&lt;/h2&gt;
 &lt;p&gt;The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+&lt;/p&gt;
 $$
 \begin{align*}
-\cos\theta &amp;amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\
-\sin\theta &amp;amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
+\cos\theta &amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\\
+\sin\theta &amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
 \end{align*}
-$$
+$$&lt;p&gt;
 so
-$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$&lt;/p&gt;
-&lt;p&gt;Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
-$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$
+&lt;/p&gt;
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$&lt;p&gt;Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
+&lt;/p&gt;
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$&lt;p&gt;
 we have
+&lt;/p&gt;
 $$
 \begin{align*}
-e^{i\theta} &amp;amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\
-&amp;amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
+e^{i\theta} &amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\\
+&amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
 \end{align*}
-$$
+$$&lt;p&gt;
 which, miraculously, is exactly what we get if we interleave (sum up) the terms of $\cos\theta + i\sin\theta$.&lt;/p&gt;
 &lt;h2 id=&#34;approach-2&#34;&gt;Approach 2&lt;/h2&gt;
 &lt;p&gt;The next approach uses techniques from a first course in calculus. We first observe that if $e^{i\theta}$ is going to be the same as $\cos\theta + i\sin\theta$, then the fraction
@@ -249,33 +261,38 @@ $\frac{cos\theta + i\sin\theta}{e^{i\theta}} = (\cos\theta + i\sin\theta)e^{-i\t
 equality holds.&lt;/p&gt;
 &lt;p&gt;To do this, first define
 $f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta}$. Next, we take the (rather annoying) derivative of $f(\theta)$
+&lt;/p&gt;
 $$
 \begin{align*}
-f’(\theta) &amp;amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\
-&amp;amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\
-&amp;amp;= 0\dots
+f’(\theta) &amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\\
+&amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\\
+&amp;= 0\dots
 \end{align*}
-$$
+$$&lt;p&gt;
 If $f’(\theta) = 0$ at all values of $\theta$, $f$ is constant! Which constant? Let’s plug in $\theta = 0$ and find out!
-$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$
+&lt;/p&gt;
+$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$&lt;p&gt;
 If $f$ takes the value 1 when $\theta = 0$ and $f$ is constant, it must take the value 1 everywhere. To sum up, we have
-$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$
+&lt;/p&gt;
+$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$&lt;p&gt;
 Rearranging the second equality by cross multiplying, we see that
 Euler’s identity holds.&lt;/p&gt;
 &lt;h2 id=&#34;approach-3&#34;&gt;Approach 3&lt;/h2&gt;
 &lt;p&gt;The last technique is my favorite. It uses a bit of linear algebra in concert with differential equations to produce what I think is the most illuminating proof of Euler’s identity. First, consider the differential equation
-$$f’’ = -f.$$
+&lt;/p&gt;
+$$f’’ = -f.$$&lt;p&gt;
 A differential equation is what is a kind of functional equation.
 Rather than trying to find the value of a real-valued variable,
 we are trying to find a function whose derivatives satisfy a given relationship. In this case, we want to find a function $f$ such that
 $f$&amp;rsquo;s second derivative is the same as $f$.&lt;/p&gt;
 &lt;p&gt;We first note that $\cos\theta$ and $\sin\theta$ are both solutions to this equation:
+&lt;/p&gt;
 $$
 \begin{align*}
-(\sin\theta)’’ &amp;amp;= -\sin\theta \
-(\cos\theta)’’ &amp;amp;= -\cos\theta.
+(\sin\theta)’’ &amp;= -\sin\theta \\
+(\cos\theta)’’ &amp;= -\cos\theta.
 \end{align*}
-$$
+$$&lt;p&gt;
 Because our differential equation involves second derivatives, it&amp;rsquo;s
 solutions are sort of analogous to those of a quadratic equation:
 which is to say, there are two! Formally, we say that the solution
@@ -298,20 +315,23 @@ $\sin\theta$ and $\cos\theta$ are linearly independent. Because
 we said the solution space is of dimension 2, they are a basis for
 the solution space to our original equation.&lt;/p&gt;
 &lt;p&gt;We can separately observe that $e^{i\theta}$ is also a solution to our equation because
+&lt;/p&gt;
 $$
 \begin{align*}
-(e^{i\theta})’ &amp;amp;= ie^{i\theta}\
-(e^{i\theta})’’ &amp;amp;= -e^{i\theta}.
+(e^{i\theta})’ &amp;= ie^{i\theta}\\
+(e^{i\theta})’’ &amp;= -e^{i\theta}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
-$$e^{i\theta} = a\cos\theta + b\sin\theta.$$
+$$&lt;p&gt;Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
+&lt;/p&gt;
+$$e^{i\theta} = a\cos\theta + b\sin\theta.$$&lt;p&gt;
 for some yet unknown constants $a,b$. Now it just remains to figure out what $a$ and $b$ are. (Can you see what they should be?)&lt;/p&gt;
 &lt;p&gt;To find $a$ and $b$, we note that if $f(\theta) = e^{i\theta}$,
 then $f(0) = 1$ and $f’(0) = i$. Using the first condition, we have
-$$1 = a \cdot 1 + b \cdot 0 = a.$$
+&lt;/p&gt;
+$$1 = a \cdot 1 + b \cdot 0 = a.$$&lt;p&gt;
 Using the second (taking the derivative of both sides before plugging 0 in), we have
-$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$
+&lt;/p&gt;
+$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$&lt;p&gt;
 Putting these both together, we have
 $e^{i\theta} = \cos\theta + i\sin\theta,$
 which is what we wanted.&lt;/p&gt;
@@ -330,11 +350,13 @@ which is what we wanted.&lt;/p&gt;
 &lt;p&gt;If you are unfamiliar with what an infinite series is, see &lt;a href=&#34;https://en.wikipedia.org/wiki/Series_(mathematics)&#34;&gt;Series (mathematics) - Wikipedia&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
 &lt;p&gt;Before we start, we should understand the problem we are trying to solve. Lets say we have some infinite series, and let’s write it down as
-$$\sum_{n = 1}^\infty a_n = a_1 + a_2 + a_3 + \dots.$$
+&lt;/p&gt;
+$$\sum_{n = 1}^\infty a_n = a_1 + a_2 + a_3 + \dots.$$&lt;p&gt;
 The above series may converge or it may not. We can modify this rather plain series by adding together the terms of the
 same underlying sequence with alternating signs, forming what is known as an &lt;strong&gt;alternating series&lt;/strong&gt;. Symbolically, an
 alternating series has the form
-$$\sum_{n=1}^\infty (-1)^{n-1}a_n = a_1 - a_2 + a_3 - \dots.$$
+&lt;/p&gt;
+$$\sum_{n=1}^\infty (-1)^{n-1}a_n = a_1 - a_2 + a_3 - \dots.$$&lt;p&gt;
 (Notice that the alternation comes from the fact that -1 to an even power is 1 and -1 to an odd power is -1.)
 If the non-alternating series converges to a finite sum, then the alternating series clearly does as well.* If not,
 though, would introducing alternation maybe force convergence? If so, we say that $\sum (-1)^{n-1}a_n$ &lt;strong&gt;converges  conditionally&lt;/strong&gt;;
@@ -400,7 +422,8 @@ With this in mind, we’re ready for the main result.&lt;/p&gt;
 &lt;h2 id=&#34;proof&#34;&gt;Proof&lt;/h2&gt;
 &lt;p&gt;Now, for the proof.&lt;/p&gt;
 &lt;p&gt;The odd subsequence looks like:
-$$a_1, a_1 - a_2 + a_3, a_1 - a_2 + a_3 - a_4 + a_5, \dots$$
+&lt;/p&gt;
+$$a_1, a_1 - a_2 + a_3, a_1 - a_2 + a_3 - a_4 + a_5, \dots$$&lt;p&gt;
 Recall that the $a_n$ are decreasing. This means that subtracting $a_2$ and then adding back a little less than $a_2$ to
 $a_1$ is going to leave you slightly short of $a_1$. When you subtract $a_4$ from and then add $a_5$ to $a_1 - a_2 +
 a_3$, you’re going to end up slightly short of $a_1 - a_2 + a_3$. Extending this logic, we arrive at two conclusions.
@@ -411,7 +434,8 @@ we can bound the odd partial sums by $a_1$.&lt;/p&gt;
 &lt;p&gt;(There are formal, symbolic ways of representing all of this, but if you understand the above line of reasoning, you’ve
 understood the gist, IMO.)&lt;/p&gt;
 &lt;p&gt;Next, we note that for each $k$, the partial sum $s_{2k} \leq s_{2k+1}$ because the last term of every odd partial sum adds some small positive amount to the previous sum, which was made up of an even number of terms. For example, when $k = 1$, we have
-$$s_2 = s_{2 \times 1} = a_1 - a_2 + a_3 - a_4 \leq a_1 - a_2 + a_3 - a_4 + a_5 = s_{2 \times 1 + 1} = s_3.$$
+&lt;/p&gt;
+$$s_2 = s_{2 \times 1} = a_1 - a_2 + a_3 - a_4 \leq a_1 - a_2 + a_3 - a_4 + a_5 = s_{2 \times 1 + 1} = s_3.$$&lt;p&gt;
 Thus, the even partial sums must be bounded too!&lt;/p&gt;
 &lt;p&gt;Further, notice that the even partial sums monotonically increase. We can see this by observing that each time we tack a
 pair of $a_i$, we add a little bit and then subtract a little bit less. When we go from
@@ -420,7 +444,8 @@ $s_2 = a_1 - a_2$ to $s_4 = a_1 - a_2 + a_3 - a_4$, we take $a_1 - a_2$ and chan
 Let’s call the limit of the sequence of odd partial sums $L_1$ and the limit of the even partial sums $L_2$. To prove
 that $L_1$ and $L_2$ are the same, all we need to do is show that the difference between them is 0. To see this, we
 simply observe that
-$$\lim_{k \to \infty} s_{2k+1} - s_{2k} = \lim_{k \to \infty} a_{2k+1} =  0.$$
+&lt;/p&gt;
+$$\lim_{k \to \infty} s_{2k+1} - s_{2k} = \lim_{k \to \infty} a_{2k+1} =  0.$$&lt;p&gt;
 Thus $L_1 = L_2$; we will henceforth refer to the limit as $L$.&lt;/p&gt;
 &lt;p&gt;We can reconstruct the sequence of partial sums representing our original series by interleaving terms of the odd and
 even subsequences. Because both subsequences tend to $L$, we can conclude that the sequence constructed from the

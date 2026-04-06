@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -34,7 +34,7 @@ Without further ado, let’s begin.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -43,12 +43,16 @@ Without further ado, let’s begin.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -89,7 +93,7 @@ Without further ado, let’s begin.">
   <meta itemprop="description" content="Introduction In non-mathematical disciplines, it is very often the case that approaching the same question in different ways will lead you to different conclusions. One of the beautiful qualities of math and the type of reasoning it requires is that for any given problem, there might be (and usually is) a plethora of different approaches. The discovery of a new approach adds perspective about the problem and allows the solver’s understanding of a particular area to deepen and expand. In helping my cousin with some homework recently (she figured out one of the solutions below before I did), I came across a wonderful example of the way different approaches inform each other. One is far more intuitive than the other, but I didn’t realize there was a more intuitive solution until after solving it in a more complex, algebraic way. Without further ado, let’s begin.">
   <meta itemprop="datePublished" content="2018-09-16T00:00:00+00:00">
   <meta itemprop="dateModified" content="2018-09-16T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1303">
+  <meta itemprop="wordCount" content="1302">
   <meta itemprop="keywords" content="Combinatorics">
 
   
@@ -172,7 +176,7 @@ Without further ado, let’s begin.">
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1303 words
+          1302 words
         </span>
       
       
@@ -229,35 +233,42 @@ At this point we observe two simple facts:</p>
 <li>Each intersection is going to be counted 4 times. Why? Because each intersection requires two strings, each of which has two people holding the ends. Thus, once I’ve come up with my formula for the number of intersections per person, I have to remember that simply multiplying the result by $n$ is going to count each intersection 4 times, so we need to divide the total number of intersections we find by 4.</li>
 </ol>
 <p>From (1) and (2), we can deduce that our answer is going to have the form:
-$$\frac{n}{4} \cdot \text{intersections per person}$$</p>
-<p>The last thing we need to do is figure out the way to express the number of intersections per person. We will derive this in steps:</p>
+</p>
+$$\frac{n}{4} \cdot \text{intersections per person}$$<p>The last thing we need to do is figure out the way to express the number of intersections per person. We will derive this in steps:</p>
 <ol>
 <li>Each string that crosses the middle of the circle splits the circle into two groups. For simplicity, let’s call them the right-hand and left-hand groups.</li>
 <li>The number of edges that intersect the splitting string is exactly the number of strings that pass from the right-hand group to the left-hand group.</li>
-<li>Let’s say that there are $k$ people in the right-hand group. Because there are 2 people holding the splitting string, the left group must have the remaining people, i.e. $n - k - 2$. Each of the $k$ people in the right group shares a string with each of the people in the left group, so the number of strings that cross the splitting string is given by $\text{(# of people in right group)} \cdot \text{(# of people in left group)} = k (n - k - 2)$.</li>
+<li>Let’s say that there are $k$ people in the right-hand group. Because there are 2 people holding the splitting string, the left group must have the remaining people, i.e. $n - k - 2$. Each of the $k$ people in the right group shares a string with each of the people in the left group, so the number of strings that cross the splitting string is given by $\text{(\# of people in right group)} \cdot \text{(\# of people in left group)} = k (n - k - 2)$.</li>
 <li>We now just have to treat each string that a person is holding as a splitting string, use the formula from (3) and add the results up.</li>
 </ol>
 <p>If you understand steps (1)-(4), the rest is just boring, but unfortunately necessary algebra. If you’re new to discrete math, you should try to work this out yourself; there are some summations in there that you’ll encounter over and over again and it’s a good way to get familiar with some of them. If algebra isn’t your thing, trust me that this approach works and skip to the intuitive approach below.</p>
 <p>The goal now is to simplify
-$$\sum_{k=1}^{n-3} k(n-k-2).$$
+</p>
+$$\sum_{k=1}^{n-3} k(n-k-2).$$<p>
 (We will multiply by $n/4$ at the end.) Our first step will be to distribute the $k$ to get:
-$$\sum_{k=1}^{n-3} nk - k^2 - 2k.$$
+</p>
+$$\sum_{k=1}^{n-3} nk - k^2 - 2k.$$<p>
 From now on, I’m going to write the summation without the indices (because typing them is tedious), but they’re implied. Splitting up into three summations, we have:
-$$\sum nk - \sum k^2 - \sum 2k.$$
+</p>
+$$\sum nk - \sum k^2 - \sum 2k.$$<p>
 Pulling out constants, this is equal to
-$$n\sum k - \sum k^2 - 2 \sum k = (n-2)\sum k - \sum k^2.$$
+</p>
+$$n\sum k - \sum k^2 - 2 \sum k = (n-2)\sum k - \sum k^2.$$<p>
 We know (but if you don’t, try to prove it yourself), that $\sum_{i=1}^m i = m(m+1)/2$. Once you’ve proven that, you can use a similar method to prove that $\sum_{i=1}^m i^2 = m(m+1)(2m+1)/6$. Substituting these in and recalling that $m$ in our case is $n - 3$, we have
-$$\frac{(n-2)(n-3)(n-3+1)}{2} - \frac{(n-3)(n-3+1)(2n-6+1)}{6}$$
+</p>
+$$\frac{(n-2)(n-3)(n-3+1)}{2} - \frac{(n-3)(n-3+1)(2n-6+1)}{6}$$<p>
 Simplifying that monster,
+</p>
 $$
 \begin{align*}
-\frac{3(n-2)(n-3)(n-2) - (n-3)(n-2)(2n-5)}{6}
-&amp;= \frac{(n-3)(n-2)(3n - 6 - (2n - 5))}{6} \\
-&amp;= \frac{(n-3)(n-2)(n-1)}{6}.
+  \frac{3(n-2)(n-3)(n-2) - (n-3)(n-2)(2n-5)}{6}
+  &= \frac{(n-3)(n-2)(3n - 6 - (2n - 5))}{6} \\\\
+  &= \frac{(n-3)(n-2)(n-1)}{6}.
 \end{align*}
-$$
+$$<p>
 Multiplying that by $n/4$, we end up with the surprisingly neat formula for the total number of intersections:
-$$\frac{n(n-1)(n-2)(n-3)}{4!}.$$
+</p>
+$$\frac{n(n-1)(n-2)(n-3)}{4!}.$$<p>
 For those who have seen this formula before, this is exactly the number of ways to choose a group of 4 people from a population of size $n$. Once I had spent all this time doing all that algebra, it occurred to me that there had to be an easier way to articulate the solution&hellip;</p>
 <h2 id="intuitive-approach">Intuitive approach</h2>
 <p>The simple way to solve the problem is to use one observation (that we actually made earlier): each intersection corresponds exactly with a single group of four people. If you draw the picture for $n = 4$, you’ll clearly see the single intersection. This observation finishes the problem for us… Can you see how?

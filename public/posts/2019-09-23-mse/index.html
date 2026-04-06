@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -36,7 +36,7 @@ amounts of data furnished by a part to learn about the whole.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -45,12 +45,16 @@ amounts of data furnished by a part to learn about the whole.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -71,7 +75,7 @@ amounts of data furnished by a part to learn about the whole.">
   
   <meta property="og:url" content="http://localhost:1313/posts/2019-09-23-mse/">
   <meta property="og:site_name" content="Jack Gindi">
-  <meta property="og:title" content="Understanding mean squared error">
+  <meta property="og:title" content="MSE = Bias² &#43; Variance">
   <meta property="og:description" content="Introduction In statistics, the overarching goal – in some sense – is to figure out how to take a limited amount of data and reliably make inferences about the broader population we don’t have data about. To do this, we study, develop, and use mathematical objects called statistics or estimators. Formally, these are functions of other objects called random variables, but, for the moment, it suffices to think of them as ways of using limited amounts of data furnished by a part to learn about the whole.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
@@ -87,11 +91,11 @@ amounts of data furnished by a part to learn about the whole.">
   
   
   
-  <meta itemprop="name" content="Understanding mean squared error">
+  <meta itemprop="name" content="MSE = Bias² &#43; Variance">
   <meta itemprop="description" content="Introduction In statistics, the overarching goal – in some sense – is to figure out how to take a limited amount of data and reliably make inferences about the broader population we don’t have data about. To do this, we study, develop, and use mathematical objects called statistics or estimators. Formally, these are functions of other objects called random variables, but, for the moment, it suffices to think of them as ways of using limited amounts of data furnished by a part to learn about the whole.">
   <meta itemprop="datePublished" content="2019-09-23T00:00:00+00:00">
   <meta itemprop="dateModified" content="2019-09-23T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1034">
+  <meta itemprop="wordCount" content="1033">
   <meta itemprop="keywords" content="Statistics">
 
   
@@ -107,13 +111,13 @@ amounts of data furnished by a part to learn about the whole.">
 
   
   
-  <title>Understanding mean squared error - Jack Gindi</title>
+  <title>MSE = Bias² &#43; Variance - Jack Gindi</title>
   
 
   
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Understanding mean squared error">
+  <meta name="twitter:title" content="MSE = Bias² &#43; Variance">
   <meta name="twitter:description" content="Introduction In statistics, the overarching goal – in some sense – is to figure out how to take a limited amount of data and reliably make inferences about the broader population we don’t have data about. To do this, we study, develop, and use mathematical objects called statistics or estimators. Formally, these are functions of other objects called random variables, but, for the moment, it suffices to think of them as ways of using limited amounts of data furnished by a part to learn about the whole.">
 
 
@@ -162,7 +166,7 @@ amounts of data furnished by a part to learn about the whole.">
 <main id="main" class="post">
   
   <div class="post-heading">
-    <h1 class="post-title">Understanding mean squared error</h1>
+    <h1 class="post-title">MSE = Bias² &#43; Variance</h1>
     <div class="publish-metadata">
       <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -174,7 +178,7 @@ amounts of data furnished by a part to learn about the whole.">
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1034 words
+          1033 words
         </span>
       
       
@@ -246,22 +250,22 @@ of $X$ - in our case, the function is $f(X) = (X - 3.5)^2$. To compute the expec
 average of all possible values $X$ can take and weight each one by the probability of seeing that outcome.
 (Don’t worry too much about why we&rsquo;re squaring; it makes calculus easier.)</p>
 <p>Mathematically, we write
+</p>
 $$
 \text{MSE}(\hat y) = E_y((\hat y - y)^2)
-$$
+$$<p>
 where $\hat y$ is the estimator and $y$ is the true parameter value.</p>
 <p>Intuitively, if we expect the estimator to, on average, stray far from the true value of the parameter, the
 estimator is probably not very good. Alternatively, if that expected value is close to 0, it means that the
 estimator deviates very little from the actual parameter, i.e. it’s a great estimator! With some tedious
 algebra, we can actually show that</p>
-<p>$$
+$$
 \begin{align}
-\text{MSE}(\hat y) &amp;= E_y((\hat y - y)^2) \
-&amp;= \dots \ &amp;= E((\hat y - E(\hat y))^2) + (E(\hat y) - \hat y)^2 \
-&amp;= \text{Var}_y(\hat y) + (\text{Bias}_y(\hat y))^2
+\text{MSE}(\hat y) &= E_y((\hat y - y)^2) \\
+&= \dots \\ &= E((\hat y - E(\hat y))^2) + (E(\hat y) - \hat y)^2 \\
+&= \text{Var}_y(\hat y) + (\text{Bias}_y(\hat y))^2
 \end{align}
-$$</p>
-<p>Bias and variance are two very important qualities of estimators that help us understand how they relate to
+$$<p>Bias and variance are two very important qualities of estimators that help us understand how they relate to
 the real value you’re attempting to estimate:</p>
 <h3 id="bias">Bias</h3>
 <p>Bias tells you the difference between the expected value of your estimator and that actual value of the

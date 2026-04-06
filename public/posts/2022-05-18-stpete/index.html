@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -25,10 +25,7 @@ Mathematically, if the payoff of the uncertain game is represented by the random
 variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$,
 and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$,
 then the value of playing the game would be given by
-$$E[X] = x_1p_1 &#43; \dots &#43; x_np_n = \sum_{i=1}^n x_i p_i.$$
-(The notation $E[X]$ is how we represent the expected value of $X$.)
-For many bets, this approach has intuitive appeal, and there are many scenarios
-in which it is used directly.">
+">
   
 
   
@@ -49,7 +46,7 @@ in which it is used directly.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -58,12 +55,16 @@ in which it is used directly.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -86,7 +87,7 @@ in which it is used directly.">
   <meta property="og:site_name" content="Jack Gindi">
   <meta property="og:title" content="The St. Petersburg paradox">
   <meta property="og:description" content="In this post, I want to talk through a simple mathematical result that forces us to think twice about relying too heavily on averages.
-Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by $$E[X] = x_1p_1 &#43; \dots &#43; x_np_n = \sum_{i=1}^n x_i p_i.$$ (The notation $E[X]$ is how we represent the expected value of $X$.) For many bets, this approach has intuitive appeal, and there are many scenarios in which it is used directly.">
+Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -103,7 +104,7 @@ Quick review of expected values Given an opportunity to play a game with uncerta
   
   <meta itemprop="name" content="The St. Petersburg paradox">
   <meta itemprop="description" content="In this post, I want to talk through a simple mathematical result that forces us to think twice about relying too heavily on averages.
-Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by $$E[X] = x_1p_1 &#43; \dots &#43; x_np_n = \sum_{i=1}^n x_i p_i.$$ (The notation $E[X]$ is how we represent the expected value of $X$.) For many bets, this approach has intuitive appeal, and there are many scenarios in which it is used directly.">
+Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by">
   <meta itemprop="datePublished" content="2022-05-18T00:00:00+00:00">
   <meta itemprop="dateModified" content="2022-05-18T00:00:00+00:00">
   <meta itemprop="wordCount" content="782">
@@ -130,7 +131,7 @@ Quick review of expected values Given an opportunity to play a game with uncerta
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="The St. Petersburg paradox">
   <meta name="twitter:description" content="In this post, I want to talk through a simple mathematical result that forces us to think twice about relying too heavily on averages.
-Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by $$E[X] = x_1p_1 &#43; \dots &#43; x_np_n = \sum_{i=1}^n x_i p_i.$$ (The notation $E[X]$ is how we represent the expected value of $X$.) For many bets, this approach has intuitive appeal, and there are many scenarios in which it is used directly.">
+Quick review of expected values Given an opportunity to play a game with uncertain outcomes, one reasonable way to value to opportunity is to weight each possible reward by its probability of occuring and sum up the results. This quantity is called the expected value, or expectation, of the game. (Note that a simple average is an expected value with equal weight on each outcome.) Another way of saying this is that if you have to pay a fee to play this game, the fee you should be willing to pay is the game’s expected value (or less, of course). Mathematically, if the payoff of the uncertain game is represented by the random variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$, and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$, then the value of playing the game would be given by">
 
 
   
@@ -244,7 +245,8 @@ Mathematically, if the payoff of the uncertain game is represented by the random
 variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$,
 and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$,
 then the value of playing the game would be given by
-$$E[X] = x_1p_1 + \dots + x_np_n = \sum_{i=1}^n x_i p_i.$$
+</p>
+$$E[X] = x_1p_1 + \dots + x_np_n = \sum_{i=1}^n x_i p_i.$$<p>
 (The notation $E[X]$ is how we represent the expected value of $X$.)
 For many bets, this approach has intuitive appeal, and there are many scenarios
 in which it is used directly.</p>
@@ -255,17 +257,19 @@ willing to pay to play this game?</p>
 <p>Well, you might begin, there are infinitely many possible outcomes (head after 1, head after 2,&hellip;).
 Each outcome requires flipping $k-1$ tails and then a single head. Using a fair
 coin, we have
+</p>
 $$
-P(\text{game ends on flip}~k) = \frac{1}{2^{k-1}}\frac{1}{2} = \frac{1}{2^k}.
-$$
+  P(\text{game ends on flip}~k) = \frac{1}{2^{k-1}}\frac{1}{2} = \frac{1}{2^k}.
+$$<p>
 Using the framework of outcome values and probabilities of those outcomes,
 we can express $x_i$ and $p_i$ for each $i=1,2,\dots$ as
+</p>
 $$
 \begin{align*}
-x_i &amp;= 2^i\
-p_i &amp;= \frac{1}{2^i}.
+  x_i &= 2^i\\
+  p_i &= \frac{1}{2^i}.
 \end{align*}
-$$
+$$<p>
 But wait! If this is the case, then for each $i$, $x_ip_i = 2^i/2^i = 1$, so the
 expected value of the game is actually infinite (the sum of infinitely many 1s)!
 It seems that, according to this mathematically sound analysis, that we should be
@@ -294,9 +298,10 @@ $W$ (for wealth) dollars with which to fund the game. We&rsquo;ve introduced a c
 rounds before the game ends: $L = \lfloor \log_2 W \rfloor$ (i.e., the number of times you
 can double the payout before exceeding $W$, rounded down). Having reframed the problem this way,
 the expected value calculation returns a saner result:
+</p>
 $$
-E[X] = \sum_{i=1}^L 2^i \frac{1}{2^i} = \sum_{i=1}^L 1 = L.
-$$
+  E[X] = \sum_{i=1}^L 2^i \frac{1}{2^i} = \sum_{i=1}^L 1 = L.
+$$<p>
 That is, the expected value of the game is now logarithmic in the banker&rsquo;s wealth.
 This means, for example, that if the banker has one billion dollars, the game is only
 worth about \$30. This accords with our intuition about small probabilities of winning

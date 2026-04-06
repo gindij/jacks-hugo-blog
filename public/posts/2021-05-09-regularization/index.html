@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -40,7 +40,7 @@ thought of in an interesting statistical way.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -49,12 +49,16 @@ thought of in an interesting statistical way.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -96,7 +100,7 @@ thought of in an interesting statistical way.">
   <meta itemprop="description" content="Introduction If you’ve read enough of my posts over the years, you know that some of my favorite topics to write about are those that can be thought about or studied from different perspectives. In this post, I want to write about regularization, a technique used in machine learning to mitigate a common problem called overfitting – a problem that crops up when algorithms fit their understanding of the world so tightly to a particular dataset, that it isn’t able to make predictions about data that it hasn’t seen. Regularization can be thought about as a term to add to the optimization objective that directly discourages overfitting, or it can be thought of in an interesting statistical way.">
   <meta itemprop="datePublished" content="2021-05-09T00:00:00+00:00">
   <meta itemprop="dateModified" content="2021-05-09T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1128">
+  <meta itemprop="wordCount" content="1127">
   <meta itemprop="keywords" content="Statistics,Optimization">
 
   
@@ -179,7 +183,7 @@ thought of in an interesting statistical way.">
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1128 words
+          1127 words
         </span>
       
       
@@ -238,9 +242,10 @@ thought of in an interesting statistical way.</p>
 $b$ represents the number of bedrooms in the house, we <em>assume</em> (more on this in a second)
 that the relationship between the number of bedrooms and the price of the house
 is linear:
+</p>
 $$
-p(b) = \theta b + \epsilon.
-$$
+  p(b) = \theta b + \epsilon.
+$$<p>
 Here, $p$ is price, $b$ is the number of bedrooms in the house, and $\epsilon$
 is a random number that represents the error in our model, or the part of our model that
 the data we are using do not explain. What the formula above says is that <em>we believe</em>
@@ -259,15 +264,17 @@ and a current guess at a parameter $\theta$. To evaluate $\theta$, a natural mea
 well $\theta$ fits is to find the average (square) error, where the error for each example
 can be expressed as the difference between $\theta b_i$ (our prediction) and $y_i$
 (the actual price). Mathematically, we can write this measure down as
+</p>
 $$
-J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
-$$
+  J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
+$$<p>
 Now that we&rsquo;ve decided what constitutes a good choice of parameter, we can employ
 tools provided by calculus to actually calculate what value of $\theta$ is best
 by solving the optimization problem (replacing 100 with the more general $m$) given by
+</p>
 $$
-\text{argmin}<em>\theta \sum</em>{i=1}^m (\theta b_i - y_i)^2.
-$$
+  \text{argmin}_\theta \sum_{i=1}^m (\theta b_i - y_i)^2.
+$$<p>
 (This is the value of $\theta$ that minimizes $J$. Without going into detail,
 in this case, it turns out that the best value is $\theta = \frac{\mathbf y^T \mathbf b}{\mathbf b^T \mathbf b}$,
 where $\mathbf b = (b_1,\dots, b_m)$ and $\mathbf y = (y_1,\dots,y_m)$.)</p>
@@ -285,10 +292,10 @@ of the features have parameters that are too large, i.e., that their impact is o
 in the model. As such, rather than just finding the parameters that minimize the least
 squares objective, we want to find <em>small</em> parameters that minimize the objective.
 For the simple regression case, we would add a term to the objective:
+</p>
 $$
-\text{argmin}<em>\theta ~~ \sum</em>{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
-$$</p>
-<p>Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
+\text{argmin}_\theta ~~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+$$<p>Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
 will also be large, so the optimizer will not be encouraged to pick that value of $\theta$,
 even it fits the data pretty well. Adding this term causes the optimizer to trade off
 goodness of fit and simplicity (in the sense of parameters that aren&rsquo;t too large).
@@ -304,18 +311,20 @@ $1/\lambda$ (we can tune $\lambda$ to change the width of the bell curve). Makin
 essentially pins down a probability density function for the parameter $\theta$:
 $P(\theta) = \frac{\sqrt{\lambda}}{\sqrt{2\pi}}\exp(-\lambda(\theta - 0)^2/2)$.
 Taking $\log$s (this doesn&rsquo;t affect the optimization problem we need to solve), we have
+</p>
 $$
-\log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
-$$
+  \log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
+$$<p>
 Adding this assumption about the prior distribution over $\theta$ and ignoring
 constants (with respect to $\theta$), we would need to solve the modified MLE problem:
+</p>
 $$
 \begin{align}
-\text{argmax}<em>\theta~ \log(P(\mathbf y <del>|</del> \mathbf b, \theta)P(\theta))
-&amp;= \text{argmax}</em>\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\
-&amp;= \text{argmin}<em>\theta ~ \sum</em>{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+  \text{argmax}_\theta~ \log(P(\mathbf y ~|~ \mathbf b, \theta)P(\theta))
+  &= \text{argmax}_\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\\
+  &= \text{argmin}_\theta ~ \sum_{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
 \end{align}
-$$
+$$<p>
 which is exactly what we had intuitively motivated in the previous section!</p>
 <p>We&rsquo;ve just uncovered the statistical interpretation of regularization!* Using (this flavor
 of) regularization is actually imposing a Gaussian prior onto $\theta$. As we force the

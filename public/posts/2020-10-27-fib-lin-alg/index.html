@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -37,7 +37,7 @@ incorrect, please do reach out and let me know.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -46,12 +46,16 @@ incorrect, please do reach out and let me know.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -92,7 +96,7 @@ incorrect, please do reach out and let me know.">
   <meta itemprop="description" content="Introduction After writing a post about one interesting way to arrive at a closed-form for the $n$th term of the Fibonacci sequence, a friend pointed out a few alternative ways to get there, one of which felt particularly natural. It requires some linear algebra, so I guess that in some sense, it could be considered “unnatural,” but I especially like it because the argument’s flow requires fewer arbitrary-seeming leaps. With that said, this post will be brief (as I’m a little busy at the moment), so if there’s anything that doesn’t make sense or is incorrect, please do reach out and let me know.">
   <meta itemprop="datePublished" content="2020-10-27T00:00:00+00:00">
   <meta itemprop="dateModified" content="2020-10-27T00:00:00+00:00">
-  <meta itemprop="wordCount" content="579">
+  <meta itemprop="wordCount" content="578">
   <meta itemprop="keywords" content="Linear-Algebra">
 
   
@@ -175,7 +179,7 @@ incorrect, please do reach out and let me know.">
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          579 words
+          578 words
         </span>
       
       
@@ -203,8 +207,8 @@ incorrect, please do reach out and let me know.">
   <ul>
     <li><a href="#introduction">Introduction</a></li>
     <li><a href="#fibonacci-matrix">Fibonacci matrix</a></li>
-    <li><a href="#diagonalizing-a">Diagonalizing $A$</a></li>
-    <li><a href="#using-as-eigenvalues">Using $A$&rsquo;s eigenvalues</a></li>
+    <li><a href="#diagonalizing">Diagonalizing </a></li>
+    <li><a href="#using-s-eigenvalues">Using &rsquo;s eigenvalues</a></li>
   </ul>
 </nav></div>
   </details>
@@ -222,50 +226,57 @@ post will be brief (as I&rsquo;m a little busy at the moment), so if there&rsquo
 incorrect, please do reach out and let me know.</p>
 <h2 id="fibonacci-matrix">Fibonacci matrix</h2>
 <p>The Fibonacci sequence can be viewed through the lens of matrices. In particular, if we start with the matrix
+</p>
 $$
-A = \begin{bmatrix} 1 &amp; 1 \ 1 &amp; 0 \end{bmatrix},
-$$ we can see that the Fibonacci sequence can be materialized by repeatedly multiplying $A$ by itself.</p>
+A = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix},
+$$<p> we can see that the Fibonacci sequence can be materialized by repeatedly multiplying $A$ by itself.</p>
 <p>To see this, first notice that if we are considering the Fibonacci sequence that starts with $F_0 = 0$ and
 $F_1 = 1$, then we note that
+</p>
 $$
-A = \begin{bmatrix} F_2 &amp; F_1 \ F_1 &amp; F_0 \end{bmatrix}.
-$$
+A = \begin{bmatrix} F_2 & F_1 \\ F_1 & F_0 \end{bmatrix}.
+$$<p>
 Suppose now that
+</p>
 $$
-A^{n-1} = \begin{bmatrix} 1 &amp; 1 \ 1 &amp; 0 \end{bmatrix}^{n-1} = \begin{bmatrix} F_{n-1} &amp; F_{n-2} \ F_{n-2} &amp;
+A^{n-1} = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}^{n-1} = \begin{bmatrix} F_{n-1} & F_{n-2} \\ F_{n-2} &
 F_{n-3} \end{bmatrix}
-$$ for $n \geq 3$. Then
+$$<p> for $n \geq 3$. Then
+</p>
 $$
-A^n = A^{n-1}A = \begin{bmatrix} F_{n-1} + F_{n-2} &amp; F_{n-2} + F_{n-3} \ F_{n-2} + F_{n-3} &amp; F_{n-2}
-\end{bmatrix} = \begin{bmatrix} F_n &amp; F_{n-1} \ F_{n-1} &amp; F_{n-2} \end{bmatrix}.
-$$
+A^n = A^{n-1}A = \begin{bmatrix} F_{n-1} + F_{n-2} & F_{n-2} + F_{n-3} \\ F_{n-2} + F_{n-3} & F_{n-2}
+\end{bmatrix} = \begin{bmatrix} F_n & F_{n-1} \\ F_{n-1} & F_{n-2} \end{bmatrix}.
+$$<p>
 Thus, to get the $n$th element of the Fibonacci sequence, we need only get the upper left entry of $A^n$. If
 we had a fast way to obtain $A^n$ instead of actually carrying out iterated matrix multiplication, we could
 obtain the $n$th element without doing very much work.</p>
-<h2 id="diagonalizing-a">Diagonalizing $A$</h2>
+<h2 id="diagonalizing">Diagonalizing $A$</h2>
 <p>To do this, we will look to diagonalize $A$. This means that we will try to write
+</p>
 $$
 A = VDV^{-1}
-$$ where $D$ is a diagonal matrix and $V$ is a matrix with eigenvectors of $A$ as columns (we have to
+$$<p> where $D$ is a diagonal matrix and $V$ is a matrix with eigenvectors of $A$ as columns (we have to
 actually find $D$ and $V$ that work). What&rsquo;s nice about a diagonal representation is that
+</p>
 $$
 A^n = (VDV^{-1})^n = VDV^{-1}VDV^{-1}\dots VDV^{-1} = VD^nV^{-1}.
-$$
+$$<p>
 If $D$ is written as a matrix with $\lambda_1,\dots,\lambda_n$ on the diagonal, then $D^n$ is simply $D$ with
 the elements on the diagonal each taken to the $n$th power, like so:
+</p>
 $$
-D = \begin{bmatrix} \lambda_1 &amp; 0 \ 0 &amp; \lambda_2 \end{bmatrix} \implies D^n = \begin{bmatrix} \lambda_1^n &amp;
-0 \ 0 &amp; \lambda_2^n \end{bmatrix}.
-$$</p>
-<p>Now that we&rsquo;ve laid out our approach, it&rsquo;s time to carry it out. (I will spare the algebra required to keep this post brief.)</p>
-<h2 id="using-as-eigenvalues">Using $A$&rsquo;s eigenvalues</h2>
+D = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{bmatrix} \implies D^n = \begin{bmatrix} \lambda_1^n &
+0 \\ 0 & \lambda_2^n \end{bmatrix}.
+$$<p>Now that we&rsquo;ve laid out our approach, it&rsquo;s time to carry it out. (I will spare the algebra required to keep this post brief.)</p>
+<h2 id="using-s-eigenvalues">Using $A$&rsquo;s eigenvalues</h2>
 <p>The eigenvalues of $A$ (as you might expect if you read the earlier post about Fibonacci) are
 $\lambda_1,\lambda_2 = \frac{1 \pm \sqrt 5}{2}$, and the corresponding eigenvectors are $v_1, v_2 =
-\begin{bmatrix} \frac{1 \pm \sqrt 5}{2} \ 1 \end{bmatrix}$. Thus, we have
+\begin{bmatrix} \frac{1 \pm \sqrt 5}{2} \\ 1 \end{bmatrix}$. Thus, we have
+</p>
 $$
-D = \begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp; 0 \ 0 &amp; \frac{1 - \sqrt 5}{2} \end{bmatrix} ~~~~ V =
-\begin{bmatrix} \frac{1 + \sqrt 5}{2} &amp; \frac{1 - \sqrt 5}{2} \ 1 &amp; 1\end{bmatrix}.
-$$
+D = \begin{bmatrix} \frac{1 + \sqrt 5}{2} & 0 \\ 0 & \frac{1 - \sqrt 5}{2} \end{bmatrix} ~~~~ V =
+\begin{bmatrix} \frac{1 + \sqrt 5}{2} & \frac{1 - \sqrt 5}{2} \\ 1 & 1\end{bmatrix}.
+$$<p>
 With these in hand, we see that $A$ is indeed diagonalizable, so that $A^n$ can be written as $VD^nV^{-1}$,
 and voila! with two matrix multiplications and exponentiating the diagonal entries of $D$, we can very
 quickly and efficiently come up with large Fibonacci numbers quickly.</p>

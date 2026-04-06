@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,7 +32,7 @@ This post’s title is intentionally vague. Usually, I write an introduction tha
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -41,12 +41,16 @@ This post’s title is intentionally vague. Usually, I write an introduction tha
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -220,10 +224,11 @@ This post’s title is intentionally vague. Usually, I write an introduction tha
 <p>In English, (1) and (2) say that linear transformations must preserve addition and scalar multiplication &ndash; that is, adding/scaling then mapping must produce the same result as mapping then adding/scaling. For this post, we’re going to focus our attention on linear <em>operators</em>, or linear maps from $V$ to itself.</p>
 <h2 id="invariant-subspaces">Invariant subspaces</h2>
 <p>So suppose $T$ is an operator on $V$. It’s natural to wonder how $T$ behaves with respect to subspaces of $V$. In the case of an operator, it will always be the case that $T$ maps a subspace $U$ to some subspace of $V$, but <em>how</em> $T$ transforms an arbitrary choice of subspace is unclear. Let’s simplify a little bit and think about the neatest-possible set of outputs that $T$ might produce as it acts on vectors from $U$; we are going to focus on subspaces which, with respect to $T$, are in some sense self-contained. In other words, let’s require that $T$ map every vector in $U$ get back into $U$ somewhere. (A more compact way of phrasing our requirement is that we want $T$ to be an operator on $U$.) If $T$ behaves this way with respect to $U$, we say that $U$ is <em>invariant</em> under $T$. (In technical jargon, we say a subspace $U$ is invariant under $T$ if for every vector $u \in U$, $T(u) \in U$.)</p>
-<p>I don’t know about you, but I still don’t feel on sure enough footing; let’s simplify further. Instead of letting our invariant subspaces get big and complicated, let’s restrict our focus to $T$’s invariant subspaces of the lowest possible dimension. As a brief aside, the dimension of a vector space is the smallest number of vectors, linear combinations of which can comprise an entire space. For example, consider $\mathbf{R}^2$ (the $(x,y)$ plane). It is a vector space of dimension 2. Why? Because I can make the two vectors $(0,1)$ and $(1,0)$ into any vector (coordinate pair) that I want! How? Notice that $(a,b) = a \times (1,0) + b \times (0,1)$. In the $\mathbf{R}^2$ example, we call ${(0,1), (1,0)}$ a basis (“a” basis because there are infinitely many others). A vector space&rsquo;s dimension is defined as the size of any basis (all bases are the same size).</p>
+<p>I don’t know about you, but I still don’t feel on sure enough footing; let’s simplify further. Instead of letting our invariant subspaces get big and complicated, let’s restrict our focus to $T$’s invariant subspaces of the lowest possible dimension. As a brief aside, the dimension of a vector space is the smallest number of vectors, linear combinations of which can comprise an entire space. For example, consider $\mathbf{R}^2$ (the $(x,y)$ plane). It is a vector space of dimension 2. Why? Because I can make the two vectors $(0,1)$ and $(1,0)$ into any vector (coordinate pair) that I want! How? Notice that $(a,b) = a \times (1,0) + b \times (0,1)$. In the $\mathbf{R}^2$ example, we call $\{(0,1), (1,0)\}$ a basis (“a” basis because there are infinitely many others). A vector space&rsquo;s dimension is defined as the size of any basis (all bases are the same size).</p>
 <h2 id="eigenvalues">Eigenvalues</h2>
 <p>In light of our detour, what might a one-dimensional invariant subspace look like? Well, a one dimensional subspace has a basis of size one, which means that the subspace is made up of linear combinations of a single vector, i.e. its scalar multiples! In math terms &ndash; and in this case, I actually think the symbols help &ndash; a one dimensional subspace $U$ looks like
-$$U = { au <del>|</del> a \in F },$$
+</p>
+$$U = \{ au ~|~ a \in F \},$$<p>
 where $F$ is $V$’s underlying field.</p>
 <p>Now let’s say this low-dimensional subspace is invariant under $T$. This would mean that $T(u)$ lands back in $U$, and
 given that $U$ is of dimension one, $T$ must send $u$ to a scalar multiple of itself. In other words, there is $\lambda \in

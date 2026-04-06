@@ -28,7 +28,8 @@ Mathematically, if the payoff of the uncertain game is represented by the random
 variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$,
 and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$,
 then the value of playing the game would be given by
-$$E[X] = x_1p_1 + \dots + x_np_n = \sum_{i=1}^n x_i p_i.$$
+&lt;/p&gt;
+$$E[X] = x_1p_1 + \dots + x_np_n = \sum_{i=1}^n x_i p_i.$$&lt;p&gt;
 (The notation $E[X]$ is how we represent the expected value of $X$.)
 For many bets, this approach has intuitive appeal, and there are many scenarios
 in which it is used directly.&lt;/p&gt;
@@ -39,17 +40,19 @@ willing to pay to play this game?&lt;/p&gt;
 &lt;p&gt;Well, you might begin, there are infinitely many possible outcomes (head after 1, head after 2,&amp;hellip;).
 Each outcome requires flipping $k-1$ tails and then a single head. Using a fair
 coin, we have
+&lt;/p&gt;
 $$
-P(\text{game ends on flip}~k) = \frac{1}{2^{k-1}}\frac{1}{2} = \frac{1}{2^k}.
-$$
+  P(\text{game ends on flip}~k) = \frac{1}{2^{k-1}}\frac{1}{2} = \frac{1}{2^k}.
+$$&lt;p&gt;
 Using the framework of outcome values and probabilities of those outcomes,
 we can express $x_i$ and $p_i$ for each $i=1,2,\dots$ as
+&lt;/p&gt;
 $$
 \begin{align*}
-x_i &amp;amp;= 2^i\
-p_i &amp;amp;= \frac{1}{2^i}.
+  x_i &amp;= 2^i\\
+  p_i &amp;= \frac{1}{2^i}.
 \end{align*}
-$$
+$$&lt;p&gt;
 But wait! If this is the case, then for each $i$, $x_ip_i = 2^i/2^i = 1$, so the
 expected value of the game is actually infinite (the sum of infinitely many 1s)!
 It seems that, according to this mathematically sound analysis, that we should be
@@ -78,9 +81,10 @@ $W$ (for wealth) dollars with which to fund the game. We&amp;rsquo;ve introduced
 rounds before the game ends: $L = \lfloor \log_2 W \rfloor$ (i.e., the number of times you
 can double the payout before exceeding $W$, rounded down). Having reframed the problem this way,
 the expected value calculation returns a saner result:
+&lt;/p&gt;
 $$
-E[X] = \sum_{i=1}^L 2^i \frac{1}{2^i} = \sum_{i=1}^L 1 = L.
-$$
+  E[X] = \sum_{i=1}^L 2^i \frac{1}{2^i} = \sum_{i=1}^L 1 = L.
+$$&lt;p&gt;
 That is, the expected value of the game is now logarithmic in the banker&amp;rsquo;s wealth.
 This means, for example, that if the banker has one billion dollars, the game is only
 worth about \$30. This accords with our intuition about small probabilities of winning

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -40,7 +40,7 @@ both legs of the trip. Is the first trip longer than, shorter than, or the same 
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -49,12 +49,16 @@ both legs of the trip. Is the first trip longer than, shorter than, or the same 
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -97,7 +101,7 @@ Round trip Problem An airline runs a round trip from city A to city B and back. 
 Round trip Problem An airline runs a round trip from city A to city B and back. The plane travels at a single constant speed. During one trip, there is no wind blowing during either leg. During a second trip, there is a constant wind that blows from A to B during both legs of the trip. Is the first trip longer than, shorter than, or the same length as, the second trip? (Take a minute to think about it before reading the solution.)">
   <meta itemprop="datePublished" content="2018-02-21T00:00:00+00:00">
   <meta itemprop="dateModified" content="2018-02-21T00:00:00+00:00">
-  <meta itemprop="wordCount" content="504">
+  <meta itemprop="wordCount" content="503">
   <meta itemprop="keywords" content="Misc">
 
   
@@ -181,7 +185,7 @@ Round trip Problem An airline runs a round trip from city A to city B and back. 
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          504 words
+          503 words
         </span>
       
       
@@ -243,19 +247,20 @@ both legs of the trip. Is the first trip longer than, shorter than, or the same 
 <p>Let $d$ be the distance from A to B. If $r \cdot t = d$ (rate x time = distance), then $t = d/r$. What we are going to do
 is write equations for $t$ in each of the wind and no-wind cases and see if we can determine the relationship between them.
 In the no-wind case, if the plane’s constant speed is given by $r$, then $t_1 = 2d / r$.
-In the wind case, let’s say the wind speed is given by some $w &gt; 0$. Then the plane travels at a rate of $r + w$ on the way
+In the wind case, let’s say the wind speed is given by some $w > 0$. Then the plane travels at a rate of $r + w$ on the way
 from A to B and at a rate of $r - w$ on the way back. Thus, the total round trip time is given by
+</p>
 $$
 \begin{align*}
-t_2 &amp;= \frac{d}{r + w} + \frac{d}{r - w} \\
-&amp;= \frac{d(r - w) + d(r + w)}{r^2 - w^2} \\
-&amp;= \frac{2dr}{r^2 - w^2}
+t_2 &= \frac{d}{r + w} + \frac{d}{r - w} \\\\
+&= \frac{d(r - w) + d(r + w)}{r^2 - w^2} \\\\
+&= \frac{2dr}{r^2 - w^2}
 \end{align*}
-$$</p>
-<p>Notice that because $w &gt; 0$, $w^2 &gt; 0$, so that
+$$<p>Notice that because $w > 0$, $w^2 > 0$, so that
+</p>
 $$
-t_2 = \frac{2dr}{r^2 - w^2} &gt; \frac{2dr}{r^2} = \frac{2d}{r} = t_1,
-$$
+t_2 = \frac{2dr}{r^2 - w^2} > \frac{2dr}{r^2} = \frac{2d}{r} = t_1,
+$$<p>
 showing us that the trip with wind takes longer.</p>
 <h2 id="cornerless-chessboard">Cornerless chessboard</h2>
 <h3 id="problem-1">Problem</h3>

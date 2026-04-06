@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -34,7 +34,7 @@ Suppose that data is presented as a sequence of values $\sigma = s_1, \dots, s_m
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -43,12 +43,16 @@ Suppose that data is presented as a sequence of values $\sigma = s_1, \dots, s_m
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -91,7 +95,7 @@ Naive solution Suppose that data is presented as a sequence of values $\sigma = 
 Naive solution Suppose that data is presented as a sequence of values $\sigma = s_1, \dots, s_m$ where, for simplicity, the $s_i \in \lbrace 0, \dots, n - 1\rbrace$. I want to know the number of distinct values that were in the stream. For example, if the sequence were $\sigma = 1,2,3,4,5,5,7$, our algorithm should output 6. How might we accomplish this?">
   <meta itemprop="datePublished" content="2022-09-11T00:00:00+00:00">
   <meta itemprop="dateModified" content="2022-09-11T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1456">
+  <meta itemprop="wordCount" content="1452">
   <meta itemprop="keywords" content="Computer-Science">
 
   
@@ -175,7 +179,7 @@ Naive solution Suppose that data is presented as a sequence of values $\sigma = 
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1456 words
+          1452 words
         </span>
       
       
@@ -209,7 +213,7 @@ Naive solution Suppose that data is presented as a sequence of values $\sigma = 
         <li><a href="#pairwise-independent-hash-functions">Pairwise independent hash functions</a></li>
       </ul>
     </li>
-    <li><a href="#how-do-we-get-fracntx">How do we get $\frac{nt}{X}$?</a></li>
+    <li><a href="#how-do-we-get-">How do we get ?</a></li>
     <li><a href="#so-does-the-fancy-algorithm-work">So does the fancy algorithm work?</a></li>
   </ul>
 </nav></div>
@@ -232,7 +236,7 @@ Naive solution Suppose that data is presented as a sequence of values $\sigma = 
 <ul>
 <li>Choose $\varepsilon \in (0,1)$.</li>
 <li>Let $t = \frac{400}{\varepsilon^2}$.</li>
-<li>Pick a pairwise independent hash function $h: {0,\dots,n-1} \to {0,\dots,n-1}$</li>
+<li>Pick a pairwise independent hash function $h: \{0,\dots,n-1\} \to \{0,\dots,n-1\}$</li>
 <li>Upon receiving $s_i$, compute $h(s_i)$ and update $D$, a datastructure with which we keep track of the $t$ smallest hash values we&rsquo;ve computed.</li>
 <li>When we stop receiving values, let $X$ be the $t^{th}$ smallest hash value and output $\frac{nt}{X}$.</li>
 </ul>
@@ -246,45 +250,50 @@ $\Pr[h(x_1)=y_1 \wedge h(x_2) = y_2] = \frac{1}{n^2}$
 $\mathcal{H} = \lbrace h_{ab}: \lbrace 0,\dots,p-1 \rbrace \to \lbrace 0,\dots, p-1\rbrace \rbrace $
 where $p$ is prime, $0 \leq a \leq p -1$ and $0 \leq b \leq p-1$, defined, for some input $k$, by $h_{ab}(k) = ak + b \mod p$. In our case, if $n$ is not prime, we can find a prime near $n$ and let $p$ be that prime (an interesting proof for another time is that
 for any $n$, there is always a prime between $n$ and $2n$). Note that the only thing we have to store about this hash function to use it are $a$ and $b$ &ndash; each of which only requires $\log p$ bits of storage (so we are still under the linear space we are trying to avoid).</p>
-<h2 id="how-do-we-get-fracntx">How do we get $\frac{nt}{X}$?</h2>
+<h2 id="how-do-we-get-">How do we get $\frac{nt}{X}$?</h2>
 <p>Next, I&rsquo;ll try to motivate where $\frac{nt}{X}$ comes from. Suppose that there are $k$ distinct values in the stream (that is, suppose that $k$ is the solution to our problem). Let those values be $a_1,\dots,a_k$. Because we have $n$ possible outputs of our hash function and there are $k$ distinct values, we can expect that the distance between the $h(a_i)$ is $\frac{n}{k}$. In particular, we expect the $t$th smallest value to be at $t \cdot \frac{n}{k}$. Thus, $X \approx \frac{nt}{k}$. Solving for $k$, we see that $k \approx \frac{nt}{X}$, so that&rsquo;s exactly what we output. In the next piece, we will need to distinguish between the right answer and our output so the correct answer will henceforth be referred to as $k$ and we will refer to our output, $nt/X$, as $\hat k$.</p>
 <h2 id="so-does-the-fancy-algorithm-work">So does the fancy algorithm work?</h2>
 <p>All that&rsquo;s left to do is now to show that $\hat k$ is very close to $k$. Mathematically speaking, we want to show that
-$$\frac{k}{1 + \varepsilon} \leq \hat k \leq (1+\varepsilon)k$$
+</p>
+$$\frac{k}{1 + \varepsilon} \leq \hat k \leq (1+\varepsilon)k$$<p>
 with a probability $\geq \frac{99}{100}$ (where $\varepsilon$ is the parameter we chose in the first step of the algorithm).
-If we can show that $\Pr[\hat k &gt; (1+\varepsilon)k] \leq \frac{1}{200}$ and that $\Pr[\hat k &lt; k/(1 +\varepsilon)] \leq \frac{1}{200}$, we get
-$$\Pr[k/(1+\varepsilon) \leq \hat k \leq (1+\varepsilon)k] = 1 -\Pr[\hat k &gt; (1+\varepsilon)k] -\Pr[\hat k &lt; k/(1 +\varepsilon)].$$</p>
-<p>Because each of the probabilities on the right side of the inequality are $\leq \frac{1}{200}$, we can rewrite the above as
+If we can show that $\Pr[\hat k > (1+\varepsilon)k] \leq \frac{1}{200}$ and that $\Pr[\hat k < k/(1 +\varepsilon)] \leq \frac{1}{200}$, we get
+</p>
+$$\Pr[k/(1+\varepsilon) \leq \hat k \leq (1+\varepsilon)k] = 1 -\Pr[\hat k > (1+\varepsilon)k] -\Pr[\hat k < k/(1 +\varepsilon)].$$<p>Because each of the probabilities on the right side of the inequality are $\leq \frac{1}{200}$, we can rewrite the above as
 $\Pr[k/(1+\varepsilon) \leq \hat k \leq (1+\varepsilon)k] \geq 1 - \frac{2}{200} = \frac{99}{100}$
 which is what we want.</p>
 <p>So all we have left to do is to show that the two probabilities are indeed both $\leq \frac{1}{200}$.
-We will only do analysis of one of the two probabilities because a symmetric argument takes care of the other side. All of this put together means we only have one claim left to prove: $\Pr[\hat k &gt; (1+\varepsilon)k] \leq \frac{1}{200}$.</p>
+We will only do analysis of one of the two probabilities because a symmetric argument takes care of the other side. All of this put together means we only have one claim left to prove: $\Pr[\hat k > (1+\varepsilon)k] \leq \frac{1}{200}$.</p>
 <p>First, we note that
+</p>
 $$
 \begin{align*}
-\Pr[\hat k &gt; (1+\varepsilon)k] &amp;= \Pr[ (nt)/X &gt; (1+\varepsilon)k] \
-&amp;= \Pr\biggr[X &lt; \frac{nt}{(1+\varepsilon)k}\biggr].
+\Pr[\hat k > (1+\varepsilon)k] &= \Pr[ (nt)/X > (1+\varepsilon)k] \\
+&= \Pr\biggr[X < \frac{nt}{(1+\varepsilon)k}\biggr].
 \end{align*}
-$$</p>
-<p>With this in mind, define a random variable $Y_i$ which takes the value 1 if $h(a_i) &lt; \frac{nt}{(1+\varepsilon)k}$ and 0 otherwise. Now, observe that on average, the odds of $h(a_i)$ taking a value less than $\frac{nt}{(1+\varepsilon)k}$ is the number of hash values between 0 and $\frac{nt}{(1 + \varepsilon)k}$ divided by the number of possible values $h(a_i)$ can take. We can write this mathematically as
+$$<p>With this in mind, define a random variable $Y_i$ which takes the value 1 if $h(a_i) < \frac{nt}{(1+\varepsilon)k}$ and 0 otherwise. Now, observe that on average, the odds of $h(a_i)$ taking a value less than $\frac{nt}{(1+\varepsilon)k}$ is the number of hash values between 0 and $\frac{nt}{(1 + \varepsilon)k}$ divided by the number of possible values $h(a_i)$ can take. We can write this mathematically as
+</p>
 $$
 E[Y_i] = \frac{tn}{(1+\varepsilon)kn} = \frac{t}{(1+\varepsilon)k}.
-$$</p>
-<p>Next, let the random variable $Y$ be the sum of the $Y_i$. Because expectation is linear, we can infer that $E[Y] = \sum_{i = 1}^k E[Y_i] = k \cdot\frac{t}{(1+\varepsilon)k} = \frac{t}{1 + \varepsilon}$. We also see that in this case,
+$$<p>Next, let the random variable $Y$ be the sum of the $Y_i$. Because expectation is linear, we can infer that $E[Y] = \sum_{i = 1}^k E[Y_i] = k \cdot\frac{t}{(1+\varepsilon)k} = \frac{t}{1 + \varepsilon}$. We also see that in this case,
 $\text{Var}(Y) = \frac{t}{1+\varepsilon} - \frac{t^2}{(1+\varepsilon)^2} \leq \frac{t}{1 + \varepsilon} = E[Y]$.
 We&rsquo;re almost there!</p>
 <p>We can now more readily examine the probability we were interested in above in terms of $Y$. That is, we can say
-$$\Pr \biggr[X &lt; \frac{nt}{(1+\varepsilon)k} \biggr] = \Pr[Y \geq t].$$
+</p>
+$$\Pr \biggr[X < \frac{nt}{(1+\varepsilon)k} \biggr] = \Pr[Y \geq t].$$<p>
 Why? The left hand probability represents the chances that the $t$th smallest hash value we saw was less than some value, let&rsquo;s call said nasty value $M$ for a minute. $Y$ is the number of hash values we saw that were less than $M$. If at least $t$ values hashed to values less than $M$, then $X$, the $t$th smallest hash value will be less than $M$, hence the equality.</p>
 <p>Using our variance result from earlier, we have $t = (1 + \varepsilon) E[Y]$, we really want to know $\Pr[Y \geq (1 + \varepsilon) E[Y]]$. This is bounded above by $\Pr[|Y - E[Y]| \geq \varepsilon E[Y]]$ (adding in the absolute value causes inequality rather than equality). Chebyshev&rsquo;s inequality tells us that
-$$\Pr[|Y - E[Y]| \geq \varepsilon E[Y]] \leq \frac{\text{Var}(Y)}{\varepsilon^2 E[Y]^2}.$$
+</p>
+$$\Pr[|Y - E[Y]| \geq \varepsilon E[Y]] \leq \frac{\text{Var}(Y)}{\varepsilon^2 E[Y]^2}.$$<p>
 Because $\text{Var}(Y) \leq E[Y]$, we can write
-$$\frac{\text{Var}(Y)}{\varepsilon^2 E[Y]^2} \leq \frac{E[Y]}{\varepsilon^2 E[Y]^2} = \frac{1}{\varepsilon^2 E[Y]}.$$
+</p>
+$$\frac{\text{Var}(Y)}{\varepsilon^2 E[Y]^2} \leq \frac{E[Y]}{\varepsilon^2 E[Y]^2} = \frac{1}{\varepsilon^2 E[Y]}.$$<p>
 Now recall that earlier, we said that $t = (1 + \varepsilon) E[Y] \iff E[Y] = \frac{t}{1 + \varepsilon}$. We can substitute this in for $E[Y]$ above and get
-$$\frac{1}{\varepsilon^2 E[Y]} = \frac{1 + \varepsilon}{\varepsilon^2 t}.$$
+</p>
+$$\frac{1}{\varepsilon^2 E[Y]} = \frac{1 + \varepsilon}{\varepsilon^2 t}.$$<p>
 Because $\varepsilon$ is at most 1, we conclude
-$$\frac{1 + \varepsilon}{\varepsilon^2 t} \leq \frac{2}{\varepsilon^2 \frac{400}{\varepsilon^2}} = \frac{2}{400} = \frac{1}{200}.$$</p>
-<p>Thus, all in all, we&rsquo;ve shown that the odds of our return value being an over-estimate is bounded above by 1/200. A similar argument shows that the probability of underestimating is also bounded above by 1/200, so the probability of erring is at most 1/200 + 1/200 = 1/100 which means our probability of success is at least 99/100, as desired.</p>
+</p>
+$$\frac{1 + \varepsilon}{\varepsilon^2 t} \leq \frac{2}{\varepsilon^2 \frac{400}{\varepsilon^2}} = \frac{2}{400} = \frac{1}{200}.$$<p>Thus, all in all, we&rsquo;ve shown that the odds of our return value being an over-estimate is bounded above by 1/200. A similar argument shows that the probability of underestimating is also bounded above by 1/200, so the probability of erring is at most 1/200 + 1/200 = 1/100 which means our probability of success is at least 99/100, as desired.</p>
 
     
   </article>

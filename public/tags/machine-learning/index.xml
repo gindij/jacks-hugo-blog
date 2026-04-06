@@ -18,118 +18,89 @@
 &lt;p&gt;But why? Why the sigmoid function specifically? Why not use a clipped straight line, or a different S-shaped curve like the cumulative normal distribution? Is it just an arbitrary choice that happens to work well, or is there something fundamental about the mathematics that demands this specific shape?&lt;/p&gt;
 &lt;h1 id=&#34;logistic-regression&#34;&gt;Logistic regression&lt;/h1&gt;
 &lt;p&gt;For various reasons we will not cover here, directly using linear regression for classification does not work well. If $x$ is $d+1$-dimensional, and $\beta = (\beta_0, \dots, \beta_{d})$ are model parameters that we adjust during training, then we can take our linear model $\beta^\top x$ and force it to only take values between 0 and 1 by pushing it through the sigmoid function. In other words, we model the probability that $y$ is 1 given features $x$ as
+&lt;/p&gt;
 $$
-p(y=1|x) \approx \frac{1}{1 + \exp(-\beta^\top x)} = \sigma(\beta^\top x).
-$$
+    p(y=1|x) \approx \frac{1}{1 + \exp(-\beta^\top x)} = \sigma(\beta^\top x).
+$$&lt;p&gt;
 The sigmoid function $\sigma$ has an output range between 0 and 1, but there have to be other such functions, right? Why use this one and not some other one? In the remainder of this post, we look at two ways to understand why the choice of sigmoid is deeper than it seems.&lt;/p&gt;
 &lt;h1 id=&#34;range-mapping&#34;&gt;Range mapping&lt;/h1&gt;
 &lt;p&gt;(For this section, we will refer to $p(y=1|x)$ as $p$.)&lt;/p&gt;
 &lt;p&gt;Assuming we want to leverage linear regression as much as possible, we want to find something that we can model using $\beta^\top x$. The most obvious thing we could try first is to model the probability directly:
+&lt;/p&gt;
 $$
-p \approx \beta^\top x.
-$$&lt;/p&gt;
-&lt;p&gt;One simple reason this doesn&amp;rsquo;t work is just that the output ranges don&amp;rsquo;t match. To put a finer point on it, since $p$ is a probability, it can only take values between 0 and 1, whereas $\beta^\top x$ can take any real value. The plot below helps to visually understand our problem:&lt;/p&gt;
+    p \approx \beta^\top x.
+$$&lt;p&gt;One simple reason this doesn&amp;rsquo;t work is just that the output ranges don&amp;rsquo;t match. To put a finer point on it, since $p$ is a probability, it can only take values between 0 and 1, whereas $\beta^\top x$ can take any real value. The plot below helps to visually understand our problem:&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/posts/logistic-regression/line_bad.png&#34;&gt;
 &lt;p&gt;Because of this, we need to find something else we can model with $\beta^\top x$.&lt;/p&gt;
 &lt;p&gt;Instead of modeling $p$, what if we modeled $p/(1-p)$, a quantity known as the odds? Things get a little bit better here, since the odds range from 0 (when $p$ is very small) to $+\infty$ when ($p\approx 1$). However, remember that $\beta^\top x$ can take &lt;em&gt;any&lt;/em&gt; real value, including negative values all the way to $-\infty$! So while this is a little bit better, it still doesn&amp;rsquo;t quite work.&lt;/p&gt;
 &lt;p&gt;One thing to notice about the odds is that they cover the domain of the $\log$ function. So what if we modeled the log odds $p / (1-p)$ instead of the odds? In this case, the ranges match! When the odds are close to 0, the log odds approach $-\infty$. As the odds approach $\infty$, so do the log odds! At this point, our model is
+&lt;/p&gt;
 $$
 \log\biggr( \frac{p}{1-p} \biggr) \approx \beta^\top x
-$$&lt;/p&gt;
-&lt;p&gt;We can solve this for $p$ using some simple algebra to see that this is equivalent to a model for $p$. To do this, first we exponentiate both sides
+$$&lt;p&gt;We can solve this for $p$ using some simple algebra to see that this is equivalent to a model for $p$. To do this, first we exponentiate both sides
+&lt;/p&gt;
 $$
 \frac{p}{1-p} \approx \exp(\beta^\top x)
-$$
+$$&lt;p&gt;
 Next, we multiply both sides by $1-p$ and distribute on the right.
+&lt;/p&gt;
 $$
 p \approx \exp(\beta^\top x) - p\exp(\beta^\top x)
-$$
+$$&lt;p&gt;
 Next, we move the $p$ terms to the left side and pull them out to get
+&lt;/p&gt;
 $$
 p (1 + \exp(\beta^\top x)) \approx \exp(\beta^\top x)
-$$
+$$&lt;p&gt;
 Finally, dividing by $1 + \exp(\beta^\top x)$, we have
+&lt;/p&gt;
 $$
 p \approx \frac{\exp(\beta^\top x)}{1 + \exp(\beta^\top x)}.
-$$
+$$&lt;p&gt;
 We can see that this is actually the sigmoid by dividing the numerator and denominator by $\exp(\beta^\top x)$, which gives us our the final form of our model for $p$:
+&lt;/p&gt;
 $$
 p \approx \frac{\exp(\beta^\top x) / \exp(\beta^\top x)}{1 / \exp(\beta^\top x) + \exp(\beta^\top x) / \exp(\beta^\top x)} = \frac{1}{\exp(-\beta^\top x) + 1} = \sigma(\beta^\top x).
-$$
+$$&lt;p&gt;
 (Remember that $1/\exp(\beta^\top x) = \exp(-\beta^\top x)$.)&lt;/p&gt;
 &lt;p&gt;This derivation is intuitive and visually satisfying. It solves the &amp;ldquo;unbounded output&amp;rdquo; problem by mapping the infinite range of a linear model to the unit interval of a probability. However, a skeptical reader might still ask: &amp;ldquo;Why did we choose to model the log-odds specifically?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;While the log-odds are a convenient choice for range mapping, they are not the only choice. We could have chosen other functions to map $(-\infty, \infty)$ to $[0,1]$ (such as the cumulative distribution of a Gaussian). To understand why the sigmoid is not just a convenient choice, but the mathematically &amp;ldquo;natural&amp;rdquo; choice, we need to dig a bit deeper.&lt;/p&gt;
 &lt;h1 id=&#34;the-exponential-family&#34;&gt;The exponential family&lt;/h1&gt;
 &lt;p&gt;Another, perhaps more principled way to arrive at the sigmoid function is to make an assumption about the conditional distribution of the target $Y$ given the input $X$. If we assume that
+&lt;/p&gt;
 $$
 Y|x \sim \text{Bern}(p(\beta^\top x)),
-$$
+$$&lt;p&gt;
 i.e., that given a value for $x$ and parameters $\beta$, that $Y$ is a Bernoulli random variable with success probability $p(\beta^\top x)$, then we can write the probability mass function for this distribution
+&lt;/p&gt;
 $$
 P(Y|X=x; p(\beta^\top x)) = \begin{cases}
-p(\beta^\top x) &amp;amp;\text{ if } Y=1 \
-1 - p(\beta^\top x) &amp;amp;\text{ if } Y=0
+    p(\beta^\top x) &amp;\text{ if } Y=1 \\
+    1 - p(\beta^\top x) &amp;\text{ if } Y=0
 \end{cases}
-$$
+$$&lt;p&gt;
 From this point forward, we will make our notation less cumbersome and refer to $p(\beta^\top x)$ simply as $p$.&lt;/p&gt;
 &lt;p&gt;There&amp;rsquo;s a more compact, cleverer way of writing $P(Y|X=x; p)$ that packs both cases from the previous formulation into a single expression:
+&lt;/p&gt;
 $$
 P(Y=y|X=x; p) = p^y (1 - p)^{(1-y)}.
-$$
+$$&lt;p&gt;
 The key is that $y$, which is binary, acts as a switch that turns on the relevant term for each case. When $y = 1$, $1-y=0$, so $P(Y=1|X=x; p)$ resolves to $p$. Similarly, when $Y = 0$, the expression resolves to $1 - p$.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s first rewrite
+&lt;/p&gt;
 $$
 \begin{align*}
-P(Y=y|X=x; p) &amp;amp;= p^y (1 - p)^{(1-y)} \
-&amp;amp;= \exp(\log(p^y (1 - p)^{(1-y)})) \
-&amp;amp;= \exp(y\log(p) + (1 - y)\log(1 - p)) \
-&amp;amp;= \exp(y\log(p) + \log(1 - p) -y\log(1 - p)) \
-&amp;amp;= \exp((\log(p) - \log(1 - p))y + \log(1 - p)) \
-&amp;amp;= \exp(y\log(p/(1 - p)) + \log(1 - p))
+P(Y=y|X=x; p) &amp;= p^y (1 - p)^{(1-y)} \\
+&amp;= \exp(\log(p^y (1 - p)^{(1-y)})) \\
+&amp;= \exp(y\log(p) + (1 - y)\log(1 - p)) \\
+&amp;= \exp(y\log(p) + \log(1 - p) -y\log(1 - p)) \\
+&amp;= \exp((\log(p) - \log(1 - p))y + \log(1 - p)) \\
+&amp;= \exp(y\log(p/(1 - p)) + \log(1 - p))
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;This is great! But why go through this derivation?&lt;/p&gt;
+$$&lt;p&gt;This is great! But why go through this derivation?&lt;/p&gt;
 &lt;p&gt;It reveals that the log-odds are what is known as the &lt;strong&gt;natural parameter&lt;/strong&gt; of the Bernoulli distribution. By setting our linear predictor $\beta^\top x$ equal to this natural parameter, we are using what is called the &lt;strong&gt;canonical link function&lt;/strong&gt;. This specific choice is mathematically &amp;ldquo;safe&amp;rdquo;: it guarantees that the log-likelihood function with respect to the parameters $\beta$ is concave. In practical terms, this makes the likelihood much easier to maximize, since ther are no local optima to get stuck at. To see the model we get for $p$ when we model the log odds as $\beta^\top x$, we&amp;hellip; just have a look at the earlier section on range mapping.&lt;/p&gt;
 &lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;In this post, we&amp;rsquo;ve seen two ways of motivating the use of the sigmoid function in logistic regression. The first is easier to grasp and more intuitive, but the second gives a glimpse of the mathematical depth that is often skipped over when engineers study ML for the first time. I hope you enjoyed, and happy Thanksgiving!&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>The challenge of multimodal distributions in ML</title>
-      <link>http://localhost:1313/posts/2025-02-15-multimodality/</link>
-      <pubDate>Sat, 15 Feb 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/posts/2025-02-15-multimodality/</guid>
-      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;In this post, I want to write about multimodality &amp;ndash; though not in the sense that the AI world has been buzzing about recently. One way to build decision making systems is to show the system many of examples of desired behavior during the training process. But this introduces an important problem: that there are many ways of accomplishing a given task! Training certain kinds of (widely-used) machine learning methods on multiple different ways of accomplishing the same task could result in some kind of weird &amp;ndash; and possibly invalid &amp;ndash; averaging that leads to suboptimal, at best, and, at worst, unusable systems.&lt;/p&gt;
-&lt;p&gt;For the rest of this post, we&amp;rsquo;re going to introduce multimodality with some simple examples, see why it presents a problem for deterministic machine learning algorithms, and then discuss some approaches for training decision making systems that can work around some of those pitfalls.&lt;/p&gt;
-&lt;h1 id=&#34;what-is-multimodality&#34;&gt;What is multimodality?&lt;/h1&gt;
-&lt;p&gt;Let&amp;rsquo;s say we&amp;rsquo;re trying to fit this data with linear regression.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/posts/multimodality/noline.png&#34;&gt;
-&lt;p&gt;Using simple linear regression, we&amp;rsquo;d find a line like this one.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/posts/multimodality/line.png&#34;&gt;
-&lt;p&gt;What it means to &amp;ldquo;find a line&amp;rdquo; in this context is to find $m$ and $b$ that minimizes the the mean square distance between the collection of training points and the line. Now suppose I wanted to &lt;em&gt;generate&lt;/em&gt; some $y$ values for some new values of $x$. In other words, how could I use the parameters $m$ and $b$ in a generative capacity?&lt;/p&gt;
-&lt;p&gt;One simple way to do it would be to assume that the errors come from a mean-zero normal distribution and calculate a variance $\sigma^2$ that captures the spread of the training points around the line. With this value of $\sigma^2$, we can generate new points by&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;picking a value of $x$&lt;/li&gt;
-&lt;li&gt;sampling $y \sim \mathcal N(mx +b, \sigma^2)$&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;That is, we use $mx + b$ as a starting point, then add some noise to produce our $y$.&lt;/p&gt;
-&lt;p&gt;As you might imagine, this strategy would actually work pretty well at generating plausible points like the ones in the collection shown in the first figure.&lt;/p&gt;
-&lt;p&gt;But what about if we started with data like this?&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/posts/multimodality/mm.png&#34;&gt;
-&lt;p&gt;If we fit a model to the points in this example and used the same procedure to generate new points, what would happen? Well, if we sampled $y$s for $x$s around 3, we&amp;rsquo;d probably produce a large number of points where there aren&amp;rsquo;t any in the actual dataset we&amp;rsquo;re trying to model. To crystallize what messes things up here, let&amp;rsquo;s look at the cross section of $y$ values around $x=3$.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/posts/multimodality/mmnear3.png&#34;&gt;
-&lt;p&gt;When we say that the data distribution is multimodal, we informally mean that there are more than one point around which data are clustered. The normal distribution we sampled from in step 2 above is unimodal, since it is centered around $mx + b$ alone; it would be difficult for a simple generative process like the one we designed to reproduce the true shape of this data.&lt;/p&gt;
-&lt;h1 id=&#34;why-is-it-a-problem&#34;&gt;Why is it a problem?&lt;/h1&gt;
-&lt;p&gt;When we train decision making systems to perform tasks of interest, there might be more than one way to accomplish the task. Take this very simple example: Suppose we want to train a robot to navigate around obstacle like the one shown in the image below using correct demonstrations.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/posts/multimodality/twopaths.png&#34;&gt;
-&lt;p&gt;In this example, there are two modes around which the correct examples cluster: paths that pass above and below the obstacle. If we learned a unimodal policy (a way to turn observations into actions), can you see what might happen? (Pause and think it through before continuing.)&lt;/p&gt;
-&lt;p&gt;A unimodal policy here would center around the average of the behaviors shown in the dataset, which would be to&amp;hellip; try to move straight through the obstacle. Since this action is not valid, the robot would freeze.&lt;/p&gt;
-&lt;p&gt;In the real world, there are many correct ways of accomplishing the same task. If we collect demonstrations from many different humans, not only &lt;em&gt;might&lt;/em&gt; we find different ways of doing things, we should &lt;em&gt;expect&lt;/em&gt; multimodality in our dataset. What types of model architectures can we use to avoid this sort of undesirable averaging that occurs when we learn unimodal action distributions?&lt;/p&gt;
-&lt;h1 id=&#34;what-can-we-do&#34;&gt;What can we do?&lt;/h1&gt;
-&lt;p&gt;There are many ways to learn multimodal action distributions. In this section we will briefly describe one such approach, energy based modeling, at a high level.&lt;/p&gt;
 </description>
     </item>
     
@@ -164,7 +135,7 @@ $$&lt;/p&gt;
 &lt;li&gt;A decoder $D$: this piece maps from the embedding space back into the input space.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;(Note: Both $E$ and $D$ are smaller neural networks whose parameters are updated during training. Once the system has been trained, we typically throw out $D$ and just use $E$ to generate embeddings.)&lt;/p&gt;
-&lt;p&gt;During training, the model is shown many examples $x$. For each one, it computes $e = E(x)$, and then $x&amp;rsquo; = D(e)$. Here, $e$ is what we call the &lt;em&gt;embedding&lt;/em&gt; of the object. With autoencoders, we use the original $x$ as our &amp;ldquo;label&amp;rdquo;! The way we determine whether or not our embedding $e$ is good is by whether it contains enough information to be re-expanded back into $x$! Mathematically, our representation is good if $\text{distance}(x, x&amp;rsquo;)$ is small.&lt;/p&gt;
+&lt;p&gt;During training, the model is shown many examples $x$. For each one, it computes $e = E(x)$, and then $x&#39; = D(e)$. Here, $e$ is what we call the &lt;em&gt;embedding&lt;/em&gt; of the object. With autoencoders, we use the original $x$ as our &amp;ldquo;label&amp;rdquo;! The way we determine whether or not our embedding $e$ is good is by whether it contains enough information to be re-expanded back into $x$! Mathematically, our representation is good if $\text{distance}(x, x&#39;)$ is small.&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/posts/self-supervision/autoencoder.png&#34; alt=&#34;drawing&#34; width=&#34;550&#34; height=&#34;300&#34;/&gt;
 &lt;p&gt;This is our first example of actually manufacturing a supervised problem from unlabeled data by cleverly defining our objective. In this case, we define our training objective to be that our reproductions of inputs (images, for instance) should be as close as possible to the original inputs themselves. By using this training task, we obviate the need for labels, but are nonetheless able to learn something useful.&lt;/p&gt;
 &lt;p&gt;Next, we&amp;rsquo;ll look at a pair of training tasks used in conjunction to train a model called BERT, a precursor to many of the large language models available today.&lt;/p&gt;
@@ -251,18 +222,17 @@ $$&lt;/p&gt;
 &lt;p&gt;Suppose that we want to train a model $M$ to produce generic image embeddings. One way we can do this is as follows. First, we produce a triplet of embeddings:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Select an image $x_1$ and compute its embedding $e_1 = M(x_1)$ .&lt;/li&gt;
-&lt;li&gt;Apply an augmentation to $x_1$ and compute the embedding of the augmented image $e_1&amp;rsquo; = M(x_1&amp;rsquo;)$. (There are a wide variety of augmentations we can apply, including crops, rotations, or color inversions.)&lt;/li&gt;
+&lt;li&gt;Apply an augmentation to $x_1$ and compute the embedding of the augmented image $e_1&#39; = M(x_1&#39;)$. (There are a wide variety of augmentations we can apply, including crops, rotations, or color inversions.)&lt;/li&gt;
 &lt;li&gt;Choose another random image $x_2$ from the dataset and compute its embedding $e_2 = M(x_2)$.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Contrastive objectives try to push embeddings of similar objects (e.g., an image and its crop) closer together, while pushing embeddings of unrelated objects (e.g., two random images) apart. We can set up an objective to do this using our three embeddings as follows:&lt;/p&gt;
-&lt;p&gt;$$
-\mathcal L(e_1, e_1&amp;rsquo;, e_2; M) = \max(\text{distance}(e_1, e_1&amp;rsquo;) - \text{distance}(e_1, e_2) + \alpha, 0)
-$$&lt;/p&gt;
-&lt;p&gt;Let&amp;rsquo;s have a think about what&amp;rsquo;s going on here. The function $\mathcal L$ takes positive values when
 $$
-\text{distance}(e_1, e_1&amp;rsquo;) - \text{distance}(e_1, e_2) &amp;gt; \alpha.
-$$&lt;/p&gt;
-&lt;p&gt;That is, when the distance between embeddings similar objects is larger than the distance between embeddings of unrelated objects by more than $\alpha$ (we choose $\alpha$), the model needs to be adjusted. We would take that positive loss and make updates to $M$&amp;rsquo;s parameters proportionally to how much each contributed to the loss.&lt;/p&gt;
+    \mathcal L(e_1, e_1&#39;, e_2; M) = \max(\text{distance}(e_1, e_1&#39;) - \text{distance}(e_1, e_2) + \alpha, 0)
+$$&lt;p&gt;Let&amp;rsquo;s have a think about what&amp;rsquo;s going on here. The function $\mathcal L$ takes positive values when
+&lt;/p&gt;
+$$
+\text{distance}(e_1, e_1&#39;) - \text{distance}(e_1, e_2) &gt; \alpha.
+$$&lt;p&gt;That is, when the distance between embeddings similar objects is larger than the distance between embeddings of unrelated objects by more than $\alpha$ (we choose $\alpha$), the model needs to be adjusted. We would take that positive loss and make updates to $M$&amp;rsquo;s parameters proportionally to how much each contributed to the loss.&lt;/p&gt;
 &lt;p&gt;With a large enough dataset of diverse images and enough training, this leads to image embeddings that can be applied to a range of downstream applications and tasks.&lt;/p&gt;
 &lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;The shift from relying solely on traditional supervised learning to pre-training using self-supervision marks a significant evolution in machine learning, offering solutions to the challenges of scale imposed by the costs obtaining high-quality labeled data. By creatively designing training tasks that derive supervision from the data itself, we can harness the power of large, unlabeled datasets to pre-train models that can then be fine-tuned for specific applications.&lt;/p&gt;
@@ -285,12 +255,11 @@ $$&lt;/p&gt;
 &lt;p&gt;We are going to develop the k-means algorithm in a somewhat non-standard way, but first we need to review a few preliminaries.&lt;/p&gt;
 &lt;h2 id=&#34;mixtures-of-gaussians&#34;&gt;Mixtures of Gaussians&lt;/h2&gt;
 &lt;p&gt;A mixture of Gaussians model can be succinctly expressed as follows:&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 p(x) = \sum_{i=1}^k \pi_i N(x | \mu_i, \Sigma_i).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.&lt;/p&gt;
+$$&lt;p&gt;This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.&lt;/p&gt;
 &lt;p&gt;One way to interpret this model that I find intuitively appealing is as an assumption that each point in your dataset is generated from one of $k$ distinct (Gaussian) generating processes. To sample a new point from this distribution, you can first sample a value $i$ using the $\pi_i$, and then subsequently sample a point from the corresponding Gaussian. (Note that this assumption may or may not be suitable for a particular dataset or application. As George Box has famously said: &amp;ldquo;All models are wrong, but some are useful.&amp;rdquo;)&lt;/p&gt;
 &lt;h2 id=&#34;em-algorithm&#34;&gt;EM algorithm&lt;/h2&gt;
 &lt;p&gt;The EM algorithm is a way of carrying out &lt;a href=&#34;https://en.wikipedia.org/wiki/Maximum_likelihood_estimation&#34;&gt;maximum likelihood estimation&lt;/a&gt; in cases where the model is constructed with &lt;strong&gt;latent variables&lt;/strong&gt;. Latent variables are often used to account for or represent characteristics of a population that cannot be directly observed. As an example, someone&amp;rsquo;s political orientation might not be directly observable, but if you ask questions about certain issues, you might be able to infer it.&lt;/p&gt;
@@ -298,52 +267,46 @@ $$&lt;/p&gt;
 &lt;h3 id=&#34;expectation-step&#34;&gt;Expectation step&lt;/h3&gt;
 &lt;p&gt;The output of this step is a &lt;em&gt;function&lt;/em&gt; that takes a potential parameter setting (i.e., a model) $\theta$, and outputs a score. (Higher scores are better.) The obvious question: How do we compute that score? Let&amp;rsquo;s say that $z$ is a possible latent variable setting. The score corresponding to $z$ is $\log p(x, z | \theta)$, i.e., the (log) likelihood of observing the data $x$ and $z$ assuming the model $\theta$. Since a &amp;ldquo;probable&amp;rdquo; setting of $z$ depends on the parameters we&amp;rsquo;ve estimated so far and the observed data $x$, the overall score for $\theta$ takes a weighted average of the scores across possible values of $z$, where the weights are the likelihood of observing $z$ given the latest parameters and the data $x$.&lt;/p&gt;
 &lt;p&gt;To summarize using notation we&amp;rsquo;ll refer to in the next section, the output of this step is a function we&amp;rsquo;ll call $Q$. To formalize the idea in the previous paragraph, we define $Q$ as follows:&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 Q(\theta; x, \theta^{(t)}) = E_{z \sim p(\cdot | x, \theta^{(t)})} [\log p(x, z | \theta)].
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting &lt;em&gt;that we are constructing $Q$ to evaluate&lt;/em&gt;. In the same way that when we define $f(x)$, we don&amp;rsquo;t know anything about $x$ except that it&amp;rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&amp;rsquo;t know anything about $\theta$ except that it&amp;rsquo;s a potential parameter setting we might want to test.&lt;/p&gt;
+$$&lt;p&gt;Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting &lt;em&gt;that we are constructing $Q$ to evaluate&lt;/em&gt;. In the same way that when we define $f(x)$, we don&amp;rsquo;t know anything about $x$ except that it&amp;rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&amp;rsquo;t know anything about $\theta$ except that it&amp;rsquo;s a potential parameter setting we might want to test.&lt;/p&gt;
 &lt;p&gt;The semicolon in the definition of $Q$ is just a way of indicating that the function also depends on the data $x$ and the latest parameter setting $\theta^{(t)}$, but that we&amp;rsquo;re treating these as known (whereas $\theta$ is a variable).&lt;/p&gt;
 &lt;h3 id=&#34;maximization-step&#34;&gt;Maximization step&lt;/h3&gt;
 &lt;p&gt;Once we have the function $Q$, we simply maximize the function over $\theta$. The concrete update rule depends on the model we&amp;rsquo;re working with, but the general idea is to find the parameter setting that makes the data most likely. In general mathematical terms we are looking for&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
 \theta^{(t+1)} = \arg\max_{\theta} Q(\theta; x, \theta^{(t)}).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.&lt;/p&gt;
+$$&lt;p&gt;We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.&lt;/p&gt;
 &lt;h1 id=&#34;k-means--em--mixture-of-gaussians--a-limit&#34;&gt;K-means = EM + mixture of Gaussians + a limit&lt;/h1&gt;
 &lt;p&gt;For each point $x_i$, we can imagine that there is a true, but latent, cluster assignment vector $z_i \in \text{one-hot}(k)$. Each entry $z_{ic}$ of $z_i$ is 1 if $x_i$ is a member of cluster $c$ and 0 otherwise. (Note that only one component of $z_i$ can be 1 for each $i$.) In our setup, since the cluster assignment is latent, $x_i$&amp;rsquo;s cluster membership is smeared across the different clusters probabilistically. We express this idea of a &lt;strong&gt;soft assignment&lt;/strong&gt; by saying that there is a probability, $\gamma(z_{ic})$, that the point $x_i$ is in cluster $c$. (In contrast, k-means makes a &lt;strong&gt;hard assignment&lt;/strong&gt;, where each point is assigned to &lt;em&gt;exactly one&lt;/em&gt; cluster, in which case $\gamma$&amp;rsquo;s output would be binary. We&amp;rsquo;ll get to that in a moment.)&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s assume that the $x_i$ are drawn from a mixture of Gaussians with mixture coefficients $\pi_i$ for $i = 1,\dots, k$, but with the additional assumption that for each $i$, $\Sigma_i = \sigma I$. That is, assume that the covariance matrices for each Gaussian are all diagonal and have the same value $\sigma$ on their diagonals.&lt;/p&gt;
 &lt;p&gt;The entries of the $\gamma(z_i)$ (the vector of $\gamma(z_{ic})$ for $c = 1, \dots, k$) can be expressed as&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \begin{align*}
-\gamma(z_{ij}; \theta^{(t)}) &amp;amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \
-&amp;amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} |x_i - \mu_j|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} |x_i - \mu_l|^2\right)}.
+\gamma(z_{ij}; \theta^{(t)}) &amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \\
+&amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_j\|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_l\|^2\right)}.
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&amp;rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.&lt;/p&gt;
+$$&lt;p&gt;We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&amp;rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.&lt;/p&gt;
 &lt;p&gt;The denominator here looks complicated, but it&amp;rsquo;s just there to make sure that the entries of $\gamma(z_i)$ sum to 1. The numerator is roughly the probability that $x_i$ was generated by the $j$th Gaussian. (The exact expression is a bit more complicated, but this is the intuition.)&lt;/p&gt;
 &lt;p&gt;The k-means algorithm can be seen as a limiting case of the EM algorithm applied to this mixture of Gaussians setup.&lt;/p&gt;
 &lt;h2 id=&#34;the-e-step&#34;&gt;The E-step&lt;/h2&gt;
 &lt;p&gt;The TL;DR is that the E-step of the EM algorithm computes the $\gamma(z_i)$ for each $x_i$ using the existing $\mu_j$s and $\pi_j$s. I want to be slightly more precise, though, about how this fits within the abstract framework of the EM algorithm that we outlined earlier.&lt;/p&gt;
 &lt;p&gt;The E-step computes $\gamma(z_i)$ as above. To map this onto the abstract definition of the E-step, we can first note that for a particular example $x_i$, we can compute the (log) likelihood of $x_i$ being generated by the $j$th Gaussian as&lt;/p&gt;
-&lt;p&gt;$$
+$$
 \log p(x_i, z_{ij} = 1 | \theta) = \log \pi_j N(x_i | \mu_j, \sigma I).
-$$&lt;/p&gt;
-&lt;p&gt;Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:&lt;/p&gt;
-&lt;p&gt;$$
+$$&lt;p&gt;Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:&lt;/p&gt;
+$$
 \begin{align*}
-Q(\theta; x_i, \theta^{(t)}) &amp;amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \
-&amp;amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
+Q(\theta; x_i, \theta^{(t)}) &amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \\
+&amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:&lt;/p&gt;
-&lt;p&gt;$$
+$$&lt;p&gt;To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:&lt;/p&gt;
+$$
 Q(\theta; x, \theta^{(t)}) = \sum_{i=1}^n \sum_{j=1}^k \gamma(z_{ij}; \theta^{(t)}) \log \pi_j N(x_i | \mu_j, \sigma I).
-$$&lt;/p&gt;
-&lt;p&gt;Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&amp;rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.&lt;/p&gt;
+$$&lt;p&gt;Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&amp;rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.&lt;/p&gt;
 &lt;h2 id=&#34;the-m-step&#34;&gt;The M-step&lt;/h2&gt;
 &lt;p&gt;Since we&amp;rsquo;ve fixed the covariances, i.e. are not parameters that need to be found, the M-step updates the $\mu_j$ to be the weighted average of all of the $x_i$. Each point&amp;rsquo;s contribution to the computation of $\mu_j$ is weighted by the corresponding $\gamma(z_{ij})$, or how strongly it is attracted to $\mu_j$. This makes intuitive sense; the farther away a point is from a given mean, the (exponentially) less impact it has on that mean&amp;rsquo;s update.&lt;/p&gt;
 &lt;h2 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h2&gt;
@@ -394,20 +357,21 @@ $y_i$ are real numbers ($y_i \in \mathbf{R}$). Using a linear model to model the
 relationship is equivalent to making the assumption that there is a vector of
 parameters $\theta \in \mathbf{R}^d$ (the slope) and an intercept $b \in \mathbf{R}$
 such that
+&lt;/p&gt;
 $$
 \begin{align*}
-y_i = \theta^\top x_i + b + \varepsilon_i
+    y_i = \theta^\top x_i + b + \varepsilon_i
 \end{align*}
-$$
+$$&lt;p&gt;
 where $\varepsilon_i$ is some randomness that our model doesn&amp;rsquo;t capture.&lt;/p&gt;
 &lt;p&gt;The mathematical characterization of the problem of finding the optimal parameters $\theta^\star$
 and $b^\star$ is
+&lt;/p&gt;
 $$
 \begin{align}
-\theta^\star, b^\star := \underset{\theta, b}{\text{arg min}} ~| \theta^\top X + b\mathbf{1} - y |_2^2
+    \theta^\star, b^\star := \underset{\theta, b}{\text{arg min}} ~\| \theta^\top X + b\mathbf{1} - y \|_2^2
 \end{align}
-$$&lt;/p&gt;
-&lt;p&gt;Before continuing, let&amp;rsquo;s break down those symbols:&lt;/p&gt;
+$$&lt;p&gt;Before continuing, let&amp;rsquo;s break down those symbols:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&amp;ldquo;$\theta^\star, b^\star :=$&amp;rdquo;: We typically use the $\star$ superscript to indicate the best or optimal
 choice. We use the $:=$ symbol to indicate that we are not writing out any mathematical equivalence, just a definition.
@@ -589,21 +553,22 @@ let $q(x \mid x_1, x_2, \dots, x_i)$ be the expensive model, and $p(x \mid x_1, 
 the draft model. As in the paper, we will also refer to the $t$th draft token as $\tilde x_t$.&lt;/p&gt;
 &lt;p&gt;I will first state the answers to questions (1) and (2), and then I will show that they work. The probability $r$
 that we use is given by the expression
+&lt;/p&gt;
 $$
 \begin{align*}
-r = \min\biggr(1, \frac{q(\tilde x_t \mid x_1, \dots, x_{n+t-1})}{p(\tilde x_t \mid x_1, \dots, x_{n+t-1})} \biggr)
+    r = \min\biggr(1, \frac{q(\tilde x_t \mid x_1, \dots, x_{n+t-1})}{p(\tilde x_t \mid x_1, \dots, x_{n+t-1})} \biggr)
 \end{align*}
-$$
+$$&lt;p&gt;
 and the rejection distribution is
+&lt;/p&gt;
 $$
 \begin{align}
-(q(x \mid x_1, \dots, x_{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))&lt;em&gt;+
-= \frac{\max(0, q(x \mid x_1, \dots, x&lt;/em&gt;{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))}
-{\sum_{x&amp;rsquo;} \max(0, q(x&amp;rsquo; \mid x_1, \dots, x_{n+t-1}) - p(x&amp;rsquo; \mid x_1, \dots, x_{n+t-1}))}
+    (q(x \mid x_1, \dots, x_{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))_+
+    = \frac{\max(0, q(x \mid x_1, \dots, x_{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))}
+           {\sum_{x&#39;} \max(0, q(x&#39; \mid x_1, \dots, x_{n+t-1}) - p(x&#39; \mid x_1, \dots, x_{n+t-1}))}
 \end{align}
-$$&lt;/p&gt;
-&lt;p&gt;These probabilities and distributions depend on the combined initial sequence and already accepted draft tokens.
-Also, note that if $q(x \mid x_1, \dots, x_{n+t-1}) &amp;gt; p(x \mid x_1, \dots, x_{n+t-1})$, we automatically accept
+$$&lt;p&gt;These probabilities and distributions depend on the combined initial sequence and already accepted draft tokens.
+Also, note that if $q(x \mid x_1, \dots, x_{n+t-1}) &gt; p(x \mid x_1, \dots, x_{n+t-1})$, we automatically accept
 the $t$th draft token. Intuitively, this checks out, because if the draft model produces a token which, given
 the prior sequence tokens, is more likely to have been produced by the large model than the draft model, of course
 we should use it!&lt;/p&gt;
@@ -618,7 +583,7 @@ models really disagree about whether $\tilde x_t$ would make a good next token.&
 If, on the other hand, we reject $\tilde x_t$, we sample from the complicated looking distribution
 we spelled out in equation (1). What we want is a distribution that re-weights the possible tokens
 to sample from the large expensive model in a sensible way. In our case, $q - p$ (in the numerator)
-will produce negative &amp;ldquo;probabilities&amp;rdquo;  for tokens where $q &amp;lt; p$, and positive values where $q &amp;gt; p$. This kind of makes
+will produce negative &amp;ldquo;probabilities&amp;rdquo;  for tokens where $q &lt; p$, and positive values where $q &gt; p$. This kind of makes
 sense, because if $\tilde x_t$ is rejected, we want to favor sampling tokens to which $q$ assigns higher scores than $p$ does.
 We have two problems, though:&lt;/p&gt;
 &lt;ol&gt;
@@ -637,47 +602,49 @@ objective, which is to come up with a sample that looks as though it was obtaine
 target (expensive model). Let&amp;rsquo;s see if we can show that our strategy helps accomplish this.&lt;/p&gt;
 &lt;h3 id=&#34;proving-that-we-recover-the-target-distribution&#34;&gt;Proving that we recover the target distribution&lt;/h3&gt;
 &lt;p&gt;If we have two discrete distributions $a$ (target) and $b$ (draft) and a draft sample
-$x&amp;rsquo; \sim b$ ($\sim$ means &amp;ldquo;sampled from&amp;rdquo;), let $X$ be a random variable representing the sample
+$x&#39; \sim b$ ($\sim$ means &amp;ldquo;sampled from&amp;rdquo;), let $X$ be a random variable representing the sample
 produced by speculative sampling. If $X$ ends up taking on a specific value $x$, there are two possible
 ways it could have happened:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;We accepted $x&amp;rsquo;$, in which case $x&amp;rsquo; = x$.&lt;/li&gt;
-&lt;li&gt;We rejected $x&amp;rsquo;$, in which case $x \sim (a - b)_+$.&lt;/li&gt;
+&lt;li&gt;We accepted $x&#39;$, in which case $x&#39; = x$.&lt;/li&gt;
+&lt;li&gt;We rejected $x&#39;$, in which case $x \sim (a - b)_+$.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;outcome-1&#34;&gt;Outcome 1&lt;/h3&gt;
-&lt;p&gt;The probability of outcome (1) is the probability that the draft sample $x&amp;rsquo;$ is accepted given that it takes the particular value $x$.
-We have to multiply this by the probability that the draft distribution assigns to the event that $x&amp;rsquo;$ takes on that value, so we have
+&lt;p&gt;The probability of outcome (1) is the probability that the draft sample $x&#39;$ is accepted given that it takes the particular value $x$.
+We have to multiply this by the probability that the draft distribution assigns to the event that $x&#39;$ takes on that value, so we have
+&lt;/p&gt;
 $$
 \begin{align*}
-P(\text{option 1}) = P(x&amp;rsquo;~\text{accepted} \mid x&amp;rsquo; = x)P(x&amp;rsquo; = x)
+    P(\text{option 1}) = P(x&#39;~\text{accepted} \mid x&#39; = x)P(x&#39; = x)
 \end{align*}
-$$&lt;/p&gt;
-&lt;p&gt;The probability of sampling the value of $x$ from the distribution $b$ is simply $b(x)$. The probability of
+$$&lt;p&gt;The probability of sampling the value of $x$ from the distribution $b$ is simply $b(x)$. The probability of
 accepting it is $\min(1, a(x) / b(x))$ (from the algorithm specification). We thus have
+&lt;/p&gt;
 $$
 \begin{align*}
-P(\text{option 1}) = b(x) \min(1, a(x)/b(x)) = \min(b(x), a(x)).
+    P(\text{option 1}) = b(x) \min(1, a(x)/b(x)) = \min(b(x), a(x)).
 \end{align*}
-$$&lt;/p&gt;
-&lt;h3 id=&#34;outcome-2&#34;&gt;Outcome 2&lt;/h3&gt;
-&lt;p&gt;On the other hand, if $x&amp;rsquo;$ is rejected, then the probability that $X$ takes the value
-$x$ is the probability of sampling $x$ from $(a(x) - b(x))&lt;em&gt;+$. By our definition of that
+$$&lt;h3 id=&#34;outcome-2&#34;&gt;Outcome 2&lt;/h3&gt;
+&lt;p&gt;On the other hand, if $x&#39;$ is rejected, then the probability that $X$ takes the value
+$x$ is the probability of sampling $x$ from $(a(x) - b(x))_+$. By our definition of that
 distribution, we would have
+&lt;/p&gt;
 $$
 \begin{align*}
-P(X = x \mid x&amp;rsquo;~\text{rejected}) = \frac{\max(0, a(x) - b(x))}{\sum&lt;/em&gt;{\hat x} \max(0, a(\hat x) - b(\hat x))}.
+    P(X = x \mid x&#39;~\text{rejected}) = \frac{\max(0, a(x) - b(x))}{\sum_{\hat x} \max(0, a(\hat x) - b(\hat x))}.
 \end{align*}
-$$
-We need to weight this outcome by the probability that $x&amp;rsquo;$ is rejected, which is given by
+$$&lt;p&gt;
+We need to weight this outcome by the probability that $x&#39;$ is rejected, which is given by
+&lt;/p&gt;
 $$
 \begin{align*}
-P(x&amp;rsquo;&lt;del&gt;\text{rejected}) &amp;amp;= 1 - P(x&amp;rsquo;&lt;/del&gt;\text{accepted}) \
-&amp;amp;= 1 - \sum_{\hat x} P(X = \hat x, x&amp;rsquo;~\text{accepted}) \
-&amp;amp;= 1 - \sum_{\hat x} \min(a(\hat x), b(\hat x)) \
-&amp;amp;= \sum_{\hat x} a(\hat x) - \min(a(\hat x), b(\hat x)) \
-&amp;amp;= \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)).
+P(x&#39;~\text{rejected}) &amp;= 1 - P(x&#39;~\text{accepted}) \\
+&amp;= 1 - \sum_{\hat x} P(X = \hat x, x&#39;~\text{accepted}) \\
+&amp;= 1 - \sum_{\hat x} \min(a(\hat x), b(\hat x)) \\
+&amp;= \sum_{\hat x} a(\hat x) - \min(a(\hat x), b(\hat x)) \\
+&amp;= \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)).
 \end{align*}
-$$
+$$&lt;p&gt;
 In the above sequence of equalities, the second uses the fact that to get the $p(x)$, we can sum up
 $p(x, y)$ over all possible values of $y$. The third equality reuses our computation from Outcome 1.
 The fourth uses the fact that the 1 outside the summation can be broken into probabilities $a(\hat x)$
@@ -685,24 +652,25 @@ for all possible values of $\hat x$, since probabilities must sum to 1. Finally,
 when you flip $-\min(a(\hat x), b(\hat x))$ to $\max(-a(\hat x), -b(\hat x))$ and then add the $a(\hat x)$
 to both of the arguments to $\max$.&lt;/p&gt;
 &lt;p&gt;Now that we&amp;rsquo;ve worked all of the details out, does the last expression look familiar? It is the denominator of
-$P(X = x \mid x&amp;rsquo;&lt;del&gt;\text{rejected})$! Multiplying our two probabilities together, we have
+$P(X = x \mid x&#39;~\text{rejected})$! Multiplying our two probabilities together, we have
+&lt;/p&gt;
 $$
 \begin{align*}
-P(\text{option 2}) &amp;amp;= P(X = x \mid x&amp;rsquo;&lt;/del&gt;\text{rejected}) P(x&amp;rsquo;~\text{rejected}) \
-&amp;amp;= \frac{\max(0, a(x) - b(x))}{\sum_{\hat x} \max(0, a(\hat x) - b(\hat x))} \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)) \
-&amp;amp;= \max(0, a(x) - b(x))
+    P(\text{option 2}) &amp;= P(X = x \mid x&#39;~\text{rejected}) P(x&#39;~\text{rejected}) \\
+    &amp;= \frac{\max(0, a(x) - b(x))}{\sum_{\hat x} \max(0, a(\hat x) - b(\hat x))} \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)) \\
+    &amp;= \max(0, a(x) - b(x))
 \end{align*}
-$$&lt;/p&gt;
-&lt;h3 id=&#34;putting-them-together&#34;&gt;Putting Them Together&lt;/h3&gt;
+$$&lt;h3 id=&#34;putting-them-together&#34;&gt;Putting Them Together&lt;/h3&gt;
 &lt;p&gt;Now that we&amp;rsquo;ve computed probabilities for both options, we note that the two possibilities are mutually
 exclusive and exhaustive ways that $X$ can take the value $x$. Thus, the probability $P(X = x)$ is given by
+&lt;/p&gt;
 $$
 \begin{align*}
-P(X = x) &amp;amp;= P(\text{option 1}) + P(\text{option 2}) \
-&amp;amp;= \min(b(x), a(x)) + \max(0, a(x) - b(x)).
+    P(X = x) &amp;= P(\text{option 1}) + P(\text{option 2}) \\
+    &amp;= \min(b(x), a(x)) + \max(0, a(x) - b(x)).
 \end{align*}
-$$
-Now, if $a(x) &amp;gt; b(x)$, then the first term is $b(x)$ and the second term is $a(x) - b(x)$. Adding these together,
+$$&lt;p&gt;
+Now, if $a(x) &gt; b(x)$, then the first term is $b(x)$ and the second term is $a(x) - b(x)$. Adding these together,
 we get $a(x)$. If $a(x) \leq b(x)$, then the first term is $a(x)$ and the second term is 0, so again the sum
 is $a(x)$. Thus, speculative sampling recovers the target distribution $a(x)$. In other words, the rejection
 sampling technique we&amp;rsquo;ve devised produces sequences of tokens that are theoretically indistinguishable

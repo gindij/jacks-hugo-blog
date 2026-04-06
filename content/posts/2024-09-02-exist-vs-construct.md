@@ -34,7 +34,7 @@ Many of the cryptographic protocols responsible for securing data on the interne
 # The Probabilistic Method
 The probabilistic method, often used when studying finite structures, is a very interesting and general technique that manages to cleverly prove that an object with certain (rare) properties exists without actually finding one. The method does this by using randomness in the following ingenious way. First, we construct a "random" instance of the object. Then, we show that the object has the desired property with nonzero probability. Since, if we sample an object at random, the "probability" of drawing the object with the properties we care about is
 $$
-    \frac{\text{# of configurations with property}}{\text{# of configurations}},
+    \frac{\text{\# of configurations with property}}{\text{\# of configurations}},
 $$
 if the probability is nonzero, it means there must be at least one instance that has our property. Without using the method to actually carry out a proof here, I'll set a problem up to give a "concrete" sense of a problem we can solve with this.
 

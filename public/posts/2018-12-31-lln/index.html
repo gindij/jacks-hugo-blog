@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -35,7 +35,7 @@ to say that Alice is better than Bob at a game like backgammon, where dice (a so
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -44,12 +44,16 @@ to say that Alice is better than Bob at a game like backgammon, where dice (a so
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -90,7 +94,7 @@ to say that Alice is better than Bob at a game like backgammon, where dice (a so
   <meta itemprop="description" content="Introduction When I say that Alice is better than Bob at chess, I’m effectively asserting that barring careless mistakes, Alice should always beat Bob. This notion, of Alice “being better than” Bob is easy to wrap one’s head around when the game in question doesn’t have to contend with randomness or uncertainty. What does it mean, though, to say that Alice is better than Bob at a game like backgammon, where dice (a source of randomness) are involved? The rest of this post aims to provide some mathematical machinery to answer such a question.">
   <meta itemprop="datePublished" content="2018-12-31T00:00:00+00:00">
   <meta itemprop="dateModified" content="2018-12-31T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1201">
+  <meta itemprop="wordCount" content="1198">
   <meta itemprop="keywords" content="Statistics">
 
   
@@ -173,7 +177,7 @@ to say that Alice is better than Bob at a game like backgammon, where dice (a so
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1201 words
+          1198 words
         </span>
       
       
@@ -252,7 +256,7 @@ ourselves here with the Weak Law of Large Numbers (the Strong Law is harder to p
 similar in spirit). Mathematically, we would state it as follows (don’t worry &ndash; we’ll break each piece of
 this down momentarily): Let $X_1, \dots, X_n$ be independent and identically distributed random
 variables all having finite average value $m$. Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$. Then for any
-$\varepsilon &gt; 0$, $P(|\bar X_n - m| &lt; \varepsilon) \to 1$ as $n \to \infty$.</p>
+$\varepsilon > 0$, $P(|\bar X_n - m| < \varepsilon) \to 1$ as $n \to \infty$.</p>
 <p>Let’s dissect this piece by piece and make sure it makes sense:</p>
 <ul>
 <li>“Let $X_1, \dots, X_n$ be independent and identically distributed random variables”: This means that each
@@ -262,11 +266,11 @@ probability distribution. Each number the box spits out would be represented by 
 going to say what we can infer about the average of the black box distribution’s average value once we’ve
 made a sufficiently large number of observations.)</li>
 <li>“Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$”: $\bar X_n$ is the average value of the observations.</li>
-<li>“Then for any $\varepsilon &gt; 0$”: This is a math trick students usually first come across in real
+<li>“Then for any $\varepsilon > 0$”: This is a math trick students usually first come across in real
 analysis. You basically pick some arbitrarily small value of $\varepsilon$ and then show that some quantity
 can always be made smaller than the value you chose. (In our case, that value will be the difference
 between the average value of the observations and the true average $m$.)</li>
-<li>“$P(|\bar X_n - m| &lt; \varepsilon) \to 1$ as $n \to \infty$”: The probability that the average value of
+<li>“$P(|\bar X_n - m| < \varepsilon) \to 1$ as $n \to \infty$”: The probability that the average value of
 the observations and the true mean of the underlying distribution differ by less than $\varepsilon$ becomes
 more and more certain as you take more and more observations.</li>
 </ul>
@@ -280,36 +284,33 @@ assumption is not necessary. (It’s just that if we don’t make that assumptio
 complicated.)
 First, let’s compute the mean and variance of $\bar X_n$. Because expectation is linear, and $\bar X_n$ is
 just a sum of RVs each having mean $m$, we have</p>
-<p>$$
+$$
 \begin{align*}
-E(\bar X_n) &amp;= \frac{1}{n}\sum_{i=1}^n E(X_i) \\
-&amp;= \frac{1}{n}\sum_{i=1}^n m \\
-&amp;= mn/n \\
-&amp;= m.
+E(\bar X_n) &= \frac{1}{n}\sum_{i=1}^n E(X_i) \\\\
+&= \frac{1}{n}\sum_{i=1}^n m \\\\
+&= mn/n \\\\
+&= m.
 \end{align*}
-$$</p>
-<p>To compute the variance, we use the independence of the $X_i$ to write that</p>
-<p>$$
+$$<p>To compute the variance, we use the independence of the $X_i$ to write that</p>
+$$
 \begin{align*}
-\text{Var}(\bar X_n) &amp;= \text{Var}(\frac{1}{n}\sum X_i) \\
-&amp;= \frac{1}{n^2}\text{Var}(\sum X_i) \\
-&amp;= \frac{1}{n^2}\sum \text{Var}(X_i) \\
-&amp;= \frac{1}{n^2}n\sigma^2 \\
-&amp;= \sigma^2/n.
+\text{Var}(\bar X_n) &= \text{Var}(\frac{1}{n}\sum X_i) \\\\
+&= \frac{1}{n^2}\text{Var}(\sum X_i) \\\\
+&= \frac{1}{n^2}\sum \text{Var}(X_i) \\\\
+&= \frac{1}{n^2}n\sigma^2 \\\\
+&= \sigma^2/n.
 \end{align*}
-$$</p>
-<p>Before we continue note that the fact that variance is a decreasing function of $n$ just about makes sense.
+$$<p>Before we continue note that the fact that variance is a decreasing function of $n$ just about makes sense.
 The more observations I take, the smaller my variance should intuitively be.</p>
 <p>Next, we use Chebyshev’s inequality with $\mu = m$, $k = \varepsilon$ and $X = \bar X_n$ to say that</p>
-<p>$$
+$$
 \begin{align*}
-P(|\bar X_n - m| &lt; \varepsilon) &amp;= 1 - P(|\bar X_n - m| &gt; \varepsilon) \\
-&amp;\geq 1 - \frac{\sigma^2/
-n}{\varepsilon^2} \\
-&amp;= 1 -\frac{\sigma^2}{n\varepsilon^2}.
+P(|\bar X_n - m| < \varepsilon) &= 1 - P(|\bar X_n - m| > \varepsilon) \\\\
+&\geq 1 - \frac{\sigma^2/
+  n}{\varepsilon^2} \\\\
+&= 1 -\frac{\sigma^2}{n\varepsilon^2}.
 \end{align*}
-$$</p>
-<p>(The inequality sign is flipped because we have that $1  - \dots$ in there. Otherwise, it’s just plug and play Chebyshev.)</p>
+$$<p>(The inequality sign is flipped because we have that $1  - \dots$ in there. Otherwise, it’s just plug and play Chebyshev.)</p>
 <p>As $n$ gets larger and larger, that rightmost term tends to 0, so the probability of interest is bounded below by 1, and voila! We’re done.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>This law is intuitive, deep <em>and</em> also deeply embedded in the way that we as human beings trying to navigate the world deal with uncertainty, so I thought it deserved a post.</p>
@@ -333,7 +334,7 @@ $$</p>
     <a class="link" href="http://localhost:1313/posts/2018-11-04-markov-chebyshev/" title="Bounding probabilities with Markov and Chebyshev">← prev</a>
     
     
-    <a class="link" href="http://localhost:1313/posts/2019-09-23-mse/" title="Understanding mean squared error">next →</a>
+    <a class="link" href="http://localhost:1313/posts/2019-09-23-mse/" title="MSE = Bias² &#43; Variance">next →</a>
     
   </div>
   

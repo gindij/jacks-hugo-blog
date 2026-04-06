@@ -120,11 +120,11 @@ To show that the sequences of iterates converge in the way that we claimed, we
 just need to show that the sequence $v_i$ converges to an eigenvector of $A$ (
 because we've already shown that given an eigenvector, $\alpha$ produces an eigenvalue).
 
-Let's say that $\\{q_i\\}$, $i = 1,\dots,m$, make up an orthogonal basis of eigenvectors of $A$
+Let's say that $\{q_i\}$, $i = 1,\dots,m$, make up an orthogonal basis of eigenvectors of $A$
 corresponding to the eigenvalues $\lambda_i$ (this set exists because $A$ is symmetric).
 We can also assume, without altering the proof, that $|\lambda_1| > |\lambda_2| \geq \dots \geq |\lambda_m|$.
 Because $v_k = c_kA^kv_0$ for some sequence of constants $c_k$ (because of the
-normalization at each step), we can use the expansion of $v_k$ in the basis $\\{q_i\\}$ as
+normalization at each step), we can use the expansion of $v_k$ in the basis $\{q_i\}$ as
 $$
 \begin{align*}
     v_k &= cA^kv_0 \\\\

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -32,7 +32,7 @@ In the next few posts I want to take you on the learning journey that happened w
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -41,12 +41,16 @@ In the next few posts I want to take you on the learning journey that happened w
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -88,7 +92,7 @@ In the next few posts I want to take you on the learning journey that happened w
   <meta itemprop="description" content="Introduction In the next few posts I want to take you on the learning journey that happened when I tried to wrap my head around this wonderful paper by Brian Kulis and Michael I. Jordan (yes, Michael Jordan). The paper is about a variant of the k-means algorithm inspired by a Bayesian way of thinking about clustering. This helps solve a significant problem with k-means, namely that we don’t know the optimal value of $k$ in advance, and, furthermore, that there often is not even a way to make a reasonable guess of what a good value might be for a particular dataset.">
   <meta itemprop="datePublished" content="2024-04-04T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-04-04T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1789">
+  <meta itemprop="wordCount" content="1782">
   <meta itemprop="keywords" content="Machine-Learning,Statistics">
 
   
@@ -171,7 +175,7 @@ In the next few posts I want to take you on the learning journey that happened w
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          1789 words
+          1782 words
         </span>
       
       
@@ -226,12 +230,11 @@ In the next few posts I want to take you on the learning journey that happened w
 <p>We are going to develop the k-means algorithm in a somewhat non-standard way, but first we need to review a few preliminaries.</p>
 <h2 id="mixtures-of-gaussians">Mixtures of Gaussians</h2>
 <p>A mixture of Gaussians model can be succinctly expressed as follows:</p>
-<p>$$
+$$
 \begin{align*}
 p(x) = \sum_{i=1}^k \pi_i N(x | \mu_i, \Sigma_i).
 \end{align*}
-$$</p>
-<p>This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.</p>
+$$<p>This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.</p>
 <p>One way to interpret this model that I find intuitively appealing is as an assumption that each point in your dataset is generated from one of $k$ distinct (Gaussian) generating processes. To sample a new point from this distribution, you can first sample a value $i$ using the $\pi_i$, and then subsequently sample a point from the corresponding Gaussian. (Note that this assumption may or may not be suitable for a particular dataset or application. As George Box has famously said: &ldquo;All models are wrong, but some are useful.&rdquo;)</p>
 <h2 id="em-algorithm">EM algorithm</h2>
 <p>The EM algorithm is a way of carrying out <a href="https://en.wikipedia.org/wiki/Maximum_likelihood_estimation">maximum likelihood estimation</a> in cases where the model is constructed with <strong>latent variables</strong>. Latent variables are often used to account for or represent characteristics of a population that cannot be directly observed. As an example, someone&rsquo;s political orientation might not be directly observable, but if you ask questions about certain issues, you might be able to infer it.</p>
@@ -239,52 +242,46 @@ $$</p>
 <h3 id="expectation-step">Expectation step</h3>
 <p>The output of this step is a <em>function</em> that takes a potential parameter setting (i.e., a model) $\theta$, and outputs a score. (Higher scores are better.) The obvious question: How do we compute that score? Let&rsquo;s say that $z$ is a possible latent variable setting. The score corresponding to $z$ is $\log p(x, z | \theta)$, i.e., the (log) likelihood of observing the data $x$ and $z$ assuming the model $\theta$. Since a &ldquo;probable&rdquo; setting of $z$ depends on the parameters we&rsquo;ve estimated so far and the observed data $x$, the overall score for $\theta$ takes a weighted average of the scores across possible values of $z$, where the weights are the likelihood of observing $z$ given the latest parameters and the data $x$.</p>
 <p>To summarize using notation we&rsquo;ll refer to in the next section, the output of this step is a function we&rsquo;ll call $Q$. To formalize the idea in the previous paragraph, we define $Q$ as follows:</p>
-<p>$$
+$$
 \begin{align*}
 Q(\theta; x, \theta^{(t)}) = E_{z \sim p(\cdot | x, \theta^{(t)})} [\log p(x, z | \theta)].
 \end{align*}
-$$</p>
-<p>Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting <em>that we are constructing $Q$ to evaluate</em>. In the same way that when we define $f(x)$, we don&rsquo;t know anything about $x$ except that it&rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&rsquo;t know anything about $\theta$ except that it&rsquo;s a potential parameter setting we might want to test.</p>
+$$<p>Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting <em>that we are constructing $Q$ to evaluate</em>. In the same way that when we define $f(x)$, we don&rsquo;t know anything about $x$ except that it&rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&rsquo;t know anything about $\theta$ except that it&rsquo;s a potential parameter setting we might want to test.</p>
 <p>The semicolon in the definition of $Q$ is just a way of indicating that the function also depends on the data $x$ and the latest parameter setting $\theta^{(t)}$, but that we&rsquo;re treating these as known (whereas $\theta$ is a variable).</p>
 <h3 id="maximization-step">Maximization step</h3>
 <p>Once we have the function $Q$, we simply maximize the function over $\theta$. The concrete update rule depends on the model we&rsquo;re working with, but the general idea is to find the parameter setting that makes the data most likely. In general mathematical terms we are looking for</p>
-<p>$$
+$$
 \begin{align*}
 \theta^{(t+1)} = \arg\max_{\theta} Q(\theta; x, \theta^{(t)}).
 \end{align*}
-$$</p>
-<p>We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.</p>
+$$<p>We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.</p>
 <h1 id="k-means--em--mixture-of-gaussians--a-limit">K-means = EM + mixture of Gaussians + a limit</h1>
 <p>For each point $x_i$, we can imagine that there is a true, but latent, cluster assignment vector $z_i \in \text{one-hot}(k)$. Each entry $z_{ic}$ of $z_i$ is 1 if $x_i$ is a member of cluster $c$ and 0 otherwise. (Note that only one component of $z_i$ can be 1 for each $i$.) In our setup, since the cluster assignment is latent, $x_i$&rsquo;s cluster membership is smeared across the different clusters probabilistically. We express this idea of a <strong>soft assignment</strong> by saying that there is a probability, $\gamma(z_{ic})$, that the point $x_i$ is in cluster $c$. (In contrast, k-means makes a <strong>hard assignment</strong>, where each point is assigned to <em>exactly one</em> cluster, in which case $\gamma$&rsquo;s output would be binary. We&rsquo;ll get to that in a moment.)</p>
 <p>Let&rsquo;s assume that the $x_i$ are drawn from a mixture of Gaussians with mixture coefficients $\pi_i$ for $i = 1,\dots, k$, but with the additional assumption that for each $i$, $\Sigma_i = \sigma I$. That is, assume that the covariance matrices for each Gaussian are all diagonal and have the same value $\sigma$ on their diagonals.</p>
 <p>The entries of the $\gamma(z_i)$ (the vector of $\gamma(z_{ic})$ for $c = 1, \dots, k$) can be expressed as</p>
-<p>$$
+$$
 \begin{align*}
-\gamma(z_{ij}; \theta^{(t)}) &amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \
-&amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} |x_i - \mu_j|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} |x_i - \mu_l|^2\right)}.
+\gamma(z_{ij}; \theta^{(t)}) &= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \\
+&= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_j\|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} \|x_i - \mu_l\|^2\right)}.
 \end{align*}
-$$</p>
-<p>We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.</p>
+$$<p>We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.</p>
 <p>The denominator here looks complicated, but it&rsquo;s just there to make sure that the entries of $\gamma(z_i)$ sum to 1. The numerator is roughly the probability that $x_i$ was generated by the $j$th Gaussian. (The exact expression is a bit more complicated, but this is the intuition.)</p>
 <p>The k-means algorithm can be seen as a limiting case of the EM algorithm applied to this mixture of Gaussians setup.</p>
 <h2 id="the-e-step">The E-step</h2>
 <p>The TL;DR is that the E-step of the EM algorithm computes the $\gamma(z_i)$ for each $x_i$ using the existing $\mu_j$s and $\pi_j$s. I want to be slightly more precise, though, about how this fits within the abstract framework of the EM algorithm that we outlined earlier.</p>
 <p>The E-step computes $\gamma(z_i)$ as above. To map this onto the abstract definition of the E-step, we can first note that for a particular example $x_i$, we can compute the (log) likelihood of $x_i$ being generated by the $j$th Gaussian as</p>
-<p>$$
+$$
 \log p(x_i, z_{ij} = 1 | \theta) = \log \pi_j N(x_i | \mu_j, \sigma I).
-$$</p>
-<p>Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:</p>
-<p>$$
+$$<p>Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:</p>
+$$
 \begin{align*}
-Q(\theta; x_i, \theta^{(t)}) &amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \
-&amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
+Q(\theta; x_i, \theta^{(t)}) &= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \\
+&= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
 \end{align*}
-$$</p>
-<p>To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:</p>
-<p>$$
+$$<p>To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:</p>
+$$
 Q(\theta; x, \theta^{(t)}) = \sum_{i=1}^n \sum_{j=1}^k \gamma(z_{ij}; \theta^{(t)}) \log \pi_j N(x_i | \mu_j, \sigma I).
-$$</p>
-<p>Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.</p>
+$$<p>Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.</p>
 <h2 id="the-m-step">The M-step</h2>
 <p>Since we&rsquo;ve fixed the covariances, i.e. are not parameters that need to be found, the M-step updates the $\mu_j$ to be the weighted average of all of the $x_i$. Each point&rsquo;s contribution to the computation of $\mu_j$ is weighted by the corresponding $\gamma(z_{ij})$, or how strongly it is attracted to $\mu_j$. This makes intuitive sense; the farther away a point is from a given mean, the (exponentially) less impact it has on that mean&rsquo;s update.</p>
 <h2 id="putting-it-all-together">Putting it all together</h2>

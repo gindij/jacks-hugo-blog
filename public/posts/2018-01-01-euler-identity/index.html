@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -14,14 +14,7 @@
 In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
 Approach 1
 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
-$$
-\begin{align*}
-\cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\
-\sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots,
-\end{align*}
-$$
-so
-$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+">
   
 
   
@@ -42,7 +35,7 @@ $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dot
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -51,12 +44,16 @@ $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dot
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -79,7 +76,7 @@ $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dot
   <meta property="og:site_name" content="Jack Gindi">
   <meta property="og:title" content="Euler&#39;s Identity">
   <meta property="og:description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
-Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
@@ -97,10 +94,10 @@ Approach 1 The first technique is one I encountered toward the end of my tenure 
   
   <meta itemprop="name" content="Euler&#39;s Identity">
   <meta itemprop="description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
-Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are">
   <meta itemprop="datePublished" content="2018-01-01T00:00:00+00:00">
   <meta itemprop="dateModified" content="2018-01-01T00:00:00+00:00">
-  <meta itemprop="wordCount" content="851">
+  <meta itemprop="wordCount" content="849">
   <meta itemprop="keywords" content="Calculus,Linear-Algebra">
 
   
@@ -124,7 +121,7 @@ Approach 1 The first technique is one I encountered toward the end of my tenure 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Euler&#39;s Identity">
   <meta name="twitter:description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
-Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are">
 
 
   
@@ -184,7 +181,7 @@ Approach 1 The first technique is one I encountered toward the end of my tenure 
           <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          851 words
+          849 words
         </span>
       
       
@@ -226,23 +223,26 @@ Approach 1 The first technique is one I encountered toward the end of my tenure 
 <p>In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.</p>
 <h2 id="approach-1">Approach 1</h2>
 <p>The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+</p>
 $$
 \begin{align*}
-\cos\theta &amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\
-\sin\theta &amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
+\cos\theta &= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\\
+\sin\theta &= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
 \end{align*}
-$$
+$$<p>
 so
-$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$</p>
-<p>Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
-$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$
+</p>
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$<p>Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
+</p>
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$<p>
 we have
+</p>
 $$
 \begin{align*}
-e^{i\theta} &amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\
-&amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
+e^{i\theta} &= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\\
+&= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
 \end{align*}
-$$
+$$<p>
 which, miraculously, is exactly what we get if we interleave (sum up) the terms of $\cos\theta + i\sin\theta$.</p>
 <h2 id="approach-2">Approach 2</h2>
 <p>The next approach uses techniques from a first course in calculus. We first observe that if $e^{i\theta}$ is going to be the same as $\cos\theta + i\sin\theta$, then the fraction
@@ -250,33 +250,38 @@ $\frac{cos\theta + i\sin\theta}{e^{i\theta}} = (\cos\theta + i\sin\theta)e^{-i\t
 equality holds.</p>
 <p>To do this, first define
 $f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta}$. Next, we take the (rather annoying) derivative of $f(\theta)$
+</p>
 $$
 \begin{align*}
-f’(\theta) &amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\
-&amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\
-&amp;= 0\dots
+f’(\theta) &= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\\
+&= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\\
+&= 0\dots
 \end{align*}
-$$
+$$<p>
 If $f’(\theta) = 0$ at all values of $\theta$, $f$ is constant! Which constant? Let’s plug in $\theta = 0$ and find out!
-$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$
+</p>
+$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$<p>
 If $f$ takes the value 1 when $\theta = 0$ and $f$ is constant, it must take the value 1 everywhere. To sum up, we have
-$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$
+</p>
+$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$<p>
 Rearranging the second equality by cross multiplying, we see that
 Euler’s identity holds.</p>
 <h2 id="approach-3">Approach 3</h2>
 <p>The last technique is my favorite. It uses a bit of linear algebra in concert with differential equations to produce what I think is the most illuminating proof of Euler’s identity. First, consider the differential equation
-$$f’’ = -f.$$
+</p>
+$$f’’ = -f.$$<p>
 A differential equation is what is a kind of functional equation.
 Rather than trying to find the value of a real-valued variable,
 we are trying to find a function whose derivatives satisfy a given relationship. In this case, we want to find a function $f$ such that
 $f$&rsquo;s second derivative is the same as $f$.</p>
 <p>We first note that $\cos\theta$ and $\sin\theta$ are both solutions to this equation:
+</p>
 $$
 \begin{align*}
-(\sin\theta)’’ &amp;= -\sin\theta \
-(\cos\theta)’’ &amp;= -\cos\theta.
+(\sin\theta)’’ &= -\sin\theta \\
+(\cos\theta)’’ &= -\cos\theta.
 \end{align*}
-$$
+$$<p>
 Because our differential equation involves second derivatives, it&rsquo;s
 solutions are sort of analogous to those of a quadratic equation:
 which is to say, there are two! Formally, we say that the solution
@@ -299,20 +304,23 @@ $\sin\theta$ and $\cos\theta$ are linearly independent. Because
 we said the solution space is of dimension 2, they are a basis for
 the solution space to our original equation.</p>
 <p>We can separately observe that $e^{i\theta}$ is also a solution to our equation because
+</p>
 $$
 \begin{align*}
-(e^{i\theta})’ &amp;= ie^{i\theta}\
-(e^{i\theta})’’ &amp;= -e^{i\theta}.
+(e^{i\theta})’ &= ie^{i\theta}\\
+(e^{i\theta})’’ &= -e^{i\theta}.
 \end{align*}
-$$</p>
-<p>Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
-$$e^{i\theta} = a\cos\theta + b\sin\theta.$$
+$$<p>Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
+</p>
+$$e^{i\theta} = a\cos\theta + b\sin\theta.$$<p>
 for some yet unknown constants $a,b$. Now it just remains to figure out what $a$ and $b$ are. (Can you see what they should be?)</p>
 <p>To find $a$ and $b$, we note that if $f(\theta) = e^{i\theta}$,
 then $f(0) = 1$ and $f’(0) = i$. Using the first condition, we have
-$$1 = a \cdot 1 + b \cdot 0 = a.$$
+</p>
+$$1 = a \cdot 1 + b \cdot 0 = a.$$<p>
 Using the second (taking the derivative of both sides before plugging 0 in), we have
-$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$
+</p>
+$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$<p>
 Putting these both together, we have
 $e^{i\theta} = \cos\theta + i\sin\theta,$
 which is what we wanted.</p>

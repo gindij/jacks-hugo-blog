@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -46,7 +46,7 @@ time. Now, to the formal problem statement&hellip;">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -55,12 +55,16 @@ time. Now, to the formal problem statement&hellip;">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -282,14 +286,15 @@ how does it compare to the alternative at finding mistakes?</p>
 <p>In the first case, there aren&rsquo;t any mistakes to catch, so our analysis need only
 consider the second case. Define $D = C - AB$. What we are formally interested in is
 the probability that $ABr = Cr \iff (C - AB)r = Dr = 0$ when $AB \neq C \iff C - AB =
-D \neq 0$. In other words, we are interested in $\Pr[Dr = 0 <del>|</del> D \neq 0]$. To
+D \neq 0$. In other words, we are interested in $\Pr[Dr = 0 ~|~ D \neq 0]$. To
 compute this probability, suppose there was indeed an entry of $C$ that was computed
 incorrectly. Without loss of generality, assume that $D_{11} \neq 0$. Note that this
-means that $(AB)<em>{11}$ and $C</em>{11}$ are different, so $D_{11}$ is of interest to us &mdash;
+means that $(AB)_{11}$ and $C_{11}$ are different, so $D_{11}$ is of interest to us &mdash;
 it is the elusive mistake. To better understand what&rsquo;s going on here, consider the
 following:
-$$\begin{bmatrix}D_{11} &amp; \dots &amp; D_{1n}\\vdots &amp; \ddots &amp;\&amp;
-&amp;\end{bmatrix}\begin{bmatrix}r_1\ r_2\ \vdots\end{bmatrix}=\begin{bmatrix}D_{11}r_1 + \dots + D_{1n}r_n\ \vdots\end{bmatrix}$$
+</p>
+$$\begin{bmatrix}D_{11} & \dots & D_{1n}\\\vdots & \ddots &\\&
+&\end{bmatrix}\begin{bmatrix}r_1\\ r_2\\ \vdots\end{bmatrix}=\begin{bmatrix}D_{11}r_1 + \dots + D_{1n}r_n\\ \vdots\end{bmatrix}$$<p>
 (computation of $Dr$).</p>
 <p>The only way the algorithm can be fooled is if, somehow, $D_{11}r_1 + \dots +
 D_{1n}r_n = 0$. That is, if the first entry of $Dr$ is $0$, we find ourselves in a
@@ -300,7 +305,7 @@ $D_{11}r_1 + \dots +D_{1n}r_n = 0$, or, equivalently, the odds that $r_1 = -
 \frac{D_{12}r_2 + \dots D_{1n}r_n}{D_{11}}$. Recall that $r_1 \in \{0,1\}$. If that
 ugly fraction is neither 0 nor 1, we&rsquo;re good to go because $r_1$ cannot possibly take
 on that value. If, however, that fraction does equal 0 or 1, then there is a
-$\frac{1}{2}$ chance that we assigned $r_1$ that value. Thus, $\Pr[Dr = 0 <del>|</del> D \neq
+$\frac{1}{2}$ chance that we assigned $r_1$ that value. Thus, $\Pr[Dr = 0 ~|~ D \neq
 0] \geq \frac{1}{2}$, which means that our algorithm will catch a mistake at least
 half of the time.</p>
 <h2 id="conclusion">Conclusion</h2>

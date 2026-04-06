@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style="font-size: 100%">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -36,7 +36,7 @@ mathematical legwork that I thought would be worth exposing a small part of.">
   
   
   <link rel="stylesheet" href='/katex/katex.min.css'>
-<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/katex.min.js'></script>
 <script defer src='/katex/contrib/auto-render.min.js'></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -45,12 +45,16 @@ mathematical legwork that I thought would be worth exposing a small part of.">
               {left: '$$', right: '$$', display: true},
               {left: '$', right: '$', display: false},
               {left: '\\(', right: '\\)', display: false},
-              {left: '\\[', right: '\\]', display: true}
+              {left: '\\[', right: '\\]', display: true},
+              {left: '\\begin{equation}', right: '\\end{equation}', display: true},
+              {left: '\\begin{align}', right: '\\end{align}', display: true},
+              {left: '\\begin{align*}', right: '\\end{align*}', display: true}
           ],
           throwOnError : false
         });
     });
 </script>
+
   
 
   
@@ -231,7 +235,8 @@ picture, imagine the following. You have two points on the $x$-axis that are pre
 and the other $c = x + \text{a little bit}$. If our curve is given by $f(x)$, we can denote the slope of the line through
 $(x,f(x))$ and $(c, f(c))$ as the change in $y$ values divided by the change in $x$ values (aka rise over run). In other
 words, the slope $m$ of the line would be given by
-$$m = \frac{f(c) - f(x)}{c - x}.$$
+</p>
+$$m = \frac{f(c) - f(x)}{c - x}.$$<p>
 This isn’t anything new. You’ve known how to calculate slopes since middle school. The question of slope becomes more difficult, however, when you try to modify the usual notion of slope of a line through <em>two</em> points to come up with an analogous description for the slope of tangent line to a curve at <em>one</em> point.</p>
 <p>(Note: I will assume for the remainder of this post that you have some familiarity with limits and continuity. If you
 don’t, you might want to browse the web and review those briefly. Even if you don’t have the requisite background, I’ll
@@ -241,7 +246,8 @@ get smaller and smaller, so that $x$ and $c$ get closer and closer together. As 
 smaller, the slope of the secant line through $(x,f(x))$ and $(c,f(c))$ approximates the slope of the tangent line at $x$.
 Put succinctly, <strong>the slope of the tangent line of a curve at a point $c$ is the limit of the slopes of secant lines
 between $(c,f(c))$ and points $(x, f(x))$ where $x$ gets arbitrarily close to $c$.</strong> Put mathematically
-$$f’(c) := \lim_{x \to c} \frac{f(c) - f(x)}{c - x}.$$
+</p>
+$$f’(c) := \lim_{x \to c} \frac{f(c) - f(x)}{c - x}.$$<p>
 We say that the function $f$ is differentiable at $c$ if the limit above exists. This idea of differentiability at a point
 can be extended naturally to a set of points.</p>
 <p>In a typical real analysis course, after laying definitions down, you get familiar with the definitions by proving some of
@@ -260,16 +266,18 @@ our main result via a few intermediate ones, starting with the interior extremum
 minimum) on $(a,b)$ at some point $c$, then $f’(c) = 0$.</p>
 </blockquote>
 <p><strong>Proof:</strong> Because $c$ is in the open interval $(a,b)$, we can find two sequences, $x_n$ and $y_n$, such that both
-converge to $c$ and $x_n &lt; c &lt; y_n$ for all $n$. Given these sequences, we have
-$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(x_n)}{c - x_n} \geq 0,$$
+converge to $c$ and $x_n < c < y_n$ for all $n$. Given these sequences, we have
+</p>
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(x_n)}{c - x_n} \geq 0,$$<p>
 because $f(c) - f(x_n)$ is nonnegative (because $f(c)$ is a maximum value of $f$ on $(a,b)$) and $c - x_n$ is positive for
-all $n$ (because $x_n &lt; c$). On the other hand, we also see that
-$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(y_n)}{c - y_n} \leq 0,$$
+all $n$ (because $x_n < c$). On the other hand, we also see that
+</p>
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(y_n)}{c - y_n} \leq 0,$$<p>
 because the numerator is again nonnegative, but this time the denominator is negative for all $n$. Thus, we have $0 \leq
 f’(c) \leq 0, $ so $ f’(c) = 0$. <strong>QED.</strong></p>
 <p>Note that the converse is not necessarily true. It isn’t necessarily the case that if the derivative is 0 at a point $c$,
 then $f(c)$ is maximum or a minimum of $f$ on $(a,b)$. Consider the function $f(x) = x^3$ on the interval $(-1,1)$. By the
-power rule, $f’(x)=3x^2$ (and it is defined on $(-1,1)$). At $x = 0$,$ f’(x) = 0$, but $-1 = f(-1) &lt; f(0) &lt; f(1) = 1$,
+power rule, $f’(x)=3x^2$ (and it is defined on $(-1,1)$). At $x = 0$,$ f’(x) = 0$, but $-1 = f(-1) < f(0) < f(1) = 1$,
 whence $f$ takes neither a minimum nor a maximum value at 0 even though the derivative vanishes there. Although its
 converse doesn’t hold, the IET does furnish us with a pretty powerful computational tool with which to solve optimization
 problems, the solutions to which often begin with “First take the derivative of the function you want to optimize and find
@@ -304,9 +312,11 @@ before reading the proof below.)</p>
 <p><strong>Proof:</strong> Let’s first write down what the equation of the line through $(a, f(a))$ and $(b, f(b))$ would look like. On the one hand, we know that the slope of the line is $\frac{f(a) - f(b)}{a - b}$. On the other, because we are talking about a line, that the slope of the same line through any $(x, y(x))$ and $(a, y(a) = f(a))$ should be the same, so we have
 $\frac{f(a) - f(b)}{a - b} = \frac{y(x) - f(a)}{x - a}.$
 We can get a general equation of the line by solving for f(x) (multiply both sides by $x - a$ and then add $f(a)$ to both sides). Doing so, we see that
-$$y(x) = \frac{f(a) - f(b)}{a - b}(x - a) + f(a).$$
+</p>
+$$y(x) = \frac{f(a) - f(b)}{a - b}(x - a) + f(a).$$<p>
 In order to transform this into an instance of Rolle’s theorem, what we’re going to do is build a new function $d$ that represents the differences between the curve and the line. Namely, we have
-$$d(x) = f(x) - y(x) = f(x) - \biggr[ \frac{f(a) - f(b)}{a - b}(x - a) + f(a) \biggr].$$
+</p>
+$$d(x) = f(x) - y(x) = f(x) - \biggr[ \frac{f(a) - f(b)}{a - b}(x - a) + f(a) \biggr].$$<p>
 Clearly, $d(a) = d(b) = 0$. By the rules about combining continuous functions, $d(x)$ is continuous on $[a,b]$ and by rules for combining differentiable functions, $d(x)$ is differentiable on $(a,b)$. This means that we can apply Rolle’s Theorem to $d(x)$ so that we have a $c \in (a,b)$ such that $d’(c) = 0$. That is, there is a $c$ such that $d’(c) = f’(c) - \frac{f(a) - f(b)}{a - b} = 0$. Rearranging a bit, we see that at that $c$, we have $f’(c) = \frac{f(a) - f(b)}{a - b}$, proving the theorem. <strong>QED.</strong></p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Several of the important results (e.g. L’Hosptial’s Rule for solving limits) that you learn about later on in calculus and real analysis courses use the Mean Value Theorem as their driving force. I haven’t seen many theorems that are both simple to conceptually grasp and also fundamental building blocks of important areas of mathematics. I think the derivative is a phenomenal example of the power and necessity of good definitions and the type of ingenuity that appears all across mathematics, albeit more subtly sometimes.</p>
