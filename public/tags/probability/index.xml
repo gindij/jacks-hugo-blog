@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Probability on Jack Gindi</title>
+    <link>http://localhost:1313/tags/probability/</link>
+    <description>Recent content in Probability on Jack Gindi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 18 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/probability/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The St. Petersburg paradox</title>
+      <link>http://localhost:1313/posts/2022-05-18-stpete/</link>
+      <pubDate>Wed, 18 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2022-05-18-stpete/</guid>
+      <description>&lt;p&gt;In this post, I want to talk through a simple mathematical result that forces us
+to think twice about relying too heavily on averages.&lt;/p&gt;
+&lt;h2 id=&#34;quick-review-of-expected-values&#34;&gt;Quick review of expected values&lt;/h2&gt;
+&lt;p&gt;Given an opportunity to play a game with uncertain outcomes, one reasonable way
+to value to opportunity is to weight each possible reward by its probability of occuring
+and sum up the results. This quantity is called the expected value, or expectation,
+of the game. (Note that a simple average is an expected value with equal weight on
+each outcome.)
+Another way of saying this is that if you have
+to pay a fee to play this game, the fee you should be willing to pay is the game&amp;rsquo;s
+expected value (or less, of course).
+Mathematically, if the payoff of the uncertain game is represented by the random
+variable $X$, the possible outcomes are $x_1,x_2,\dots,x_n$,
+and the corresponding probabilities of the outcomes are correspondingly $p_1,p_2,\dots, p_n$,
+then the value of playing the game would be given by
+$$E[X] = x_1p_1 + \dots + x_np_n = \sum_{i=1}^n x_i p_i.$$
+(The notation $E[X]$ is how we represent the expected value of $X$.)
+For many bets, this approach has intuitive appeal, and there are many scenarios
+in which it is used directly.&lt;/p&gt;
+&lt;h2 id=&#34;flipping-coins&#34;&gt;Flipping coins&lt;/h2&gt;
+&lt;p&gt;With this in mind, consider the following game. You flip a coin until seeing a head. If a head falls
+on the $k$th flip, you win $2^k$ dollars. The question is: how much would you be
+willing to pay to play this game?&lt;/p&gt;
+&lt;p&gt;Well, you might begin, there are infinitely many possible outcomes (head after 1, head after 2,&amp;hellip;).
+Each outcome requires flipping $k-1$ tails and then a single head. Using a fair
+coin, we have
+$$
+P(\text{game ends on flip}~k) = \frac{1}{2^{k-1}}\frac{1}{2} = \frac{1}{2^k}.
+$$
+Using the framework of outcome values and probabilities of those outcomes,
+we can express $x_i$ and $p_i$ for each $i=1,2,\dots$ as
+$$
+\begin{align*}
+x_i &amp;amp;= 2^i\
+p_i &amp;amp;= \frac{1}{2^i}.
+\end{align*}
+$$
+But wait! If this is the case, then for each $i$, $x_ip_i = 2^i/2^i = 1$, so the
+expected value of the game is actually infinite (the sum of infinitely many 1s)!
+It seems that, according to this mathematically sound analysis, that we should be
+willing to participate in this game at &lt;em&gt;any&lt;/em&gt; offered price. With this information,
+how much would you pay to play this game?&lt;/p&gt;
+&lt;h2 id=&#34;what-gives&#34;&gt;What gives?&lt;/h2&gt;
+&lt;p&gt;If you think something is fishy here, you&amp;rsquo;re right. This problem is so well-known
+it has a name: the St. Petersburg paradox. It isn&amp;rsquo;t actually a paradox, but the use of the word refers
+to the fact that on the one hand, this game has infinite expected value, but on the other,
+the probability of making a large sum of money is vanishingly small. To put a finer
+point on it, the probability of winning more than $2^k$ dollars is $1/2^k$! For
+even moderate values of $k$, this probability is miniscule.&lt;/p&gt;
+&lt;p&gt;This sort of issue has caused many to reject the exclusive use
+of expected value as a valuation technique. Some suggest adding a measure
+of risk (as is customary in any sort of financial application),
+some advocate for use of the median instead, and still others advocate
+using the expected value of some utility function applied to the outcomes, rather
+than the outcomes themselves. There are all interesting areas to explore, but the
+bottom line is that expectations alone can lead to some head-scratching issues.&lt;/p&gt;
+&lt;h2 id=&#34;finite-resources&#34;&gt;Finite resources&lt;/h2&gt;
+&lt;p&gt;One other aspect of the problem to which some attribute the counterintuitive result
+is the implicit assumption we made that the banker or casino has infinite wealth
+with which to bankroll the game. Let&amp;rsquo;s see what happens if the banker only has finite
+wealth. That is, let&amp;rsquo;s now suppose that the banker has
+$W$ (for wealth) dollars with which to fund the game. We&amp;rsquo;ve introduced a ceiling on the number of
+rounds before the game ends: $L = \lfloor \log_2 W \rfloor$ (i.e., the number of times you
+can double the payout before exceeding $W$, rounded down). Having reframed the problem this way,
+the expected value calculation returns a saner result:
+$$
+E[X] = \sum_{i=1}^L 2^i \frac{1}{2^i} = \sum_{i=1}^L 1 = L.
+$$
+That is, the expected value of the game is now logarithmic in the banker&amp;rsquo;s wealth.
+This means, for example, that if the banker has one billion dollars, the game is only
+worth about \$30. This accords with our intuition about small probabilities of winning
+anything significant.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Expected value is one of, if not the most important tool/concept in all of probability!
+Even so, as we&amp;rsquo;ve shown in this post, it is not a panacea. If you&amp;rsquo;re not careful, strange
+(and fascinating) things might happen.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Calculus on Jack Gindi</title>
+    <link>http://localhost:1313/tags/calculus/</link>
+    <description>Recent content in Calculus on Jack Gindi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 14 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/calculus/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Is addition commutative?</title>
+      <link>http://localhost:1313/posts/2023-07-14-series-rearrangement/</link>
+      <pubDate>Fri, 14 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2023-07-14-series-rearrangement/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;This will be a quick one. From the very beginning of our mathematical educations, there is a
+fundamental fact of which we are made aware: If $a$ and $b$ are numbers of any
+kind (natural numbers, integers, rationals, reals, complex), then &amp;ndash; now hold on to your hats &amp;ndash;
+$$
+\begin{align*}
+a + b = b + a.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;Earth-shattering &amp;ndash; I know. As some of you are likely already aware, I find infinity fascinating. In this post,
+I want to briefly discuss how infinity can mess with some of our most basic assumptions
+about the nature of one of our most basic arithmetic operations. Without further ado, let&amp;rsquo;s dive
+in.&lt;/p&gt;
+&lt;h1 id=&#34;infinite-series&#34;&gt;Infinite series&lt;/h1&gt;
+&lt;p&gt;In our everyday lives (unless you&amp;rsquo;re a mathematician), we only ever consider what it means to carry
+out arithmetic operations on finite collections of numbers. A first course in calculus challenges us
+to think about the nature of infinite sums, objects like:
+$$
+\begin{align*}
+1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots
+\end{align*}
+$$
+or
+$$
+\begin{align*}
+1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;But what &amp;ndash; you might ask &amp;ndash; is so interesting about these sums? Don&amp;rsquo;t an infinite number of numbers
+added together have to add up to $\infty$?&lt;/p&gt;
+&lt;p&gt;(Mathmatical aside &amp;ndash; feel free to skip:
+Before answering that question, it is worth considering what mathmeticians even mean when they ask
+about the sum of an infinite number of terms. We could never actually add up infinitely many terms,
+so instead, the &amp;ldquo;sum&amp;rdquo; of an infinite series is the limiting value of the sequence of the series&#39;
+partial sums. That is for the second series, we want to know the limiting value of the sequence
+$1, 1 + \frac{1}{2}, 1 + \frac{1}{2} + \frac{1}{4}, \dots$.)&lt;/p&gt;
+&lt;p&gt;It turns out that some infinite series have finite sums (like the second one) and others do not
+(like the first one). There are lots of rules and tests that one can perform to determine
+what kind of series one is looking at, but for our purposes, it suffices to know that we call
+the ones with finite sums &lt;strong&gt;convergent&lt;/strong&gt; and the ones whose sums are infinite &lt;strong&gt;divergent&lt;/strong&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;the-harmonic-series-diverges&#34;&gt;The harmonic series diverges&lt;/h1&gt;
+&lt;p&gt;The first series we looked at earlier is so famous that it has a name: the Harmonic Series. It
+is an example of a series whose underlying sequence has terms that get smaller and smaller, but
+which, despite that fact, diverges. For full effect, let&amp;rsquo;s briefly have a look at why it diverges.&lt;/p&gt;
+&lt;p&gt;Let $H$ denote the sum of the Harmonic Series, and let&amp;rsquo;s compare $H$ to the sum of another,
+similar-looking series $H&amp;rsquo;$:
+$$
+\begin{align*}
+H &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{3} + \frac{1}{4}\biggr) + \biggr(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\biggr) + \dots \
+H&amp;rsquo; &amp;amp;= 1 + \frac{1}{2} + \biggr(\frac{1}{4} + \frac{1}{4}\biggr) + \biggr(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\biggr) + \dots
+\end{align*}
+$$
+Notice that (1) each of the parenthesized groups of terms in $H&amp;rsquo;$ sum to $1/2$, and (2) each of the corresponding groups of terms
+in $H$ sums to a number that is &lt;em&gt;greater&lt;/em&gt; than $1/2$. One of the rules one learns in calculus is (informally) that if you are
+comparing two sums and the smaller of them is infinite, the larger one must be infinite too. Since $H &amp;gt; H&amp;rsquo;$ because of (1), and
+$H&amp;rsquo; = \infty$ because it is a sum of infinitely many $1/2$s, $H$ must be infinite too.&lt;/p&gt;
+&lt;h1 id=&#34;can-we-make-it-converge&#34;&gt;Can we make it converge?&lt;/h1&gt;
+&lt;p&gt;Even though $H$ diverges, we can make it converge by changing half of the additions into subtractions like so:
+$$
+\begin{align*}
+1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots \
+\end{align*}
+$$
+It turns out that this modified series converges! (We will not spend time proving that this series converges, but if you&amp;rsquo;re interested, I wrote another post a while ago covering that; you can check it out &lt;a href=&#34;https://www.jgindi.me/posts/alternating/&#34;&gt;here&lt;/a&gt;.)
+To make things even weirder, if you group the terms with even denominators together, the sum of their absolute values diverges. (The same applies to the group of terms with odd denominators, as you might expect.)&lt;/p&gt;
+&lt;p&gt;For visual intuition that this series converges (in lieu of a proof), this image should help
+(&lt;a href=&#34;https://xaktly.com/AlternatingSeries.html&#34;&gt;source&lt;/a&gt;):
+&lt;img src=&#34;http://localhost:1313/posts/series-rearrangement/alternating.png&#34; width=&#34;500&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;The image shows that it converges to approximately 0.694. I claim that I can make it converge to whatever value
+I want&amp;hellip;&lt;/p&gt;
+&lt;p&gt;But how?&lt;/p&gt;
+&lt;h1 id=&#34;other-arrangements&#34;&gt;Other arrangements&lt;/h1&gt;
+&lt;p&gt;Let&amp;rsquo;s say that I wanted the sum of the terms of the alternating harmonic sequence to be 2.
+Carry out the following algorithm:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add positive terms together until we exceed 2 (we would start with $1 + 1/3 + \dots + 1/15 \approx 2.02$)&lt;/li&gt;
+&lt;li&gt;Add negative terms to the output of step 1 until we were below 2 (we would then add $-1/2$, so we&amp;rsquo;d end up at around $1.72$)&lt;/li&gt;
+&lt;li&gt;Add positive terms to the output of step 2 until we exceed 2 (starting with $1/17$, an so on)&lt;/li&gt;
+&lt;li&gt;Add negative terms until we fell below 2&lt;/li&gt;
+&lt;li&gt;etc.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Why will this sequence of numbers (2.02, 1.72, &amp;hellip;) produced by the algorithm I proposed converge to 2?&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;As we mentioned earlier, the absolute values of terms in both positive and negative groups both sum to $\infty$, so we will always
+have enough terms that we haven&amp;rsquo;t used that can get us above or below 2 when we need to.&lt;/li&gt;
+&lt;li&gt;The sizes of the successive terms from each group that we use are getting smaller and smaller, so at each step, the amount by which
+we exceed and fall below 2 shrinks.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Taken together, we see that will oscillate around 2, and successive oscillations will be smaller and smaller; that&amp;rsquo;s simply a fancy
+way of saying that our series now converges to 2. But didn&amp;rsquo;t it just converge to 0.694?&lt;/p&gt;
+&lt;p&gt;This is a quirk of trying to sum infinitely many terms. When finitely many terms are involved, rearranging terms doesn&amp;rsquo;t affect
+anything. There are even many infinite sums for which the same is true (our second one from earlier, for example).
+With infinity, though, it is always important to reexamine facts that are obvious or trivial-seeming in finite territory. We&amp;rsquo;ve just
+shown that under special conditions, the infinite version of $a + b$ is not necessarily the same as $b + a$.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The mean value theorem</title>
+      <link>http://localhost:1313/posts/2018-05-22-mvt/</link>
+      <pubDate>Tue, 22 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-05-22-mvt/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Derivatives are used across many different fields of engineering, physics and mathematics to analyze the ways that
+continuous quantities change. Although the definition of derivative that we talk about in calculus courses today works
+well, it wasn’t always so simple. Coming up with a way to talk about derivatives where we could both understand it
+intuitively as well as give ourselves the right machinery to prove useful results about them took centuries and a bunch of
+mathematical legwork that I thought would be worth exposing a small part of.&lt;/p&gt;
+&lt;p&gt;In particular, in this post I want to define derivatives and lead up to the proof of the Mean Value Theorem. It and its
+generalizations are some of the most important and useful results about derivatives that we have and I thought that proving
+the most elementary version would be accessible and somewhat fun!&lt;/p&gt;
+&lt;p&gt;(Some small amount of calculus is assumed, but it isn’t strictly necessary.)&lt;/p&gt;
+&lt;p&gt;Without further ado, here we go!&lt;/p&gt;
+&lt;h2 id=&#34;defining-the-derivative&#34;&gt;Defining the derivative&lt;/h2&gt;
+&lt;p&gt;The first thing we need to do is come up with a rigorous and useful definition of a derivative. To help draw this intuitive
+picture, imagine the following. You have two points on the $x$-axis that are pretty close together. We’ll call one point $x$
+and the other $c = x + \text{a little bit}$. If our curve is given by $f(x)$, we can denote the slope of the line through
+$(x,f(x))$ and $(c, f(c))$ as the change in $y$ values divided by the change in $x$ values (aka rise over run). In other
+words, the slope $m$ of the line would be given by
+$$m = \frac{f(c) - f(x)}{c - x}.$$
+This isn’t anything new. You’ve known how to calculate slopes since middle school. The question of slope becomes more difficult, however, when you try to modify the usual notion of slope of a line through &lt;em&gt;two&lt;/em&gt; points to come up with an analogous description for the slope of tangent line to a curve at &lt;em&gt;one&lt;/em&gt; point.&lt;/p&gt;
+&lt;p&gt;(Note: I will assume for the remainder of this post that you have some familiarity with limits and continuity. If you
+don’t, you might want to browse the web and review those briefly. Even if you don’t have the requisite background, I’ll
+do my best to explain the concepts in a non-technical, intuitive way.)&lt;/p&gt;
+&lt;p&gt;To do this, we have to use some stuff from introductory calculus. Intuitively, what we’re going to do is let “a little bit”
+get smaller and smaller, so that $x$ and $c$ get closer and closer together. As the distance between them gets smaller and
+smaller, the slope of the secant line through $(x,f(x))$ and $(c,f(c))$ approximates the slope of the tangent line at $x$.
+Put succinctly, &lt;strong&gt;the slope of the tangent line of a curve at a point $c$ is the limit of the slopes of secant lines
+between $(c,f(c))$ and points $(x, f(x))$ where $x$ gets arbitrarily close to $c$.&lt;/strong&gt; Put mathematically
+$$f’(c) := \lim_{x \to c} \frac{f(c) - f(x)}{c - x}.$$
+We say that the function $f$ is differentiable at $c$ if the limit above exists. This idea of differentiability at a point
+can be extended naturally to a set of points.&lt;/p&gt;
+&lt;p&gt;In a typical real analysis course, after laying definitions down, you get familiar with the definitions by proving some of
+the usual facts about derivatives. These are things like $(f + g)’(c) = f’(c) + g’(c), (kf)’(c) = kf’(c)$ ($k$ is a
+constant and $f, g$ are differentiable at $c$). I’ll leave proving these and other facts like the power, product,
+quotient and chain rules as an exercise for the inclined reader in favor of venturing into more interesting territory.&lt;/p&gt;
+&lt;p&gt;In particular, I want to lead up to a proof of the mean value theorem, one of the most fundamental and useful facts about
+derivatives. It’s one of those theorems that looks sort of obvious when you just draw some pictures (a la intermediate
+value theorem), but it’s actually a pretty deep result. It and its generalizations are some of the the most useful tools
+mathematicians have had at their disposal to tackle derivatives since their inception in the 17th century. We’ll get to
+our main result via a few intermediate ones, starting with the interior extremum theorem (IET).&lt;/p&gt;
+&lt;h2 id=&#34;the-interior-extremum-theorem&#34;&gt;The interior extremum theorem&lt;/h2&gt;
+&lt;p&gt;The interior extremum theorem tells us something about the connection between a function&amp;rsquo;s extreme values and points at which the derivative vanishes:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Interior Extremum Theorem: Let $f$ be differentiable on the open interval $(a,b)$. Then if $f$ attains a maximum (or a
+minimum) on $(a,b)$ at some point $c$, then $f’(c) = 0$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; Because $c$ is in the open interval $(a,b)$, we can find two sequences, $x_n$ and $y_n$, such that both
+converge to $c$ and $x_n &amp;lt; c &amp;lt; y_n$ for all $n$. Given these sequences, we have
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(x_n)}{c - x_n} \geq 0,$$
+because $f(c) - f(x_n)$ is nonnegative (because $f(c)$ is a maximum value of $f$ on $(a,b)$) and $c - x_n$ is positive for
+all $n$ (because $x_n &amp;lt; c$). On the other hand, we also see that
+$$f’(c) = \lim_{n \to \infty} \frac{f(c) - f(y_n)}{c - y_n} \leq 0,$$
+because the numerator is again nonnegative, but this time the denominator is negative for all $n$. Thus, we have $0 \leq
+f’(c) \leq 0, $ so $ f’(c) = 0$. &lt;strong&gt;QED.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Note that the converse is not necessarily true. It isn’t necessarily the case that if the derivative is 0 at a point $c$,
+then $f(c)$ is maximum or a minimum of $f$ on $(a,b)$. Consider the function $f(x) = x^3$ on the interval $(-1,1)$. By the
+power rule, $f’(x)=3x^2$ (and it is defined on $(-1,1)$). At $x = 0$,$ f’(x) = 0$, but $-1 = f(-1) &amp;lt; f(0) &amp;lt; f(1) = 1$,
+whence $f$ takes neither a minimum nor a maximum value at 0 even though the derivative vanishes there. Although its
+converse doesn’t hold, the IET does furnish us with a pretty powerful computational tool with which to solve optimization
+problems, the solutions to which often begin with “First take the derivative of the function you want to optimize and find
+the $x$ values at which it equals 0…”.&lt;/p&gt;
+&lt;h2 id=&#34;rolles-theorem&#34;&gt;Rolle&amp;rsquo;s theorem&lt;/h2&gt;
+&lt;p&gt;Next, I want to use the IET to prove another result that isn’t so hard to convince yourself of with pictures. It’s called
+Rolle’s theorem. It tells us that if f takes the same value at two ends of an interval and is differentiable on said
+interval, that there must be some point within the interval at which the derivative is zero. I actually think it’s
+worthwhile to draw some pictures and convince yourself intuitively that this result makes sense before you read the proof
+below:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Rolle&amp;rsquo;s Theorem: Let $f$ be continuous on $[a,b]$ and differentiable on $(a,b)$ with $f(a) = f(b)$. Then there is a
+point $c \in (a,b)$ such that $f’(c) = 0$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; If $f$ is constant on $(a,b)$, then $f’$ is identically zero on that interval, in which case there’s nothing to
+prove. If $f$ is non-constant on the interval, f takes on a maximum or minimum value within $(a,b)$. By applying IET,
+we’re
+done. &lt;strong&gt;QED.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The constant case above is simple. In the non-constant case, what we’re basically saying is that starting at $f(a)$, the
+value of $f$ rises (or falls) as the $x$ values move to the right. At a certain point, though, they need to start falling
+back down (rising back up) to the value $f$ took at $a$. The point at which this fall (rise) happens is the point we
+sought.&lt;/p&gt;
+&lt;h2 id=&#34;mean-value-theorem&#34;&gt;Mean value theorem&lt;/h2&gt;
+&lt;p&gt;With these results, we are now equipped to prove the mean value theorem. We will do this by reducing it to a simple
+application of Rolle’s theorem.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Mean Value Theorem: Let $f$ be continuous on $[a,b]$ and differentiable on $(a,b)$. There is a point $c \in (a,b)$ such
+that $f’(c) = \frac{f(a) - f(b)}{a - b}$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(Note that this is a more general version of Rolle’s theorem. Draw some pictures and convince yourself of the theorem
+before reading the proof below.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Proof:&lt;/strong&gt; Let’s first write down what the equation of the line through $(a, f(a))$ and $(b, f(b))$ would look like. On the one hand, we know that the slope of the line is $\frac{f(a) - f(b)}{a - b}$. On the other, because we are talking about a line, that the slope of the same line through any $(x, y(x))$ and $(a, y(a) = f(a))$ should be the same, so we have
+$\frac{f(a) - f(b)}{a - b} = \frac{y(x) - f(a)}{x - a}.$
+We can get a general equation of the line by solving for f(x) (multiply both sides by $x - a$ and then add $f(a)$ to both sides). Doing so, we see that
+$$y(x) = \frac{f(a) - f(b)}{a - b}(x - a) + f(a).$$
+In order to transform this into an instance of Rolle’s theorem, what we’re going to do is build a new function $d$ that represents the differences between the curve and the line. Namely, we have
+$$d(x) = f(x) - y(x) = f(x) - \biggr[ \frac{f(a) - f(b)}{a - b}(x - a) + f(a) \biggr].$$
+Clearly, $d(a) = d(b) = 0$. By the rules about combining continuous functions, $d(x)$ is continuous on $[a,b]$ and by rules for combining differentiable functions, $d(x)$ is differentiable on $(a,b)$. This means that we can apply Rolle’s Theorem to $d(x)$ so that we have a $c \in (a,b)$ such that $d’(c) = 0$. That is, there is a $c$ such that $d’(c) = f’(c) - \frac{f(a) - f(b)}{a - b} = 0$. Rearranging a bit, we see that at that $c$, we have $f’(c) = \frac{f(a) - f(b)}{a - b}$, proving the theorem. &lt;strong&gt;QED.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Several of the important results (e.g. L’Hosptial’s Rule for solving limits) that you learn about later on in calculus and real analysis courses use the Mean Value Theorem as their driving force. I haven’t seen many theorems that are both simple to conceptually grasp and also fundamental building blocks of important areas of mathematics. I think the derivative is a phenomenal example of the power and necessity of good definitions and the type of ingenuity that appears all across mathematics, albeit more subtly sometimes.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Euler&#39;s Identity</title>
+      <link>http://localhost:1313/posts/2018-01-01-euler-identity/</link>
+      <pubDate>Mon, 01 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-01-01-euler-identity/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.&lt;/p&gt;
+&lt;h2 id=&#34;approach-1&#34;&gt;Approach 1&lt;/h2&gt;
+&lt;p&gt;The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+$$
+\begin{align*}
+\cos\theta &amp;amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\
+\sin\theta &amp;amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
+\end{align*}
+$$
+so
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$&lt;/p&gt;
+&lt;p&gt;Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$
+we have
+$$
+\begin{align*}
+e^{i\theta} &amp;amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\
+&amp;amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
+\end{align*}
+$$
+which, miraculously, is exactly what we get if we interleave (sum up) the terms of $\cos\theta + i\sin\theta$.&lt;/p&gt;
+&lt;h2 id=&#34;approach-2&#34;&gt;Approach 2&lt;/h2&gt;
+&lt;p&gt;The next approach uses techniques from a first course in calculus. We first observe that if $e^{i\theta}$ is going to be the same as $\cos\theta + i\sin\theta$, then the fraction
+$\frac{cos\theta + i\sin\theta}{e^{i\theta}} = (\cos\theta + i\sin\theta)e^{-i\theta} = 1$. We will show that the second
+equality holds.&lt;/p&gt;
+&lt;p&gt;To do this, first define
+$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta}$. Next, we take the (rather annoying) derivative of $f(\theta)$
+$$
+\begin{align*}
+f’(\theta) &amp;amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\
+&amp;amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\
+&amp;amp;= 0\dots
+\end{align*}
+$$
+If $f’(\theta) = 0$ at all values of $\theta$, $f$ is constant! Which constant? Let’s plug in $\theta = 0$ and find out!
+$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$
+If $f$ takes the value 1 when $\theta = 0$ and $f$ is constant, it must take the value 1 everywhere. To sum up, we have
+$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$
+Rearranging the second equality by cross multiplying, we see that
+Euler’s identity holds.&lt;/p&gt;
+&lt;h2 id=&#34;approach-3&#34;&gt;Approach 3&lt;/h2&gt;
+&lt;p&gt;The last technique is my favorite. It uses a bit of linear algebra in concert with differential equations to produce what I think is the most illuminating proof of Euler’s identity. First, consider the differential equation
+$$f’’ = -f.$$
+A differential equation is what is a kind of functional equation.
+Rather than trying to find the value of a real-valued variable,
+we are trying to find a function whose derivatives satisfy a given relationship. In this case, we want to find a function $f$ such that
+$f$&amp;rsquo;s second derivative is the same as $f$.&lt;/p&gt;
+&lt;p&gt;We first note that $\cos\theta$ and $\sin\theta$ are both solutions to this equation:
+$$
+\begin{align*}
+(\sin\theta)’’ &amp;amp;= -\sin\theta \
+(\cos\theta)’’ &amp;amp;= -\cos\theta.
+\end{align*}
+$$
+Because our differential equation involves second derivatives, it&amp;rsquo;s
+solutions are sort of analogous to those of a quadratic equation:
+which is to say, there are two! Formally, we say that the solution
+space is a vector space of dimension 2. If $\sin\theta$ and
+$\cos\theta$ are linearly independent solutions, they form a basis
+of the solution space, which means that every solution to our
+differential equation must can be written in the form the form
+$a\cos\theta + b\sin\theta$ for some constants $a,b$.&lt;/p&gt;
+&lt;p&gt;To see that $\sin\theta$ and $\cos\theta$ are indeed linearly
+independent, suppose that for all  $\theta \in [0,2\pi]$,
+$a\cos\theta + b\sin\theta = 0$. Let’s pick a particular $\theta$
+value in this interval. If $\theta = \pi/2$, then we have
+$a \cdot 0 + b \cdot 1 = b = 0$ (where the $=0$ at the end is
+because we supposed that $a\cos\theta + b\sin\theta = 0$ for all
+$\theta \in [0,2\pi]$). If we pick another, say $\theta = 0$, we
+have $a \cdot 1 + b \cdot 0 = a = 0.$&lt;/p&gt;
+&lt;p&gt;So far, we&amp;rsquo;ve shown that if $a\cos\theta + b\sin\theta = 0$, then
+we know that $a = b = 0$. This constitutes a proof that
+$\sin\theta$ and $\cos\theta$ are linearly independent. Because
+we said the solution space is of dimension 2, they are a basis for
+the solution space to our original equation.&lt;/p&gt;
+&lt;p&gt;We can separately observe that $e^{i\theta}$ is also a solution to our equation because
+$$
+\begin{align*}
+(e^{i\theta})’ &amp;amp;= ie^{i\theta}\
+(e^{i\theta})’’ &amp;amp;= -e^{i\theta}.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
+$$e^{i\theta} = a\cos\theta + b\sin\theta.$$
+for some yet unknown constants $a,b$. Now it just remains to figure out what $a$ and $b$ are. (Can you see what they should be?)&lt;/p&gt;
+&lt;p&gt;To find $a$ and $b$, we note that if $f(\theta) = e^{i\theta}$,
+then $f(0) = 1$ and $f’(0) = i$. Using the first condition, we have
+$$1 = a \cdot 1 + b \cdot 0 = a.$$
+Using the second (taking the derivative of both sides before plugging 0 in), we have
+$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$
+Putting these both together, we have
+$e^{i\theta} = \cos\theta + i\sin\theta,$
+which is what we wanted.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Alternating Series test</title>
+      <link>http://localhost:1313/posts/2017-09-27-alternating/</link>
+      <pubDate>Wed, 27 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2017-09-27-alternating/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;While I was in college, I spent a few semesters TAing Calc II (Calc BC if you do it in high school). Both when I took the class and when I TAed it, I found the part of the course devoted to infinite series the most interesting by far. It was (and still is) amazing to me that you can — informally — add together an infinite number of terms and get a finite result. In fact, until the 19th century, the above was considered paradoxical and incorrect. To help determine whether or not different series converge, mathematicians developed a suite of tests whose statements are simple enough to be taught to introductory calculus students but whose power cannot be overstated.&lt;/p&gt;
+&lt;p&gt;In this post, we will prove that the “alternating series test” is valid. While the explanation might be a little bit involved, I hope to include all of the necessary background here. Hopefully, all you’ll need to follow this post is some patience and willingness to challenge yourself a little; this proof certainly challenged me, but I think the effort was well worth it.&lt;/p&gt;
+&lt;p&gt;If you are unfamiliar with what an infinite series is, see &lt;a href=&#34;https://en.wikipedia.org/wiki/Series_(mathematics)&#34;&gt;Series (mathematics) - Wikipedia&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
+&lt;p&gt;Before we start, we should understand the problem we are trying to solve. Lets say we have some infinite series, and let’s write it down as
+$$\sum_{n = 1}^\infty a_n = a_1 + a_2 + a_3 + \dots.$$
+The above series may converge or it may not. We can modify this rather plain series by adding together the terms of the
+same underlying sequence with alternating signs, forming what is known as an &lt;strong&gt;alternating series&lt;/strong&gt;. Symbolically, an
+alternating series has the form
+$$\sum_{n=1}^\infty (-1)^{n-1}a_n = a_1 - a_2 + a_3 - \dots.$$
+(Notice that the alternation comes from the fact that -1 to an even power is 1 and -1 to an odd power is -1.)
+If the non-alternating series converges to a finite sum, then the alternating series clearly does as well.* If not,
+though, would introducing alternation maybe force convergence? If so, we say that $\sum (-1)^{n-1}a_n$ &lt;strong&gt;converges  conditionally&lt;/strong&gt;;
+if not, oh well… some things just aren’t meant to be.&lt;/p&gt;
+&lt;h2 id=&#34;preliminaries&#34;&gt;Preliminaries&lt;/h2&gt;
+&lt;p&gt;More specifically, the AST is concerned with what conditions we need to place on our underlying sequence, $a_n$, so that
+alternation implies convergence. It turns out that whether an alternating series converges is quite easy to check; the
+only two things we need to verify are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The terms of the original (non-alternating) sequence are decreasing. Symbolically, we want $a_1 \geq a_2 \geq a_3
+\geq \dots$&lt;/li&gt;
+&lt;li&gt;$a_n \to 0$.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Our aim for the rest of this post is to prove that if $a_n$ satisfies (1) and (2), then $\sum (-1)^{n-1} a_n$ converges
+to a finite sum. In order to do this, though, we need a bit of machinery from real analysis, which we discuss next.&lt;/p&gt;
+&lt;h2 id=&#34;completeness-and-the-monotone-convergence-theorem&#34;&gt;Completeness and the monotone convergence theorem&lt;/h2&gt;
+&lt;p&gt;Real analysis (in an oversimplified sense) is the study of properties of the real numbers and functions of a real
+variable (things like continuity, differentiability, integrability and some other related stuff). The first thing one
+often does in a real analysis class is to formally discuss what the real numbers are, why we need them, and how to
+construct them. To go into all of that here would take us pretty far afield, but in short, the real numbers is the first
+example of a truly continuous set in the sense that there are no holes. (Although the rational numbers are dense, there
+are holes where irrational numbers — e.g. $\sqrt{2}$ — should be. Integers and natural numbers clearly have holes, e.g.
+between 1 and 2.)&lt;/p&gt;
+&lt;p&gt;One of the challenges students (myself included) typically face when discussing and trying to wrap your head around the
+above for the first time is how to rigorously define this idea that there are no holes (mathematically called
+&lt;strong&gt;completeness&lt;/strong&gt;). Most commonly, the definition you settle on is that every sequence of real numbers that has an upper
+bound has a &lt;em&gt;least&lt;/em&gt; upper bound (same with lower bounds and a &lt;em&gt;greatest&lt;/em&gt; lower bound).&lt;/p&gt;
+&lt;p&gt;A textbook I’ve been going through actually shows that in addition to the above characterization — often referred to as
+the Axiom of Completeness — there are (at least) 4 other &lt;em&gt;equivalent&lt;/em&gt; ways to characterize completeness, one of which we
+will use in the proof that we’re going to attempt below. It’s called the Monotone Convergence Theorem (MCT), and it
+states: any sequence (of real numbers) that is (1) bounded and (2) monotone converges. (A sequence is said to be
+&lt;strong&gt;bounded&lt;/strong&gt; if there is a number $M$ such that all terms of the sequence are contained in the interval $[-M, M]$. A
+sequence is &lt;strong&gt;monotone increasing&lt;/strong&gt; if every term is greater than or equal to the preceding term and &lt;strong&gt;monotone decreasing&lt;/strong&gt; if each term is less than or equal to the preceding term; if a sequence is monotone increasing or monotone
+decreasing, we say it’s &lt;strong&gt;monotone&lt;/strong&gt;, as you might expect.)&lt;/p&gt;
+&lt;p&gt;The MCT is pretty powerful. Boundedness and monotonicity are often intuitive properties that we can hand-wavily infer
+about a sequence we are examining and with MCT, we can transform those properties into what is often times the holy grail
+of sequence (and series) analysis: convergence!&lt;/p&gt;
+&lt;p&gt;Another technicality we need to address before we tackle our main result is that we need to clarify what we mean when we
+write $\sum_{n=1}^\infty a_n$. What does it &lt;em&gt;actually&lt;/em&gt; mean for $\sum_{n=1}^\infty a_n$ to “converge” to some finite
+value $S$?&lt;/p&gt;
+&lt;p&gt;When we say that the sum converges, what we mean is that as we add more and more terms, we get closer and closer to $S$.
+In other words, to know whether a series converges, we need to know whether or not what we call the sequence of &lt;strong&gt;partial sums&lt;/strong&gt; of $a_n$ — $a_1, a_1 + a_2, a_1 + a_2 + a_3, \dots$ — converges. Technically speaking, let $s_n$ denote the $n$th
+partial sum of the $a_n$; that is, $s_n = a_1 + a_2 + \dots + a_n$. Then saying that$ S = \sum_{n=1}^\infty a_n$ is the
+same as saying $S = \lim_{n \to \infty} s_n$. That last sentence is just formalism; what is really important here is that
+to show that some series converges to a number, we need only show that the partial sums of the sequence’s terms converge.
+With this in mind, we’re ready for the main result.&lt;/p&gt;
+&lt;p&gt;(Before continuing, make sure that you understand the main points from the previous two paragraphs.)&lt;/p&gt;
+&lt;p&gt;Before writing a proof, I often find it helpful to have context for the way the proof is going to unfold so that as I’m writing the proof, I’m able to remember where I am and how it’s supposed to help me get where I want to go. The statement we are trying to prove here is:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Alternating Series Test:&lt;/strong&gt; If $a_n$ is decreasing and $a_n \to 0$, then $\sum (-1)^{n-1} a_n$ converges.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;proof-sketch&#34;&gt;Proof sketch&lt;/h2&gt;
+&lt;p&gt;The proof will proceed by the following steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;We will consider two subsequences of the sequence of partial sums: the first will be the subsequence of partial sums that add up an odd number of terms and the second will be the subsequence of partial sums that add up even numbers of terms. We will call the “odd” one $s_{2n+1}$ and the “even” one $s_{2n}$.&lt;/li&gt;
+&lt;li&gt;We will show that each of the subsequences are bounded.&lt;/li&gt;
+&lt;li&gt;We will show that each of the subsequences are monotone.&lt;/li&gt;
+&lt;li&gt;(2) and (3) imply that both converge by MCT, say to limits $L_1$ and $L_2$ respectively.&lt;/li&gt;
+&lt;li&gt;We will show that $L_1 = L_2$ and will call the shared limit $L$.&lt;/li&gt;
+&lt;li&gt;We note that the “whole” sequence of partial sums can be made up by interleaving terms of the even and odd subsequences.&lt;/li&gt;
+&lt;li&gt;If the two subsequences converge to L and we can interleave them to form the original sequence, then it also must converge to $L$. The original sequence was the equivalent partial sum expression of our alternating series, so the proof is complete.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;proof&#34;&gt;Proof&lt;/h2&gt;
+&lt;p&gt;Now, for the proof.&lt;/p&gt;
+&lt;p&gt;The odd subsequence looks like:
+$$a_1, a_1 - a_2 + a_3, a_1 - a_2 + a_3 - a_4 + a_5, \dots$$
+Recall that the $a_n$ are decreasing. This means that subtracting $a_2$ and then adding back a little less than $a_2$ to
+$a_1$ is going to leave you slightly short of $a_1$. When you subtract $a_4$ from and then add $a_5$ to $a_1 - a_2 +
+a_3$, you’re going to end up slightly short of $a_1 - a_2 + a_3$. Extending this logic, we arrive at two conclusions.
+First, we see that the odd partial sums are monotonically decreasing because with every pair of $a_k$ that we tack on to
+obtain a successive term, we subtract some amount and then add back a bit less than we got rid of. Second, we see that
+once we depart from $a_1$ (and start our adding and subtracting madness), we never quite make it back. In other words,
+we can bound the odd partial sums by $a_1$.&lt;/p&gt;
+&lt;p&gt;(There are formal, symbolic ways of representing all of this, but if you understand the above line of reasoning, you’ve
+understood the gist, IMO.)&lt;/p&gt;
+&lt;p&gt;Next, we note that for each $k$, the partial sum $s_{2k} \leq s_{2k+1}$ because the last term of every odd partial sum adds some small positive amount to the previous sum, which was made up of an even number of terms. For example, when $k = 1$, we have
+$$s_2 = s_{2 \times 1} = a_1 - a_2 + a_3 - a_4 \leq a_1 - a_2 + a_3 - a_4 + a_5 = s_{2 \times 1 + 1} = s_3.$$
+Thus, the even partial sums must be bounded too!&lt;/p&gt;
+&lt;p&gt;Further, notice that the even partial sums monotonically increase. We can see this by observing that each time we tack a
+pair of $a_i$, we add a little bit and then subtract a little bit less. When we go from
+$s_2 = a_1 - a_2$ to $s_4 = a_1 - a_2 + a_3 - a_4$, we take $a_1 - a_2$ and change it slightly by adding $a_3$ and then subtracting a little bit less than $a_3$ ($a_4$).&lt;/p&gt;
+&lt;p&gt;But wait! We now have established that both the odd and even sums are monotone and bounded, so they must both converge!
+Let’s call the limit of the sequence of odd partial sums $L_1$ and the limit of the even partial sums $L_2$. To prove
+that $L_1$ and $L_2$ are the same, all we need to do is show that the difference between them is 0. To see this, we
+simply observe that
+$$\lim_{k \to \infty} s_{2k+1} - s_{2k} = \lim_{k \to \infty} a_{2k+1} =  0.$$
+Thus $L_1 = L_2$; we will henceforth refer to the limit as $L$.&lt;/p&gt;
+&lt;p&gt;We can reconstruct the sequence of partial sums representing our original series by interleaving terms of the odd and
+even subsequences. Because both subsequences tend to $L$, we can conclude that the sequence constructed from the
+interleaved subsequences also tends to $L$. This completes the proof, as we’ve provided the desired finite limit for our
+alternating series’ partial sums.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Sometimes we’re taught formulas and tests in class and are — rather unfortunately — not challenged to understand why
+they work as well as they do. As I’ve spent a little bit of time going back through some of the things I took for
+granted when I first encountered them, I’ve found that the stuff behind the curtain is often very interesting and
+illuminating. In this particular case, I hope you have too.&lt;/p&gt;
+&lt;p&gt;*If adding a bunch of positive (the same type of argument will work if some terms are negative) terms together gives some finite positive result, then subtracting some of the terms instead of adding them will certainly give a finite result as well. The sum of the alternating series is thus bounded above by the sum of the non-alternating terms.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

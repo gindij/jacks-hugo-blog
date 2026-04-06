@@ -1,0 +1,36 @@
+{{ define "head" }}
+{{ $options := dict "transpiler" "dartsass" "targetPath" "css/list.css" }}
+{{ with resources.Get "sass/layouts/list.scss" | toCSS $options | postCSS | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+{{ end }}
+{{ $options := dict "transpiler" "dartsass" "targetPath" "css/index.css" }}
+{{ with resources.Get "sass/layouts/index.scss" | toCSS $options | postCSS | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+{{ end }}
+{{ end }}
+
+{{ define "main" }}
+<main id="main">
+  {{ with .Site.GetPage "_index.md" }}
+  <section class="bio content">
+    {{ .Content }}
+  </section>
+  <hr>
+  {{ end }}
+
+  {{ $pages := where .Site.RegularPages "Type" "posts" }}
+  {{ range $pages.GroupByDate "2006" }}
+  <div class="post-group">
+    <h3>{{ .Key }}</h3>
+    <ul>
+      {{ range .Pages }}
+      <li>
+        <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <time>{{ .PublishDate.Format $.Site.Params.dateFormat }}</time>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+  {{ end }}
+</main>
+{{ end }}

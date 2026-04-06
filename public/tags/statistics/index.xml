@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Statistics on Jack Gindi</title>
+    <link>http://localhost:1313/tags/statistics/</link>
+    <description>Recent content in Statistics on Jack Gindi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 04 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The connection between k-means and Gaussian mixtures</title>
+      <link>http://localhost:1313/posts/km-gmm/</link>
+      <pubDate>Thu, 04 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/km-gmm/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;In the next few posts I want to take you on the learning journey that happened when I tried to wrap my head around &lt;a href=&#34;https://icml.cc/2012/papers/291.pdf&#34;&gt;this wonderful paper&lt;/a&gt; by Brian Kulis and Michael I. Jordan (yes, Michael Jordan). The paper is about a variant of the k-means algorithm inspired by a Bayesian way of thinking about clustering. This helps solve a significant problem with k-means, namely that we don&amp;rsquo;t know the optimal value of $k$ in advance, and, furthermore, that there often is not even a way to make a reasonable guess of what a good value might be for a particular dataset.&lt;/p&gt;
+&lt;p&gt;In this post, we will go over the contents of section 2.1 of the paper, which is about a connection between k-means and a mixture of Gaussians model. In future posts, we will introduce a Bayesian approach to clustering, and see how that perspective is more than just philosophical; it can help us develop a new algorithm that is more flexible than k-means.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re not familiar with k-means, I&amp;rsquo;d recommend reading up on it before proceeding. The &lt;a href=&#34;https://en.wikipedia.org/wiki/K-means_clustering&#34;&gt;Wikipedia page&lt;/a&gt; is a good place to start.&lt;/p&gt;
+&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
+&lt;p&gt;We are going to develop the k-means algorithm in a somewhat non-standard way, but first we need to review a few preliminaries.&lt;/p&gt;
+&lt;h2 id=&#34;mixtures-of-gaussians&#34;&gt;Mixtures of Gaussians&lt;/h2&gt;
+&lt;p&gt;A mixture of Gaussians model can be succinctly expressed as follows:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+p(x) = \sum_{i=1}^k \pi_i N(x | \mu_i, \Sigma_i).
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;This expression says that under our model, the probability assigned to sampling a point near $x$ is a mixture of the probabilities of sampling a point near $x$ according to each of $k$ different Gaussians. The mixing coefficient $\pi_i$ represents the amount of weight we place on the $i$th Gaussian (they are nonnegative and sum to 1), and $\mu_i$ and $\Sigma_i$ are the mean(vector)s and covariance(matrice)s, respectively.&lt;/p&gt;
+&lt;p&gt;One way to interpret this model that I find intuitively appealing is as an assumption that each point in your dataset is generated from one of $k$ distinct (Gaussian) generating processes. To sample a new point from this distribution, you can first sample a value $i$ using the $\pi_i$, and then subsequently sample a point from the corresponding Gaussian. (Note that this assumption may or may not be suitable for a particular dataset or application. As George Box has famously said: &amp;ldquo;All models are wrong, but some are useful.&amp;rdquo;)&lt;/p&gt;
+&lt;h2 id=&#34;em-algorithm&#34;&gt;EM algorithm&lt;/h2&gt;
+&lt;p&gt;The EM algorithm is a way of carrying out &lt;a href=&#34;https://en.wikipedia.org/wiki/Maximum_likelihood_estimation&#34;&gt;maximum likelihood estimation&lt;/a&gt; in cases where the model is constructed with &lt;strong&gt;latent variables&lt;/strong&gt;. Latent variables are often used to account for or represent characteristics of a population that cannot be directly observed. As an example, someone&amp;rsquo;s political orientation might not be directly observable, but if you ask questions about certain issues, you might be able to infer it.&lt;/p&gt;
+&lt;p&gt;The algorithm tries to find an optimal pair of quantities: the values of the latent variables and the parameter values. To do this, we alternate between two steps&lt;/p&gt;
+&lt;h3 id=&#34;expectation-step&#34;&gt;Expectation step&lt;/h3&gt;
+&lt;p&gt;The output of this step is a &lt;em&gt;function&lt;/em&gt; that takes a potential parameter setting (i.e., a model) $\theta$, and outputs a score. (Higher scores are better.) The obvious question: How do we compute that score? Let&amp;rsquo;s say that $z$ is a possible latent variable setting. The score corresponding to $z$ is $\log p(x, z | \theta)$, i.e., the (log) likelihood of observing the data $x$ and $z$ assuming the model $\theta$. Since a &amp;ldquo;probable&amp;rdquo; setting of $z$ depends on the parameters we&amp;rsquo;ve estimated so far and the observed data $x$, the overall score for $\theta$ takes a weighted average of the scores across possible values of $z$, where the weights are the likelihood of observing $z$ given the latest parameters and the data $x$.&lt;/p&gt;
+&lt;p&gt;To summarize using notation we&amp;rsquo;ll refer to in the next section, the output of this step is a function we&amp;rsquo;ll call $Q$. To formalize the idea in the previous paragraph, we define $Q$ as follows:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+Q(\theta; x, \theta^{(t)}) = E_{z \sim p(\cdot | x, \theta^{(t)})} [\log p(x, z | \theta)].
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;Here, $\theta^{(t)}$ is our running parameter estimate; the $t$ is a subscript, not an exponent. At each step, we have access to a concrete value of $\theta^{(t)}$. As the algorithm progresses, we update $\theta^{(t)}$ to $\theta^{(t+1)}$ and so on. In contrast to $\theta^{(t)}$, $\theta$ is a placeholder for a parameter setting &lt;em&gt;that we are constructing $Q$ to evaluate&lt;/em&gt;. In the same way that when we define $f(x)$, we don&amp;rsquo;t know anything about $x$ except that it&amp;rsquo;s an input to the $f$, similarly, when we work with $Q(\theta; x, \theta^{(t)})$, we don&amp;rsquo;t know anything about $\theta$ except that it&amp;rsquo;s a potential parameter setting we might want to test.&lt;/p&gt;
+&lt;p&gt;The semicolon in the definition of $Q$ is just a way of indicating that the function also depends on the data $x$ and the latest parameter setting $\theta^{(t)}$, but that we&amp;rsquo;re treating these as known (whereas $\theta$ is a variable).&lt;/p&gt;
+&lt;h3 id=&#34;maximization-step&#34;&gt;Maximization step&lt;/h3&gt;
+&lt;p&gt;Once we have the function $Q$, we simply maximize the function over $\theta$. The concrete update rule depends on the model we&amp;rsquo;re working with, but the general idea is to find the parameter setting that makes the data most likely. In general mathematical terms we are looking for&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+\theta^{(t+1)} = \arg\max_{\theta} Q(\theta; x, \theta^{(t)}).
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;We alternate between the expectation step (forming $Q$ using $\theta^{(t)}$) and maximization step (finding the parameter value that maximizes $Q$) until the algorithm converges.&lt;/p&gt;
+&lt;h1 id=&#34;k-means--em--mixture-of-gaussians--a-limit&#34;&gt;K-means = EM + mixture of Gaussians + a limit&lt;/h1&gt;
+&lt;p&gt;For each point $x_i$, we can imagine that there is a true, but latent, cluster assignment vector $z_i \in \text{one-hot}(k)$. Each entry $z_{ic}$ of $z_i$ is 1 if $x_i$ is a member of cluster $c$ and 0 otherwise. (Note that only one component of $z_i$ can be 1 for each $i$.) In our setup, since the cluster assignment is latent, $x_i$&amp;rsquo;s cluster membership is smeared across the different clusters probabilistically. We express this idea of a &lt;strong&gt;soft assignment&lt;/strong&gt; by saying that there is a probability, $\gamma(z_{ic})$, that the point $x_i$ is in cluster $c$. (In contrast, k-means makes a &lt;strong&gt;hard assignment&lt;/strong&gt;, where each point is assigned to &lt;em&gt;exactly one&lt;/em&gt; cluster, in which case $\gamma$&amp;rsquo;s output would be binary. We&amp;rsquo;ll get to that in a moment.)&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s assume that the $x_i$ are drawn from a mixture of Gaussians with mixture coefficients $\pi_i$ for $i = 1,\dots, k$, but with the additional assumption that for each $i$, $\Sigma_i = \sigma I$. That is, assume that the covariance matrices for each Gaussian are all diagonal and have the same value $\sigma$ on their diagonals.&lt;/p&gt;
+&lt;p&gt;The entries of the $\gamma(z_i)$ (the vector of $\gamma(z_{ic})$ for $c = 1, \dots, k$) can be expressed as&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+\gamma(z_{ij}; \theta^{(t)}) &amp;amp;= \frac{\pi_j N(x_i | \mu_j, \sigma I)}{\sum_{l=1}^k \pi_l N(x_i | \mu_l, \sigma I)} \
+&amp;amp;= \frac{\pi_j \exp\left(-\frac{1}{2\sigma} |x_i - \mu_j|^2\right)}{\sum_{l=1}^k \pi_l \exp\left(-\frac{1}{2\sigma} |x_i - \mu_l|^2\right)}.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;We write $\gamma(z_{ij}; \theta^{(t)})$ to emphasize that the $\gamma$&amp;rsquo;s are computed using the latest parameter estimates $\theta^{(t)}$.&lt;/p&gt;
+&lt;p&gt;The denominator here looks complicated, but it&amp;rsquo;s just there to make sure that the entries of $\gamma(z_i)$ sum to 1. The numerator is roughly the probability that $x_i$ was generated by the $j$th Gaussian. (The exact expression is a bit more complicated, but this is the intuition.)&lt;/p&gt;
+&lt;p&gt;The k-means algorithm can be seen as a limiting case of the EM algorithm applied to this mixture of Gaussians setup.&lt;/p&gt;
+&lt;h2 id=&#34;the-e-step&#34;&gt;The E-step&lt;/h2&gt;
+&lt;p&gt;The TL;DR is that the E-step of the EM algorithm computes the $\gamma(z_i)$ for each $x_i$ using the existing $\mu_j$s and $\pi_j$s. I want to be slightly more precise, though, about how this fits within the abstract framework of the EM algorithm that we outlined earlier.&lt;/p&gt;
+&lt;p&gt;The E-step computes $\gamma(z_i)$ as above. To map this onto the abstract definition of the E-step, we can first note that for a particular example $x_i$, we can compute the (log) likelihood of $x_i$ being generated by the $j$th Gaussian as&lt;/p&gt;
+&lt;p&gt;$$
+\log p(x_i, z_{ij} = 1 | \theta) = \log \pi_j N(x_i | \mu_j, \sigma I).
+$$&lt;/p&gt;
+&lt;p&gt;Here, $\theta$ is the set of all parameters to evaluate, i.e., the $\pi_i$ and $\mu_i$. To compute the expected value of this quantity for $x_i$ over all possible latent variable settings, we can use the $\gamma(z_{ij})$ we computed above to weight the contribution of the log probability for each latent setting $z$:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+Q(\theta; x_i, \theta^{(t)}) &amp;amp;= E_{z \sim p(\cdot | x_i, \theta^{(t)})} [\log p(x_i, z | \theta)] \
+&amp;amp;= \sum_{j=1}^k \gamma(z_{ij}) \log \pi_j N(x_i | \mu_j, \sigma I).
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;To extend this expectation to the entire dataset, we can simply sum over all the $x_i$:&lt;/p&gt;
+&lt;p&gt;$$
+Q(\theta; x, \theta^{(t)}) = \sum_{i=1}^n \sum_{j=1}^k \gamma(z_{ij}; \theta^{(t)}) \log \pi_j N(x_i | \mu_j, \sigma I).
+$$&lt;/p&gt;
+&lt;p&gt;Note that in the equation above, the $\mu_j$ and $\pi_j$ are the parameters that we are evaluating with the function $Q$, whereas the latest means and mixture coefficients we&amp;rsquo;ve estimated so far (i.e., those represented by $\theta^{(t)}$) are used to compute the $\gamma(z_{ij})$.&lt;/p&gt;
+&lt;h2 id=&#34;the-m-step&#34;&gt;The M-step&lt;/h2&gt;
+&lt;p&gt;Since we&amp;rsquo;ve fixed the covariances, i.e. are not parameters that need to be found, the M-step updates the $\mu_j$ to be the weighted average of all of the $x_i$. Each point&amp;rsquo;s contribution to the computation of $\mu_j$ is weighted by the corresponding $\gamma(z_{ij})$, or how strongly it is attracted to $\mu_j$. This makes intuitive sense; the farther away a point is from a given mean, the (exponentially) less impact it has on that mean&amp;rsquo;s update.&lt;/p&gt;
+&lt;h2 id=&#34;putting-it-all-together&#34;&gt;Putting it all together&lt;/h2&gt;
+&lt;p&gt;The final ingredient we need to make the rigorous connection to k-means is to note what happens when $\sigma$ gets smaller and smaller. As we assume that the $k$ Gaussians in our mixture become narrower and narrower, points that are not very close to the means have their likelihoods exponentially decay to 0. Since the sum in the denominator of the expression for $\gamma(z_{ij})$ becomes dominated by the term with the smallest distance to $\mu_j$, as $\sigma \to 0$, $\gamma(z_{ij})$ tends to 1 when $j$ minimizes $||x_i - \mu_j||^2$ and to 0 otherwise. This &amp;ldquo;one-hot&amp;quot;ing of the $\gamma(z_i)$ is the same as saying that letting $\sigma$ go to 0 turns our soft assignment into a hard assignment, which is exactly what k-means is designed to do.&lt;/p&gt;
+&lt;p&gt;To summarize: The k-means algorithm can be seen as the application of the EM algorithm to a mixture of Gaussians when we assume that the covariance matrices are fixed to $\sigma I$ and we let $\sigma$ go to 0.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;That&amp;rsquo;s all for now. I&amp;rsquo;ve always found it quite satisfying to see how different, seemingly disparate theorems, algorithms, models, etc. can come together in unexpected ways.&lt;/p&gt;
+&lt;p&gt;In the next post, we&amp;rsquo;ll start to develop our Bayesian perspective to develop the new clustering algorithm I mentioned in the intro. Stay tuned!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Probabilistic interpretation of regularization</title>
+      <link>http://localhost:1313/posts/2021-05-09-regularization/</link>
+      <pubDate>Sun, 09 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2021-05-09-regularization/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;ve read enough of my posts over the years, you know that some of my favorite
+topics to write about are those that can be thought about or studied from
+different perspectives. In this post, I want to write about regularization, a
+technique used in machine learning to mitigate a common problem called overfitting
+&amp;ndash; a problem that crops up when algorithms fit their understanding of the world
+so tightly to a particular dataset, that it isn&amp;rsquo;t able to make predictions about
+data that it hasn&amp;rsquo;t seen. Regularization can be thought about as a term to add
+to the optimization objective that directly discourages overfitting, or it can be
+thought of in an interesting statistical way.&lt;/p&gt;
+&lt;h2 id=&#34;a-helpful-example-simple-linear-regression&#34;&gt;A helpful example: simple linear regression&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s assume that we&amp;rsquo;re building a linear regression model. That is, assuming that
+$b$ represents the number of bedrooms in the house, we &lt;em&gt;assume&lt;/em&gt; (more on this in a second)
+that the relationship between the number of bedrooms and the price of the house
+is linear:
+$$
+p(b) = \theta b + \epsilon.
+$$
+Here, $p$ is price, $b$ is the number of bedrooms in the house, and $\epsilon$
+is a random number that represents the error in our model, or the part of our model that
+the data we are using do not explain. What the formula above says is that &lt;em&gt;we believe&lt;/em&gt;
+that we can model the relationship between #bedrooms and price with a linear model.
+This &lt;em&gt;does not&lt;/em&gt; say that we believe that the actual relationship is linear. This is a
+very important distinction. We believe that the linear model might be &lt;em&gt;useful&lt;/em&gt;, not
+necessarily that it is &lt;em&gt;correct&lt;/em&gt; or &lt;em&gt;true&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;(Another way of thinking about our equation, or model, is that it says once we know
+the parameter $\theta$ and the particular number of bedrooms $b_0$, the randomness
+has been confined to the variation of prices around a known mean: $\theta b_0$.)&lt;/p&gt;
+&lt;h2 id=&#34;fitting-the-parameters&#34;&gt;Fitting the parameters&lt;/h2&gt;
+&lt;p&gt;One natural way to find the best parameter $\theta$ for a set of data is to find the
+the value of $\theta$ that literally best fits the input data! To better understand what
+this means, let&amp;rsquo;s suppose that we have (#bedroom, price) pairs $(b_i, y_i)$ for $i=1,\dots,100$,
+and a current guess at a parameter $\theta$. To evaluate $\theta$, a natural measure of how
+well $\theta$ fits is to find the average (square) error, where the error for each example
+can be expressed as the difference between $\theta b_i$ (our prediction) and $y_i$
+(the actual price). Mathematically, we can write this measure down as
+$$
+J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
+$$
+Now that we&amp;rsquo;ve decided what constitutes a good choice of parameter, we can employ
+tools provided by calculus to actually calculate what value of $\theta$ is best
+by solving the optimization problem (replacing 100 with the more general $m$) given by
+$$
+\text{argmin}&lt;em&gt;\theta \sum&lt;/em&gt;{i=1}^m (\theta b_i - y_i)^2.
+$$
+(This is the value of $\theta$ that minimizes $J$. Without going into detail,
+in this case, it turns out that the best value is $\theta = \frac{\mathbf y^T \mathbf b}{\mathbf b^T \mathbf b}$,
+where $\mathbf b = (b_1,\dots, b_m)$ and $\mathbf y = (y_1,\dots,y_m)$.)&lt;/p&gt;
+&lt;h2 id=&#34;regularization&#34;&gt;Regularization&lt;/h2&gt;
+&lt;p&gt;One important concern when fitting a machine learning model is whether or not
+your model is too tightly fit to the data that you have. Because models are fit using
+a finite sample of data, it is possible, even likely, that your data is not representative
+of what can occur &amp;ldquo;in the wild.&amp;rdquo; As such, the model you&amp;rsquo;ve built may be terrific on the data
+it used to train, but does not actually generalize to situations it hasn&amp;rsquo;t encountered.
+There are various techniques for combating this problem, but the one we will discuss
+here is one called regularization.&lt;/p&gt;
+&lt;h3 id=&#34;the-intuitive-motivation&#34;&gt;The intuitive motivation&lt;/h3&gt;
+&lt;p&gt;In models with more than one feature, overfitting tends to occur because certain
+of the features have parameters that are too large, i.e., that their impact is overstated
+in the model. As such, rather than just finding the parameters that minimize the least
+squares objective, we want to find &lt;em&gt;small&lt;/em&gt; parameters that minimize the objective.
+For the simple regression case, we would add a term to the objective:
+$$
+\text{argmin}&lt;em&gt;\theta ~~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+$$&lt;/p&gt;
+&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
+will also be large, so the optimizer will not be encouraged to pick that value of $\theta$,
+even it fits the data pretty well. Adding this term causes the optimizer to trade off
+goodness of fit and simplicity (in the sense of parameters that aren&amp;rsquo;t too large).
+The constant $\lambda$ controls our preferences with respect to that tradeoff: larger
+values of $\lambda$ will encourage smaller value of $\theta$.&lt;/p&gt;
+&lt;h3 id=&#34;statistical-interpretation&#34;&gt;Statistical interpretation&lt;/h3&gt;
+&lt;p&gt;While the intuitive motivation is usually enough, there is a cool
+statistical interpretation of what is going on here that I think is worth pointing out.
+If we instead think of finding $\theta$ by carrying out &lt;a href=&#34;https://en.wikipedia.org/wiki/Maximum_likelihood_estimation&#34;&gt;maximum (log) likelihood estimation&lt;/a&gt; (MLE),
+then regularization naturally arises when we add the additional assumption to our
+model that $\theta$ comes from a normal distribution centered around zero with variance
+$1/\lambda$ (we can tune $\lambda$ to change the width of the bell curve). Making this assumption
+essentially pins down a probability density function for the parameter $\theta$:
+$P(\theta) = \frac{\sqrt{\lambda}}{\sqrt{2\pi}}\exp(-\lambda(\theta - 0)^2/2)$.
+Taking $\log$s (this doesn&amp;rsquo;t affect the optimization problem we need to solve), we have
+$$
+\log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
+$$
+Adding this assumption about the prior distribution over $\theta$ and ignoring
+constants (with respect to $\theta$), we would need to solve the modified MLE problem:
+$$
+\begin{align}
+\text{argmax}&lt;em&gt;\theta~ \log(P(\mathbf y &lt;del&gt;|&lt;/del&gt; \mathbf b, \theta)P(\theta))
+&amp;amp;= \text{argmax}&lt;/em&gt;\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\
+&amp;amp;= \text{argmin}&lt;em&gt;\theta ~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+\end{align}
+$$
+which is exactly what we had intuitively motivated in the previous section!&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ve just uncovered the statistical interpretation of regularization!* Using (this flavor
+of) regularization is actually imposing a Gaussian prior onto $\theta$. As we force the
+width of $\theta$&amp;rsquo;s bell curve to become smaller by increasing $\lambda$, we are encoding the
+fact that larger values of $\theta$ are less likely and should therefore be penalized more
+heavily during the optimization process.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we encountered a cool technique that underlies many statistical models called maximum likelihood estimation (MLE), and showed that a common technique used to combat overfitting actually has a nice statistical interpretation, too!&lt;/p&gt;
+&lt;p&gt;Happy Mother&amp;rsquo;s Day to all!&lt;/p&gt;
+&lt;p&gt;*The regularization we discuss here is called L2 regularization. Regularization comes in
+other forms too. The most popular other choice is called L1 regularization, and it can
+actually be interpreted as imposing a Laplacian (rather than a Gaussian) prior.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Understanding mean squared error</title>
+      <link>http://localhost:1313/posts/2019-09-23-mse/</link>
+      <pubDate>Mon, 23 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2019-09-23-mse/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;In statistics, the overarching goal &amp;ndash; in some sense &amp;ndash; is to figure out how to take a limited amount of data
+and reliably make inferences about the broader population we don’t have data about. To do this, we study,
+develop, and use mathematical objects called statistics or estimators. Formally, these are functions of other
+objects called random variables, but, for the moment, it suffices to think of them as ways of using limited
+amounts of data furnished by a part to learn about the whole.&lt;/p&gt;
+&lt;p&gt;As an example, let’s say that you wanted to find out the average height of all humans on earth, and let’s
+further suppose that the actual average human height is 3.5 feet. You might take a random sample of 1000
+people, add up all heights and divide by 1000. The height that you get from that procedure, the mean height
+of your sample, is an estimator of the actual population height; let’s call it $A$. Alternatively, let’s say
+you again took that same sample of 1000 people, disregarded it and decided that your estimator of the mean
+population height was going to be zero feet, zero inches; call this (rather silly) estimator $B$.&lt;/p&gt;
+&lt;p&gt;Before developing any formal measure of the quality of an estimator, think about the above two estimators.
+Does one seem “more reasonable” than the other? For any parameter you want to estimate using some data you’ve
+collected, there are infinitely many estimators you could come up with; one natural concern we might seek to
+address is how to mathematically distinguish quality estimators from useless estimators.&lt;/p&gt;
+&lt;h2 id=&#34;mean-squared-error--bias--variance&#34;&gt;Mean squared error = bias + variance&lt;/h2&gt;
+&lt;p&gt;Mean squared error (henceforth MSE) is an attempt to formally capture the difference in the quality of
+different estimators. It is defined as the expected value of the square of the distance between the
+estimator’s value and the true value of the parameter you are trying to estimate with it. In the example
+above:&lt;/p&gt;
+&lt;p&gt;The true value of the parameter (average human height) is 3.5 feet.
+The estimator is the sample average of 1000 people that you calculated.
+Because the estimator is a function of random variables (heights of people you sampled), it, too, is a random
+variable, say $X$, with some distribution. We can therefore think about the expected value of some function
+of $X$ - in our case, the function is $f(X) = (X - 3.5)^2$. To compute the expected value you take a weighted
+average of all possible values $X$ can take and weight each one by the probability of seeing that outcome.
+(Don’t worry too much about why we&amp;rsquo;re squaring; it makes calculus easier.)&lt;/p&gt;
+&lt;p&gt;Mathematically, we write
+$$
+\text{MSE}(\hat y) = E_y((\hat y - y)^2)
+$$
+where $\hat y$ is the estimator and $y$ is the true parameter value.&lt;/p&gt;
+&lt;p&gt;Intuitively, if we expect the estimator to, on average, stray far from the true value of the parameter, the
+estimator is probably not very good. Alternatively, if that expected value is close to 0, it means that the
+estimator deviates very little from the actual parameter, i.e. it’s a great estimator! With some tedious
+algebra, we can actually show that&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align}
+\text{MSE}(\hat y) &amp;amp;= E_y((\hat y - y)^2) \
+&amp;amp;= \dots \ &amp;amp;= E((\hat y - E(\hat y))^2) + (E(\hat y) - \hat y)^2 \
+&amp;amp;= \text{Var}_y(\hat y) + (\text{Bias}_y(\hat y))^2
+\end{align}
+$$&lt;/p&gt;
+&lt;p&gt;Bias and variance are two very important qualities of estimators that help us understand how they relate to
+the real value you’re attempting to estimate:&lt;/p&gt;
+&lt;h3 id=&#34;bias&#34;&gt;Bias&lt;/h3&gt;
+&lt;p&gt;Bias tells you the difference between the expected value of your estimator and that actual value of the
+parameter. To intuitively grasp this, imagine throwing several darts at a board, all of which strike the
+board close together, but off of the true center. You’re throws had high bias; in some sense, your “average”
+throw’s position would have been consistent, but generally off the mark.&lt;/p&gt;
+&lt;h3 id=&#34;variance&#34;&gt;Variance&lt;/h3&gt;
+&lt;p&gt;Variance tells you how much the estimator tends to move around it’s expected value. If the estimator (just a
+function) takes values spread widely around it’s mean, variance will be high. Suppose you know two basketball
+players, both of whom average 15 points per game. One of them scores 30 one game and 0 the next, and the
+other scores around 15 consistently. While both players have the same scoring average, one of their scoring
+patterns is high variance &amp;ndash; i.e. deviates pretty far from the mean &amp;ndash; and the other is low variance.&lt;/p&gt;
+&lt;p&gt;With this decomposition in mind, we can see that if we choose to use MSE as our metric of estimator quality,
+it actually decomposes very nicely into two intuitively appealing sources of error. Therefore, to lower MSE,
+we need to either reduce bias or reduce variance (or reduce both!). It isn&amp;rsquo;t always so simple, though, as it
+is possible that by reducing one, you might have to raise the other, hence the name, the bias-variance
+tradeoff. There are a bunch of techniques that are actually quite useful in practice which leverage the
+decomposition of MSE into bias and variance.&lt;/p&gt;
+&lt;h2 id=&#34;in-algorithms&#34;&gt;In algorithms&lt;/h2&gt;
+&lt;p&gt;For example, random forests are estimators that average the opinions of a bunch of high variance (aka not
+very general) decision trees to, in aggregate, function as a lower variance estimator. (This technique, a
+special case of a more general class of bagging algorithms, uses the fact that the variance of an average
+of $n$ independent estimators decreases as $n$ gets bigger.)&lt;/p&gt;
+&lt;p&gt;Attacking the MSE problem from the bias side, we have boosting algorithms, wherein the decision trees (or any
+other base estimator) are trained in sequence. Each tree in the sequence trains itself more tightly to the
+examples that the previous tree predicted incorrectly. In this sense, you are starting with a silly, low
+variance, estimator and gradually fitting it more tightly to the data, reducing bias, so that the sequence,
+all together, becomes more useful.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;While I&amp;rsquo;ve admittedly left out some of the technical details of bagging and boosting, the point is to
+illustrate that something abstract-seeming like MSE can be understood in a very concrete way, and that the
+decomposition we discussed can actually lead to practical problem-solving approaches that are actually quite
+useful.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The weak law of large numbers</title>
+      <link>http://localhost:1313/posts/2018-12-31-lln/</link>
+      <pubDate>Mon, 31 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-12-31-lln/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;When I say that Alice is better than Bob at chess, I’m effectively asserting that barring careless mistakes,
+Alice should always beat Bob. This notion, of Alice “being better than” Bob is easy to wrap one’s head around
+when the game in question doesn’t have to contend with randomness or uncertainty. What does it mean, though,
+to say that Alice is better than Bob at a game like backgammon, where dice (a source of randomness) are involved? The rest of this post aims to provide some mathematical machinery to answer such a question.&lt;/p&gt;
+&lt;p&gt;Whenever one talks about expecting some “eventual” outcome of a game or experiment, he or she is actually
+invoking a fundamental statistical law: the Law of Large Numbers (henceforth LLN). The LLN is one of a group
+of fundamental results in probability theory known as limit theorems, which are statements about how certain
+aspects of random variables stabilize as you make more and more observations of them. In plain English (we’ll
+get to it’s technical formulation a bit later), the LLN (and we’ll see that there are actually two
+variants) says that if you have an experiment whose average outcome is a number $m$, then as you try the
+experiment more and more times, the average value of your collection of outcomes will tend to $m$.&lt;/p&gt;
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+&lt;p&gt;To get a feel for what’s going on here, let’s look at a few examples that demonstrate the LLN’s ubiquity and
+importance.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;When you play blackjack against the house, its ability to make money hinges on a critical assumption:
+(without cheating,) even using a probabilistically optimal strategy, the chances that you win a hand is
+less than 50%. The house edge might be very very small, but as long as it has some nonzero edge, the house
+stands to make money in the long run because it is playing lots and lots of hands. This assumption relies
+on the LLN.&lt;/li&gt;
+&lt;li&gt;Let’s imagine that a basketball player is in a shooting slump. He regularly shoots around 40% from
+outside the three point line, but of late he’s only managed to connect on 20% of his attempts.
+Encouragement offered to such a player typically looks like “Don’t worry, just keep shooting, your shot
+will come back!” A coach who lifts his player’s spirits this way is also relying on the LLN.&lt;/li&gt;
+&lt;li&gt;To return to our backgammon example, when we say that Alice is better than Bob, what we’re saying is
+that in any individual game, it’s possible that Bob beats Alice, but if Alice and Bob were to play 100 or
+1000 or 1000000 games against Bob, Alice would end up winning a majority of them. The more games they
+play, the more obvious the advantage would become.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;formal-statement&#34;&gt;Formal statement&lt;/h2&gt;
+&lt;p&gt;As I’ve noted in many other posts, it is one thing to have a good idea, another to formalize it
+mathematically. The concept underlying the LLN is one that most of us intuitively grasp without understanding
+statistics. But in order to prove it and then use it as a building block to understand other, more subtle
+results, we need to be able to state it formally.&lt;/p&gt;
+&lt;p&gt;Before we do, I want to note that there are actually two well known versions of the LLN. We will concern
+ourselves here with the Weak Law of Large Numbers (the Strong Law is harder to prove but says something
+similar in spirit). Mathematically, we would state it as follows (don’t worry &amp;ndash; we’ll break each piece of
+this down momentarily): Let $X_1, \dots, X_n$ be independent and identically distributed random
+variables all having finite average value $m$. Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$. Then for any
+$\varepsilon &amp;gt; 0$, $P(|\bar X_n - m| &amp;lt; \varepsilon) \to 1$ as $n \to \infty$.&lt;/p&gt;
+&lt;p&gt;Let’s dissect this piece by piece and make sure it makes sense:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;“Let $X_1, \dots, X_n$ be independent and identically distributed random variables”: This means that each
+observation $X_i$ is independent of all the others and is produced by the same distribution as all the
+others. Think of a black box that independently spits out a sequence of $n$ numbers using some fixed, unknown
+probability distribution. Each number the box spits out would be represented by an $X_i$. (The theorem is
+going to say what we can infer about the average of the black box distribution’s average value once we’ve
+made a sufficiently large number of observations.)&lt;/li&gt;
+&lt;li&gt;“Let $\bar X_n = \frac{1}{n}\sum_{i=1}^n X_i$”: $\bar X_n$ is the average value of the observations.&lt;/li&gt;
+&lt;li&gt;“Then for any $\varepsilon &amp;gt; 0$”: This is a math trick students usually first come across in real
+analysis. You basically pick some arbitrarily small value of $\varepsilon$ and then show that some quantity
+can always be made smaller than the value you chose. (In our case, that value will be the difference
+between the average value of the observations and the true average $m$.)&lt;/li&gt;
+&lt;li&gt;“$P(|\bar X_n - m| &amp;lt; \varepsilon) \to 1$ as $n \to \infty$”: The probability that the average value of
+the observations and the true mean of the underlying distribution differ by less than $\varepsilon$ becomes
+more and more certain as you take more and more observations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Read that again if it didn’t make sense. Once all that sinks in, go back and read the formulation; I hope
+you find that it’s a delightfully compact way of formalizing the intuition we started with.
+Our final act will be to prove it. If you haven’t heard of Chebyshev’s inequality, read
+&lt;a href=&#34;https://www.quora.com/q/iqjtzyaumcdpirqz/Probabilistic-Ballparking&#34;&gt;this&lt;/a&gt; before attempting the proof.&lt;/p&gt;
+&lt;h2 id=&#34;proof&#34;&gt;Proof&lt;/h2&gt;
+&lt;p&gt;We will assume for this proof that the $X_i$ have finite variance $\sigma^2$, though this
+assumption is not necessary. (It’s just that if we don’t make that assumption, the proof gets more
+complicated.)
+First, let’s compute the mean and variance of $\bar X_n$. Because expectation is linear, and $\bar X_n$ is
+just a sum of RVs each having mean $m$, we have&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+E(\bar X_n) &amp;amp;= \frac{1}{n}\sum_{i=1}^n E(X_i) \\
+&amp;amp;= \frac{1}{n}\sum_{i=1}^n m \\
+&amp;amp;= mn/n \\
+&amp;amp;= m.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;To compute the variance, we use the independence of the $X_i$ to write that&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+\text{Var}(\bar X_n) &amp;amp;= \text{Var}(\frac{1}{n}\sum X_i) \\
+&amp;amp;= \frac{1}{n^2}\text{Var}(\sum X_i) \\
+&amp;amp;= \frac{1}{n^2}\sum \text{Var}(X_i) \\
+&amp;amp;= \frac{1}{n^2}n\sigma^2 \\
+&amp;amp;= \sigma^2/n.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;Before we continue note that the fact that variance is a decreasing function of $n$ just about makes sense.
+The more observations I take, the smaller my variance should intuitively be.&lt;/p&gt;
+&lt;p&gt;Next, we use Chebyshev’s inequality with $\mu = m$, $k = \varepsilon$ and $X = \bar X_n$ to say that&lt;/p&gt;
+&lt;p&gt;$$
+\begin{align*}
+P(|\bar X_n - m| &amp;lt; \varepsilon) &amp;amp;= 1 - P(|\bar X_n - m| &amp;gt; \varepsilon) \\
+&amp;amp;\geq 1 - \frac{\sigma^2/
+n}{\varepsilon^2} \\
+&amp;amp;= 1 -\frac{\sigma^2}{n\varepsilon^2}.
+\end{align*}
+$$&lt;/p&gt;
+&lt;p&gt;(The inequality sign is flipped because we have that $1  - \dots$ in there. Otherwise, it’s just plug and play Chebyshev.)&lt;/p&gt;
+&lt;p&gt;As $n$ gets larger and larger, that rightmost term tends to 0, so the probability of interest is bounded below by 1, and voila! We’re done.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;This law is intuitive, deep &lt;em&gt;and&lt;/em&gt; also deeply embedded in the way that we as human beings trying to navigate the world deal with uncertainty, so I thought it deserved a post.&lt;/p&gt;
+&lt;p&gt;Happy New Year to all!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bounding probabilities with Markov and Chebyshev</title>
+      <link>http://localhost:1313/posts/2018-11-04-markov-chebyshev/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-11-04-markov-chebyshev/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Very often, finding exact answers is a pain; ballpark estimates usually suffice. When you’re nervous to board
+a plane, you don’t care to calculate the exact probability that the plane will land safely; you only care
+that it’s over $99.99%$. When you’re trying to figure out how long a project will take your team at work,
+you use approximations throughout your calculation because there are far too many unknowns and variable to
+compute the exact answer. Will a member of your team get sick and have to take time off? How quickly will
+your team members learn a new technology? How productive will the new-hire be? Across computer science, there
+are a myriad problems whose solutions are, in a rigorous sense, intractable to calculate exactly. To solve
+such problems — they show up all over a variety of industries — we design approximation algorithms that
+sacrifice some optimality and/or deterministic correctness for gains in efficiency and simplicity.&lt;/p&gt;
+&lt;h2 id=&#34;ballparking&#34;&gt;Ballparking&lt;/h2&gt;
+&lt;p&gt;In probability, one particular set of heuristic techniques we use is a set of inequalities called probability
+bounds. You would use them for some of the same reasons described above: intractability of an exact
+probability calculation; lack of need for an exact answer; generality (they don’t make many complex, esoteric
+or restrictive assumptions, so they apply to lots of different problems). In this post, I want to state and
+prove a few probability bounds and show how you can apply them. While the estimates might not always give
+you something useful to work with, it’s good to be aware of how to use the bounds should the opportunity
+present itself.&lt;/p&gt;
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+&lt;p&gt;As we often do when probability is concerned, let’s think about a sequence of coin flips. Instead of the usual unbiased coin, though, let’s say the coin falls heads with probability $p=1/3$ (and tails with probability $1 - p = 2/3$). In a sequence of 100 flips, what is the probability that greater than or equal to half of them fall heads?&lt;/p&gt;
+&lt;p&gt;The distribution one would use to model this question is most probably the binomial distribution. If we let the random variable $X =$ # of heads in 100 flips, we would say that $X \sim \text{Bin}(100, 1/3)$ ($X$ represents the number of times a head will fall in 100 flips when the probability of heads on each independent toss is 1/3). In the case of this particular problem, we can calculate the exact probability of 50 or more heads. The formula that computes the exact solution looks like (don’t worry about what the symbols mean — not important, but if you’re interested, take a look at this (&lt;a href=&#34;https://en.wikipedia.org/wiki/Binomial_distribution))&#34;&gt;https://en.wikipedia.org/wiki/Binomial_distribution))&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;$$\sum_{k=50}^{100} {100 \choose k}(\frac{1}{3})^k(\frac{2}{3})^{100-k} \approx 0.00042.$$&lt;/p&gt;
+&lt;p&gt;Without a bunch of cleverness or a computer, it would be very hard, if not impossible, to carry out that computation by hand. Let’s see if those probability bounds I talked about can lend us a hand. Before we do, we need to introduce two facts about binomial random variables. If $X \sim \text{Bin}(n, p)$, the expected value (average value) of $X$, written $E(X)$, is equal to $np$ (the number of trials times the individual probability of success), and the variance of $X$ (a measure of how much $X$ deviates from its average value), written $\text{Var}(X)$, is equal to $np(1-p)$. With that in mind, follow me.&lt;/p&gt;
+&lt;h2 id=&#34;markovs-inequality&#34;&gt;Markov&amp;rsquo;s inequality&lt;/h2&gt;
+&lt;p&gt;The first probability bound we’re going to look at is known as &lt;em&gt;Markov’s inequality&lt;/em&gt;. Before we technically state it, in plain English, Markov’s inequality tells us about the probability of a random variable exceeding some value. Formally, if $X$ is a positive random variable (the outcomes of your experiments are strictly positive values), then for any real number $a &amp;gt; 0$,&lt;/p&gt;
+&lt;p&gt;$$P(X \geq a) \leq \frac{E(X)}{a}.$$&lt;/p&gt;
+&lt;p&gt;Before we prove this, I want to explicitly state that the primary advantage of Markov’s inequality is its generality. It usually doesn’t furnish the most useful bounds, but notice that in order to apply Markov, all we need to know that is that $X$ is a positive random variable. As we will see below, it is also an important building block with which we will come up with better probability bounds. Before we see what it would tell us about the problem we started with, let’s prove it.&lt;/p&gt;
+&lt;h3 id=&#34;proof&#34;&gt;Proof&lt;/h3&gt;
+&lt;p&gt;Let the random variable $I = 1$ if $X \geq a$ and $0$ otherwise. The proof is mostly complete when you notice this convenient, but somewhat subtle fact:&lt;/p&gt;
+&lt;p&gt;$$I \leq \frac{X}{a}.$$&lt;/p&gt;
+&lt;p&gt;Why? Let’s think about it. If $I = 1$, then, by definition, $X \geq a$. Dividing by $a$ on both sides of $X \geq a$ gives us $\frac{X}{a} \geq 1 = I$. If $I = 0$, the above inequality holds because both $X$ and $a$
+are positive. Taking the expectation of both sides (don’t worry — expectation doesn’t change the sign of the
+inequality), the above inequality turns into $E(I) \leq E(\frac{X}{a})$. We can pull $\frac{1}{a}$ out of the
+right hand term because you can pull constants out of expectation. Further, by the definition of expected
+value, $E(I) = 1 \times P(I = 1) + 0 \times P(I = 0) = P(I = 1)$ is just the probability that $X \geq a$ (by
+our definition of $I$), so the above expression can be rewritten as&lt;/p&gt;
+&lt;p&gt;$$P(X \geq a) \leq \frac{E(X)}{a},$$&lt;/p&gt;
+&lt;p&gt;so we’ve finished the proof.&lt;/p&gt;
+&lt;h3 id=&#34;a-bound-on-the-example-using-markov&#34;&gt;A bound on the example using Markov&lt;/h3&gt;
+&lt;p&gt;Now that we know that Markov’s inequality holds, let’s see what it can tell us about our problem. Recall that
+we defined $X$ to be the number of flips that fall heads in a sequence of $100$ tosses. In particular, we
+wanted to know what the odds were that there were more than or equal to $50$ heads, i.e. the probability that
+$X \geq 50$. Noting that the expected value of our particular $X$ (with $n = 100$ and $p = 1/3$) is $np = 100
+\times 1/3$, we can plug these numbers into Markov and see that&lt;/p&gt;
+&lt;p&gt;$$P(X \geq 50) \leq \frac{100 \times \frac{1}{3}}{50} \approx 0.67.$$&lt;/p&gt;
+&lt;p&gt;This tells us that the probability that the number of heads we see exceeds $50$ is at most $0.67$. Not so
+useful, but do you see how simple that was to compute? Given the exact answer we computed above, this
+estimate doesn’t tell us very much, but the computation was so easy.&lt;/p&gt;
+&lt;h2 id=&#34;chebyshevs-inequality&#34;&gt;Chebyshev&amp;rsquo;s inequality&lt;/h2&gt;
+&lt;p&gt;The next bound I want to look at is called Chebyshev’s inequality. While it looks and feels a bit different
+from Markov, it’s spirit is similar. Chebyshev is a statement about the probability that some random variable
+deviates from its average by a certain amount. Its formal statement is: if $X$ is a random variable with
+finite expected value $\mu$ and finite variance $\sigma^2$ (those two conditions hold enough of the time),
+then&lt;/p&gt;
+&lt;p&gt;$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;/p&gt;
+&lt;p&gt;In English, the probability that $X$ deviates from its mean by at least $k$ is at most $X$’s variance divided by $k^2$.
+We will find this bound a bit more useful when we apply it to our problem, but before we do that, we need to prove it.&lt;/p&gt;
+&lt;h3 id=&#34;proof-1&#34;&gt;Proof&lt;/h3&gt;
+&lt;p&gt;If $X$ is a random variable, then $X - \mu$ is a random variable. Furthermore, if $X - \mu$ is a random variable,
+then so is $(X - \mu)^2$. Now we apply Markov with $X$ replaced by $(X - \mu)^2$ and $a$ replaced by $k^2$, and we have:&lt;/p&gt;
+&lt;p&gt;$$P((X - \mu)^2 \geq k^2) \leq \frac{E((X - \mu)^2)}{k^2}.$$&lt;/p&gt;
+&lt;p&gt;The expression in the parentheses on the left side is equivalent to the expression $|X - \mu| \geq k$ (take the square
+root of both sides). Replacing what’s in parentheses with the equivalent formulation and recognizing the numerator on
+the right side as the very definition of variance completes the proof because we can rewrite the above as&lt;/p&gt;
+&lt;p&gt;$$P(|X - \mu| \geq k) \leq \frac{\sigma^2}{k^2}.$$&lt;/p&gt;
+&lt;p&gt;That proof might have actually been mechanically easier than Markov! In addition, Chebyshev’s inequality is usually more
+informative and almost as general as Markov, so let’s take a look at what it can tell us about our problem.&lt;/p&gt;
+&lt;h3 id=&#34;a-bound-on-the-example-using-chebyshev&#34;&gt;A bound on the example using Chebyshev&lt;/h3&gt;
+&lt;p&gt;Recall that $\mu = np$ in our problem is approximately $33.3$ and that the variance is $\sigma^2 = np(1-p) = 100 \times 1/
+3 \times 2/3 = 200/9 \approx 22.2$. The information we’re missing here is what value of $k$ to choose. In this case, we
+want to know something about the probability that there are more than or equal to $50$ heads. $50 - 33.3 = 16.7$ so if we
+set $k$ to $16.7$, we will be able to apply Chebyshev to know an upper bound on the probability that $X$ takes a value
+that is more than $16.7$ away from $\mu$ in either direction. More directly, we would be able to say something about the
+probability that $X$ takes a value less than or equal to $33.3 - 16.7 = 16.6$ and greater than or equal to $33.3 + 16.7 =
+50$. The probability that $X$ is less than or equal to $16.6$ is superfluous, but it doesn’t affect the correctness of our
+upper bound. By Chebyshev, we can conclude that&lt;/p&gt;
+&lt;p&gt;$$P(|X - \mu| \geq 16.7) \leq \frac{22.2}{16.7^2} \approx 0.079,$$&lt;/p&gt;
+&lt;p&gt;so our upper bound is now around $8%$. Given the result of the explicit calculation we computed first, this isn’t especially tight either, but it’s much better than Markov and it was almost as easy to compute!&lt;/p&gt;
+&lt;h3 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;There are other, more powerful bounds that I won’t go into here because they’re more involved and this post is already long, but hopefully you’ve gotten an idea about where these sorts of things might be useful.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tale of two distributions</title>
+      <link>http://localhost:1313/posts/2018-08-02-bin-pois/</link>
+      <pubDate>Thu, 02 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-08-02-bin-pois/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;A theme of the many posts I’ve written over the last few years is that there are deep and beautiful connections we find between apparently different areas by appealing to a little bit of formalism and some finely-tuned intuition. In this case, the two objects I will connect do not look too different from one another. In fact, they look eerily similar; it just isn’t immediately clear how to connect the dots.&lt;/p&gt;
+&lt;p&gt;(For this post, I’m going to assume a basic understanding of random variables and probability distributions (more or less just what they are). I’ll also assume basic familiarity with permutations and combinations — just the definitions — and some basic facility with limits. It’s more than I like to assume and I’ll do my best to explain things intuitively as I go along, but if you stick with me, I think it will be well worth your while. This stuff is very, very cool.)&lt;/p&gt;
+&lt;h2 id=&#34;binomial-distribution&#34;&gt;Binomial distribution&lt;/h2&gt;
+&lt;p&gt;Suppose I’m flipping a fair coin. If $X$ is a random variable that takes the value 1 on heads and 0 on tails, we might encode the likelihoods of different outcomes of this experiment as $P(X = 1) = P(X = 0) = 1/2$. More generally, if I have some experiment with two possible outcomes, one of which occurs with probability $p$ (we call this event a success) and the other of which occurs with probability $1 - p$ (we call this a failure), a random variable representing the outcome of the experiment is said to be a “Bernoulli $p$” (henceforth $\text{Bern}(p)$) random variable. The random variable $X$ from the example I opened with is $\text{Bern}(1/2)$, but the general story that describes what sorts of sample spaces might hint at this underlying distribution is the same no matter what $p$ is: I have some experiment with two possible outcomes, one that occurs with probability $p$ and another that occurs with probability $1 - p$.&lt;/p&gt;
+&lt;p&gt;Let’s make things more interesting. Suppose I repeat this Bernoulli (read: two-outcome) experiment $n$ (read: a bunch of) times, one after the next, where each trial is independent of all the others and ask you: What is the probability that $k$ (read: some number smaller than $n$) of experiments result in a success?&lt;/p&gt;
+&lt;p&gt;(Think about this and try to work out the answer before reading on.)&lt;/p&gt;
+&lt;p&gt;As &lt;a href=&#34;https://www.quora.com/profile/Alon-Amit?q=alon%20amit&#34;&gt;Alon&lt;/a&gt; once recently put it, your internal monologue should go something like: “Well… Because my trials are independent of one another, I’m probably dealing with a bunch of probabilities multiplied together. The probability of one success is $p$, so the probability of $k$ successes has got to be $p^k$. The remaining $n - k$ events must be failures, so by similar logic, the probability that the rest of the experiments fail is $(1-p)^{n-k}$. Multiplying these together, I’m pretty sure the answer is $p^k(1-p)^{n-k}$.”&lt;/p&gt;
+&lt;p&gt;Almost! There’s just one piece you’d be missing. As an example, let’s think about the different ways to get two heads in three coin flips. You can either get HHT, HTH or THH. Each of these has probability $(1/2)^2(1/2)$, &lt;em&gt;but there are three ways&lt;/em&gt; to achieve an outcome with that probability, so the probability of getting two heads actually ends up being $3(1/2)^2(1/2)$.&lt;/p&gt;
+&lt;p&gt;More generally, the probability of any one ordering of experiment outcomes with $k$ successes is indeed $p^k(1-p)^{n-k}$, but to be complete, you need to count up all of the different ways to arrive at $k$ successes in a sequence of $n$ trials. The number of configurations in which $k$ of the $n$ trials are successes is ${n \choose k}$, so the probability of seeing $k$ successes in $n$ independent Bernoulli trials is ${n \choose k}p^k(1-p)^{n-k}$.&lt;/p&gt;
+&lt;p&gt;The above story, wherein I’m trying to compute the probability of seeing a certain number of successes across a bunch of Bernoulli trials, describes what is called the binomial distribution. (An interesting note here: if you multiply out $(a + b)^n$, you’ll get $a^n + na^{n-1}b + {n \choose 2}a^{n-2}b^2 + \dots + b^n$. See if you can phrase what’s happening there in the language of permutations and combinations.) The binomial distribution is one of the most famous discrete distributions there is and it has a wide range of applications all over probability. Before explaining why I’ve led you here, we need to take a quick detour.&lt;/p&gt;
+&lt;h2 id=&#34;poisson-distribution&#34;&gt;Poisson distribution&lt;/h2&gt;
+&lt;p&gt;While the binomial distribution is just doing its thing, minding its own business, in a galaxy far, far away sits another distribution: the Poisson. The Poisson distribution is usually used to describe spaces in which many trials occur and trial has a very small probability of success. As an example, a Poisson random variable might represent the number of emails you received in the past hour. The likelihood that any one person emailed you during that hour is very low (low probability of success), but the number of people (trials) who could possibly email you is very high.&lt;/p&gt;
+&lt;p&gt;Deriving the PMF (probability mass function — essentially a formula that allows you to calculate the probabilities of various events) for this is not as easy as it was to do with the binomial, but before we jump in and try to figure out what that might look like, it’s useful to note that our Poisson story bears some interesting similarity to the story we used to define the binomial. In both cases, there are a bunch of trials taking place, each of which has some probability of success and we want to know what the probability of seeing a certain number of successes is. To crystallize this fuzzy-seeming connection, and this is the critical point, &lt;em&gt;what we are trying to capture with the Poisson story is essentially the same thing we captured when we derived the binomial, but specifically when $n$ is large and $p$ is small.&lt;/em&gt; Can we formalize this somehow?&lt;/p&gt;
+&lt;h2 id=&#34;the-connection&#34;&gt;The connection?&lt;/h2&gt;
+&lt;p&gt;We can! What we’re going to do first is to define the relationship between $n$ and $p$. Above, we revealed the need to express that $p$ is small and $n$ is large. One way to do that is to enforce that $np$ be constant (there are other ways, but this is the one that will be useful here); we’ll name that constant $\lambda$. Why does this help us? Well, if I pick a value of $\lambda$, say 1, before I start, then once I choose $n$, I’ve determined $p$. As an example, if $n = 100$, then because $np = 1$, $p$ must be 1/100. Furthermore, as $n$ gets larger we see that $p$ has to get smaller to keep lambda constant, so if we let $n$ tend to $\infty$, we are implicitly forcing $p$ to tend to 0. Being able to write $p$ in terms of $n$ is going to be very helpful in what’s to come.&lt;/p&gt;
+&lt;p&gt;With the relationship between $n$ and $p$ specified more precisely, we will now see what happens to the binomial PDF as $n$ grows. That is, we want to compute
+$$\lim_{n \to \infty} {n \choose k} p^k(1 - p)^{n - k}.$$
+Because $p = \lambda / n$ we can rewrite all the $p$s in the above limit as $\frac{\lambda}{n}$s:
+$$\lim_{n \to \infty} {n \choose k} (\frac{\lambda}{n})^k(1 - \frac{\lambda}{n})^{n - k}.$$
+Simplifying a little bit, the limit can be rewritten as
+$$\lim_{n \to \infty} \frac{n!}{k!(n-k)!} \frac{\lambda^k}{n^k}(1 - \frac{\lambda}{n})^{n - k} = \lim_{n \to \infty} \frac{n(n-1)(n-2)\dots(n-k+1)}{n^k} \cdot \frac{\lambda^k}{k!} \cdot (1 - \frac{\lambda}{n})^{n - k}.$$
+We will look at each of term of the product one at a time. Provided that their limits all exist, we can glue them together.
+For the leftmost multiplicand, noting that $\frac{n-m}{n}$ for $m$ constant tends to 1 as $n$ tends to $\infty$, we observe that we have $k$ numerator-denominator pairs that all tend to 1. Multiplied together this shows us that the leftmost term tends to 1.
+We can pull $\frac{\lambda^k}{k!}$ out of the limit because $k$ is constant. Combined with our analysis of the first term, we need still need to solve
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^{n - k}.$$
+Because $k$ is constant and $n$ is shooting off to $\infty$, $n-k$ behaves the same as $n$ in our case, so we can rewrite the limit as
+$$\lim_{n \to \infty} (1 - \frac{\lambda}{n})^n.$$
+This limit is a thinly veiled version of a common exercise from standard first semester calculus courses. I challenge you to convince yourself that
+$$\lim_{n\to \infty} (1 + \frac{a}{n})^{bn} = e^{ab}.$$
+(Hint: Start by setting $y = \lim_{n\to \infty} (1 + \frac{a}{n})^{bn}$ and taking the natural log of both sides.)&lt;/p&gt;
+&lt;p&gt;In our case, $a = -\lambda$ and $b = 1$, so our last piece evaluates to $e^{-\lambda}$. Gluing our pieces together, we have the PMF of the Poisson distribution: if $X$ is a Poisson random variable, $P(X = k) = \frac{e^{-\lambda}\lambda^k}{k!}$. (Check Wikipedia, I dare you.)&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;When I saw the above, I thought it was a really nice use of mathematical formalism to ground a connection we first noticed more intuitively. I find that it is often in finding footing for these sorts of beautiful connections that math shines brightest.&lt;/p&gt;
+&lt;p&gt;(This post was inspired by &lt;a href=&#34;http://www.people.fas.harvard.edu/~blitz/Site/Home.html&#34;&gt;Joe Blitzstein&lt;/a&gt;’s &lt;a href=&#34;https://www.youtube.com/watch?v=KbB0FjPg0mw&#34;&gt;Stat110&lt;/a&gt; course on YouTube. Your course is awesome and I’ve learned a ton. Thank you.)&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The birthday problem</title>
+      <link>http://localhost:1313/posts/2018-05-28-birthday/</link>
+      <pubDate>Mon, 28 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-05-28-birthday/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;After writing a &lt;a href=&#34;https://www.jgindi.me/posts/monty-hall/&#34;&gt;post&lt;/a&gt; about the Monty Hall problem the other day, a friend of
+mine asked if I’d write one about another famous, counterintuitive probability problem known as the birthday problem.
+The problem asks a simple(-seeming) question: determine the smallest number of people who must be in a room in order for
+there to be a 50% chance that two of them share a birthday. (Assume every year has 365 days.)&lt;/p&gt;
+&lt;p&gt;People typically hear the words “fifty percent” and “birthday” and think something along the lines of: “If there are 365
+possible birthdays, then I probably would need about 365/2 people. That’s… **stares up and to the right for a second**… 183
+birthdays!” These very people are usually shocked to hear that the solution is far smaller than that, and the rest of this
+post will show how to calculate it using some probability.&lt;/p&gt;
+&lt;h2 id=&#34;using-probability-theory&#34;&gt;Using probability theory&lt;/h2&gt;
+&lt;p&gt;While the following observation is obvious, it unlocks a new way of solving a whole trove of probability problems: when we
+consider an event $A$, it either happens or it doesn’t. (We refer to the “it doesn’t” event as $A^C$, read “$A$
+complement”.) Thus if the event $A$ happens with a certain probability $p$, then $A$ &lt;em&gt;does not&lt;/em&gt; happen with $1 - p$. This
+allows us to write $P(A)$ in terms of $P(A^C)$ and vice versa. For our purposes, we encode this logic as $P(A) = 1 -
+P(A^C)$.&lt;/p&gt;
+&lt;p&gt;To solve the problem at hand, we need to come up with an expression for the probability that two people share a birthday in
+a room of $k$ people. If we call the aforementioned event $A$, we want an expression for $P(A)$. As per the above, if we
+can come up with an expression for $P(A^C)$, then we’ve effectively determined our expression for $P(A)$.
+In our case, the event $A^C$ is the event that in a room of $k$ people, no two share a birthday. The probability of that
+event is given by:
+$$P(A^C) = \frac{\text{number of ways to assign unique birthdays to } k \text{ people}}{\text{number of ways to assign
+birthdays to } k \text{ people}}$$
+For the numerator, if we have are looking at a room with 10 people in it, we have 365 birthdays to choose from for the
+first, 364 for the second, and so on, until you’ve assigned birthdays to all 10 people. The total number of ways is thus
+$365 \cdot 364 \cdot \dots \cdot 356$.&lt;/p&gt;
+&lt;p&gt;For a room with k people, we can generalize this to $365 \cdot \dots \cdot (365 - k + 1)$, so that expression is our
+numerator. To compute the denominator, we are thinking about a more relaxed version of the same assignment problem we
+solved to compute the numerator. When I say more relaxed, I mean that we don’t have to worry about assigning the same
+birthdays to people anymore. In our room of 10 people, this means we have 365 birthday choices for the first person, but we
+also have 365 for the second, third, fourth, fifth and so on. Thus, the total number of ways to assign birthdays to 10
+people is $365^{10}$. For a room with $k$ people, this turns into $365^k$.&lt;/p&gt;
+&lt;p&gt;Now that we have the numerator and denominator, we can write down $P(A^C)$:
+$$P(A^C) = \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}$$
+With this in hand, we can now use the fact that $P(A) = 1 - P(A^C)$ to express
+$$P(A) = 1 - \frac{365 \cdot \dots \cdot (365 - k + 1)}{365^k}.$$
+Now we just start trying values of $k$ until $P(A) \geq 1/2$. This first occurs when $k = 23$.&lt;/p&gt;
+&lt;h2 id=&#34;intuition&#34;&gt;Intuition&lt;/h2&gt;
+&lt;p&gt;One explanation for why this number is so intuition-defyingly low is that when people first think about this problem, they
+usually think that $k$ has to do with the number of people in the room, instead of noticing that the key number in this
+problem is actually the number of &lt;em&gt;pairs&lt;/em&gt; of people in the room. While 23 people doesn’t seem like much, 23 people
+furnishes you with &lt;em&gt;253 pairs&lt;/em&gt;! Each pair has probability 364/365 of &lt;em&gt;not&lt;/em&gt; having the same birthday, so the probability
+that none of the 253 pairs shares a birthday is
+$$(\frac{364}{365})^{253} \approx 0.4995.$$
+This means that the probability that some pair shares a birthday is approximately $1–0.4995 = 0.5005$.
+To see that the number of pairs is what matters, note that if we increase $k$ to 50, the probability that some pair shares
+a birthday is roughly 97%. By the time you have 75 at your party, the probability jumps to 99.9%.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;As was the case with the Monty Hall problem, the birthday problem serves as an example of the way that a rigorous analysis
+is a great way to combat our sometimes errant intuition.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Monty Hall paradox</title>
+      <link>http://localhost:1313/posts/2018-05-24-monty-hall/</link>
+      <pubDate>Thu, 24 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2018-05-24-monty-hall/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to
+correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but
+the result is somewhat subtle, so I thought it’d be fun to write about.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem&#34;&gt;The problem&lt;/h2&gt;
+&lt;p&gt;The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors
+(labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each
+door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty
+asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a
+goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer?
+Think about what you would do before continuing to read. What is your intuition telling you?&lt;/p&gt;
+&lt;p&gt;At first, many people are ambivalent. They argue that because I have two doors left, it’s equally likely that the car is
+behind door 1 as it is behind door 2. Thus, switching neither hurts nor helps. This argument isn’t quite correct, though;
+it doesn’t make use of information that Monty provided you with by opening one of the doors for you! It turns out that some
+knowledge of conditional probability would greatly increase your chances of going home with that new car. Let’s see why.&lt;/p&gt;
+&lt;h2 id=&#34;law-of-total-probability&#34;&gt;Law of total probability&lt;/h2&gt;
+&lt;p&gt;Let’s see what a probabilistic argument tells us. From the fact that Monty opened door 3, we know that the car has to be
+behind door 1 or door 2. Let $S$ represent the event that the switching strategy wins the game. I think the simplest
+argument is the one that makes use of the Law of Total Probability (LoTP), which we will simplify to:
+Given a partition of a sample space (a set of events that are disjoint from one another and together make up the whole
+sample space) $B, B^C$, $P(A)$ (for $A$ in the same probability space as $B$) can be written as $P(A) = P(A|B)P(B) +
+P(A|B^C)P(B^C)$ (Note: $B^C$ is the complement of $B$. $B^C$ occurs if $B$ does not).
+(The above can be naturally generalized to an infinite partition of the sample space.)
+For an intuitive idea of what this means, this picture is helpful:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/posts/monty-hall/lotp.png&#34; alt=&#34;Law of total probability&#34;&gt;&lt;/p&gt;
+&lt;p&gt;As you can see, part of $A$ intersects with $B$ and the other part intersects with $B^C$. The LoTP basically tells us that
+one way of computing $P(A)$ is to add up the probabilities that A occurred given that either (1) $B$ occurred, or (2) $B$
+did not occur (i.e. $B^C$ occurred). Because $B$ either occurred or didn’t, this sum has to give the total probability of
+$A$. We are going to apply similar logic to our problem.&lt;/p&gt;
+&lt;p&gt;As is obvious, at the outset, the car is either behind door 1, door 2 or door 3. Let $D_i$ be the event that the car is
+behind door $i$. Because the $D_i$ are a partition of the sample space, I can use the LoTP, so that
+$$P(S) = P(S|D_1)P(D_1) + P(S|D_2)P(D_2) + P(S|D_3)P(D_3)$$
+At the beginning of the game, the car had an equal likelihood of being behind any of the three doors, we can fill in the
+right multiplicands in the sum above:
+$$P(S) = P(S|D_1)\cdot \frac{1}{3} + P(S|D_2)\cdot \frac{1}{3} + P(S|D_3)\cdot \frac{1}{3}$$
+Next, observe that $P(S|D_1)$ is the probability that switching wins given that the car is behind the door you initially
+chose. This probability is 0, because you would be switching away from the winning door. If the car is behind door 2 (note
+that in this case, door 3 was opened and is no longer in contention), switching always gets you the car, i.e. $P(S|D_2) =
+1$. The same is true if the car is behind door 3 (and door 2 was opened). Hence
+$$P(S) = 0 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} = \frac{2}{3}.$$
+In other words, switching wins the game for you with probability $2/3$!&lt;/p&gt;
+&lt;h2 id=&#34;intuition&#34;&gt;Intuition&lt;/h2&gt;
+&lt;p&gt;Let’s see if we can understand this a bit better without appealing to symbols. When you first chose door 1, you had a $1/3$
+chance of winning the car. Stated a different way, you had a $2/3$ chance of &lt;em&gt;not&lt;/em&gt; getting the car. When Monty opens one of
+the unchosen doors and reveals a goat, he is, in effect, providing you with new information. The probability of your
+initial choice being correct is still $1/3$, but with your updated understanding of the world, the $2/3$ probability that
+the car is not behind your initial choice of door is all resting on the single remaining door.&lt;/p&gt;
+&lt;p&gt;For a more extreme application of this line of reasoning, consider the a similar problem in which you start with 100 doors
+to choose from. You choose door 1 and Monty opens 98 of the remaining doors, revealing goats. Originally, your choice held
+a $99/100$ probability of being incorrect. Initially, that $99/100$ was spread evenly over the 99 doors you didn’t select.
+With each door Monty opened, that $99/100$ was condensed to fewer and fewer doors, so that by the very end, there is a
+single door holding all of that probability that you were initially wrong. You’d be crazy not to switch.*&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The Monty Hall paradox is a fun, relatable problem that is a terrific example of the need for formality in thinking about
+probabilities. Our intuition is a powerful tool, but for as many problems as it allows us to solve, it yet more often leads
+us astray. In such moments it is crucial to have a systematic, rigorous approach with which to check ourselves and make
+sure that we remain on sound logical footing.&lt;/p&gt;
+&lt;p&gt;*For the more symbolically inclined reader, I want to quickly use the logic from the simple cases to show that it in fact
+always pays to switch doors. Suppose we generalize the problem so that there are $n\geq 3$ doors and after you select one
+of them, Monty opens $m$ of the remaining doors ($1 \leq m \leq n - 2$) and then asks you if you want to switch. In this
+case, after opening $m$ doors, the $(n-1)/n$ probability that you were initially wrong gets evenly distributed across the
+$n - 1 - m$ remaining doors, so that each door carries a probability of $(n-1)/(n(n - 1 - m))$. We complete the argument by
+verifying that this quantity is always bigger than $1/n$.
+To do this, note that showing
+$1/n &amp;lt; (n-1)/(n(n - 1 - m))$
+is the same as showing
+$1 &amp;lt; (n-1)/(n - 1 - m)$, which is clear.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

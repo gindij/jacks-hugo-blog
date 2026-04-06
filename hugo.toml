@@ -1,0 +1,40 @@
+baseURL = "http://localhost:1313/"
+languageCode = "en"
+title = "Jack Gindi"
+theme = "hugo-texify3"
+
+[pagination]
+pagerSize = 10
+
+[taxonomies]
+tags = "tags"
+categories = "categories"
+
+[author]
+name = "Jack Gindi"
+
+[params]
+title = "Jack Gindi"
+description = "math x code"
+dateFormat = "2 January 2006"
+toc = true
+math = true
+numberedSubtitles = false
+emphasisWithDots = false
+enableDuckDuckGoSearchBox = false
+github = "https://github.com/gindij"
+linkedin = "https://www.linkedin.com/in/jackegindi/"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[[menu.main]]
+name = "Writing"
+url = "/posts/"
+weight = 1
+
+[[menu.main]]
+name = "Papers"
+url = "/papers/"
+weight = 2

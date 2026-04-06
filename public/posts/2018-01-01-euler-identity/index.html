@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="">
+
+  
+  
+  <meta name="description" content="Introduction
+In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
+Approach 1
+The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+$$
+\begin{align*}
+\cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\
+\sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots,
+\end{align*}
+$$
+so
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/2018-01-01-euler-identity/">
+  <meta property="og:site_name" content="Jack Gindi">
+  <meta property="og:title" content="Euler&#39;s Identity">
+  <meta property="og:description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-01-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2018-01-01T00:00:00+00:00">
+    <meta property="article:tag" content="Calculus">
+    <meta property="article:tag" content="Linear-Algebra">
+
+
+  
+  <link rel="canonical" href="http://localhost:1313/posts/2018-01-01-euler-identity/">
+
+  
+  
+  
+  <meta itemprop="name" content="Euler&#39;s Identity">
+  <meta itemprop="description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+  <meta itemprop="datePublished" content="2018-01-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-01-01T00:00:00+00:00">
+  <meta itemprop="wordCount" content="851">
+  <meta itemprop="keywords" content="Calculus,Linear-Algebra">
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.0e6556df209fd07250070e9a66bae6aae45273dd9904fb0f908fc61c7087ae31.css" integrity="sha256-DmVW3yCf0HJQBw6aZrrmquRSc92ZBPsPkI/GHHCHrjE=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.72a76d6e120e34d26028018cf79b77a2f2e99ee5402411bb7f5ce3770157340c.css" integrity="sha256-cqdtbhIONNJgKAGM95t3ovLpnuVAJBG7f1zjdwFXNAw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Euler&#39;s Identity - Jack Gindi</title>
+  
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Euler&#39;s Identity">
+  <meta name="twitter:description" content="Introduction In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta &#43; i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.
+Approach 1 The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are $$ \begin{align*} \cos\theta &amp;= 1 &#43; \frac{\theta^2}{2!} &#43; \frac{\theta^4}{4!} - \dots\ \sin\theta &amp;= \theta - \frac{\theta^3}{3!} &#43; \frac{\theta^5}{5!} - \dots, \end{align*} $$ so $$i\sin\theta = i\theta - \frac{i\theta^3}{3!} &#43; \frac{i\theta^5}{5!} - \dots$$">
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.d97c0aabdd6b4b93a3860bb977216c4a4e31291d41d1243a69cf06fe4a89df4d.css" integrity="sha256-2XwKq91rS5Ojhgu5dyFsSk4xKR1B0SQ6ac8G/kqJ300=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="http://localhost:1313/">Jack Gindi</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/posts/">Writing</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/papers/">Papers</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Euler&#39;s Identity</h1>
+    <div class="publish-metadata">
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      1 January 2018
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          851 words
+        </span>
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~4 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc "><nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#approach-1">Approach 1</a></li>
+    <li><a href="#approach-2">Approach 2</a></li>
+    <li><a href="#approach-3">Approach 3</a></li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+
+  <article class="content ">
+    
+    <h2 id="introduction">Introduction</h2>
+<p>In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.</p>
+<h2 id="approach-1">Approach 1</h2>
+<p>The first technique is one I encountered toward the end of my tenure as a Calc 2 TA last semester as I was going over Taylor and MacLaurin series with my students. If we look at the MacLaurin series for $\sin \theta$ and $\cos\theta$ are
+$$
+\begin{align*}
+\cos\theta &amp;= 1 + \frac{\theta^2}{2!} + \frac{\theta^4}{4!} - \dots\
+\sin\theta &amp;= \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \dots,
+\end{align*}
+$$
+so
+$$i\sin\theta = i\theta - \frac{i\theta^3}{3!} + \frac{i\theta^5}{5!} - \dots$$</p>
+<p>Now, let’s look at the MacLaurin series for $e^{i\theta}$. Because
+$$e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots, $$
+we have
+$$
+\begin{align*}
+e^{i\theta} &amp;= 1 + i\theta + \frac{i^2\theta^2}{2!} + \frac{i^3\theta}{3!} + \dots\
+&amp;= 1 + i\theta - \frac{\theta^2}{2!} - \frac{i\theta^3}{3!} + \dots
+\end{align*}
+$$
+which, miraculously, is exactly what we get if we interleave (sum up) the terms of $\cos\theta + i\sin\theta$.</p>
+<h2 id="approach-2">Approach 2</h2>
+<p>The next approach uses techniques from a first course in calculus. We first observe that if $e^{i\theta}$ is going to be the same as $\cos\theta + i\sin\theta$, then the fraction
+$\frac{cos\theta + i\sin\theta}{e^{i\theta}} = (\cos\theta + i\sin\theta)e^{-i\theta} = 1$. We will show that the second
+equality holds.</p>
+<p>To do this, first define
+$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta}$. Next, we take the (rather annoying) derivative of $f(\theta)$
+$$
+\begin{align*}
+f’(\theta) &amp;= e^{-i\theta}(-\sin\theta + i\cos\theta) + -ie^{-i\theta}(\cos\theta + i\sin\theta)\
+&amp;= -e^{-i\theta}\sin\theta + ie^{-i\theta}\cos\theta +-ie^{-i\theta}\cos\theta + e^{-i\theta}\sin\theta\
+&amp;= 0\dots
+\end{align*}
+$$
+If $f’(\theta) = 0$ at all values of $\theta$, $f$ is constant! Which constant? Let’s plug in $\theta = 0$ and find out!
+$$f(0) = (\cos 0 + i\sin 0) e^{-0i} = (1 + 0)(1) = 1$$
+If $f$ takes the value 1 when $\theta = 0$ and $f$ is constant, it must take the value 1 everywhere. To sum up, we have
+$$f(\theta) = (\cos\theta + i\sin\theta)e^{-i\theta} = 1.$$
+Rearranging the second equality by cross multiplying, we see that
+Euler’s identity holds.</p>
+<h2 id="approach-3">Approach 3</h2>
+<p>The last technique is my favorite. It uses a bit of linear algebra in concert with differential equations to produce what I think is the most illuminating proof of Euler’s identity. First, consider the differential equation
+$$f’’ = -f.$$
+A differential equation is what is a kind of functional equation.
+Rather than trying to find the value of a real-valued variable,
+we are trying to find a function whose derivatives satisfy a given relationship. In this case, we want to find a function $f$ such that
+$f$&rsquo;s second derivative is the same as $f$.</p>
+<p>We first note that $\cos\theta$ and $\sin\theta$ are both solutions to this equation:
+$$
+\begin{align*}
+(\sin\theta)’’ &amp;= -\sin\theta \
+(\cos\theta)’’ &amp;= -\cos\theta.
+\end{align*}
+$$
+Because our differential equation involves second derivatives, it&rsquo;s
+solutions are sort of analogous to those of a quadratic equation:
+which is to say, there are two! Formally, we say that the solution
+space is a vector space of dimension 2. If $\sin\theta$ and
+$\cos\theta$ are linearly independent solutions, they form a basis
+of the solution space, which means that every solution to our
+differential equation must can be written in the form the form
+$a\cos\theta + b\sin\theta$ for some constants $a,b$.</p>
+<p>To see that $\sin\theta$ and $\cos\theta$ are indeed linearly
+independent, suppose that for all  $\theta \in [0,2\pi]$,
+$a\cos\theta + b\sin\theta = 0$. Let’s pick a particular $\theta$
+value in this interval. If $\theta = \pi/2$, then we have
+$a \cdot 0 + b \cdot 1 = b = 0$ (where the $=0$ at the end is
+because we supposed that $a\cos\theta + b\sin\theta = 0$ for all
+$\theta \in [0,2\pi]$). If we pick another, say $\theta = 0$, we
+have $a \cdot 1 + b \cdot 0 = a = 0.$</p>
+<p>So far, we&rsquo;ve shown that if $a\cos\theta + b\sin\theta = 0$, then
+we know that $a = b = 0$. This constitutes a proof that
+$\sin\theta$ and $\cos\theta$ are linearly independent. Because
+we said the solution space is of dimension 2, they are a basis for
+the solution space to our original equation.</p>
+<p>We can separately observe that $e^{i\theta}$ is also a solution to our equation because
+$$
+\begin{align*}
+(e^{i\theta})’ &amp;= ie^{i\theta}\
+(e^{i\theta})’’ &amp;= -e^{i\theta}.
+\end{align*}
+$$</p>
+<p>Because $\sin\theta$ and $\cos\theta$ form a basis, we know that
+$$e^{i\theta} = a\cos\theta + b\sin\theta.$$
+for some yet unknown constants $a,b$. Now it just remains to figure out what $a$ and $b$ are. (Can you see what they should be?)</p>
+<p>To find $a$ and $b$, we note that if $f(\theta) = e^{i\theta}$,
+then $f(0) = 1$ and $f’(0) = i$. Using the first condition, we have
+$$1 = a \cdot 1 + b \cdot 0 = a.$$
+Using the second (taking the derivative of both sides before plugging 0 in), we have
+$$i = -a\sin 0 + b\cos 0 = 0 + b = b. $$
+Putting these both together, we have
+$e^{i\theta} = \cos\theta + i\sin\theta,$
+which is what we wanted.</p>
+
+    
+  </article>
+
+  
+  <div class="post-tags">
+    
+    <a class="link tag" href='http://localhost:1313/tags/calculus'>#calculus</a>
+    
+    <a class="link tag" href='http://localhost:1313/tags/linear-algebra'>#linear-algebra</a>
+    
+  </div>
+  
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  <div class="paginator">
+    
+    <a class="link" href="http://localhost:1313/posts/2017-10-27-cantor-set/" title="The Cantor set">← prev</a>
+    
+    
+    <a class="link" href="http://localhost:1313/posts/2017-12-2-ftoa/" title="Fundamental theorem of arithmetic">next →</a>
+    
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div class="footer-links">
+    
+    <a href="https://github.com/gindij" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+    
+    
+    <a href="https://www.linkedin.com/in/jackegindi/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    
+  </div>
+  <div>
+    <span>Copyright © 2026 </span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='http://localhost:1313/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+@use "../vars" as *;
+
+#main {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .bio {
+    margin-bottom: $margin * 1.5;
+
+    p {
+      line-height: 1;
+      margin-bottom: $margin;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  hr {
+    margin-bottom: $margin * 1.5;
+  }
+}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="">
+
+  
+  
+  <meta name="description" content="Introduction
+Over the past few years, large language models (LLMs) &ndash; most recently ChatGPT &ndash; have
+received lots of (well-deserved) press. Though they have their shortcomings, they are able to compose shockingly
+cogent prose, and the quality appears to increase the bigger the models themselves become.
+One aspect that I think is often overlooked by much of the public is the (computational, which implies financial) cost
+of actually turning the model&rsquo;s crank to produce text. Soon after ChatGPT was released, it was estimated that at 1 million users
+it was costing OpenAI around 3 million dollars per month in cloud compute costs. With 100 million users (assuming nothing else
+has changed), this would cost 300 million dollars per month, or 3.6 billion dollars per year!">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/2023-04-06-fast-lm-inf/">
+  <meta property="og:site_name" content="Jack Gindi">
+  <meta property="og:title" content="Faster language model inference">
+  <meta property="og:description" content="Introduction Over the past few years, large language models (LLMs) – most recently ChatGPT – have received lots of (well-deserved) press. Though they have their shortcomings, they are able to compose shockingly cogent prose, and the quality appears to increase the bigger the models themselves become.
+One aspect that I think is often overlooked by much of the public is the (computational, which implies financial) cost of actually turning the model’s crank to produce text. Soon after ChatGPT was released, it was estimated that at 1 million users it was costing OpenAI around 3 million dollars per month in cloud compute costs. With 100 million users (assuming nothing else has changed), this would cost 300 million dollars per month, or 3.6 billion dollars per year!">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-04-06T00:00:00+00:00">
+    <meta property="article:modified_time" content="2023-04-06T00:00:00+00:00">
+    <meta property="article:tag" content="Computer-Science">
+    <meta property="article:tag" content="Machine-Learning">
+
+
+  
+  <link rel="canonical" href="http://localhost:1313/posts/2023-04-06-fast-lm-inf/">
+
+  
+  
+  
+  <meta itemprop="name" content="Faster language model inference">
+  <meta itemprop="description" content="Introduction Over the past few years, large language models (LLMs) – most recently ChatGPT – have received lots of (well-deserved) press. Though they have their shortcomings, they are able to compose shockingly cogent prose, and the quality appears to increase the bigger the models themselves become.
+One aspect that I think is often overlooked by much of the public is the (computational, which implies financial) cost of actually turning the model’s crank to produce text. Soon after ChatGPT was released, it was estimated that at 1 million users it was costing OpenAI around 3 million dollars per month in cloud compute costs. With 100 million users (assuming nothing else has changed), this would cost 300 million dollars per month, or 3.6 billion dollars per year!">
+  <meta itemprop="datePublished" content="2023-04-06T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2023-04-06T00:00:00+00:00">
+  <meta itemprop="wordCount" content="2455">
+  <meta itemprop="keywords" content="Computer-Science,Machine-Learning">
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.0e6556df209fd07250070e9a66bae6aae45273dd9904fb0f908fc61c7087ae31.css" integrity="sha256-DmVW3yCf0HJQBw6aZrrmquRSc92ZBPsPkI/GHHCHrjE=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.72a76d6e120e34d26028018cf79b77a2f2e99ee5402411bb7f5ce3770157340c.css" integrity="sha256-cqdtbhIONNJgKAGM95t3ovLpnuVAJBG7f1zjdwFXNAw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Faster language model inference - Jack Gindi</title>
+  
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Faster language model inference">
+  <meta name="twitter:description" content="Introduction Over the past few years, large language models (LLMs) – most recently ChatGPT – have received lots of (well-deserved) press. Though they have their shortcomings, they are able to compose shockingly cogent prose, and the quality appears to increase the bigger the models themselves become.
+One aspect that I think is often overlooked by much of the public is the (computational, which implies financial) cost of actually turning the model’s crank to produce text. Soon after ChatGPT was released, it was estimated that at 1 million users it was costing OpenAI around 3 million dollars per month in cloud compute costs. With 100 million users (assuming nothing else has changed), this would cost 300 million dollars per month, or 3.6 billion dollars per year!">
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.d97c0aabdd6b4b93a3860bb977216c4a4e31291d41d1243a69cf06fe4a89df4d.css" integrity="sha256-2XwKq91rS5Ojhgu5dyFsSk4xKR1B0SQ6ac8G/kqJ300=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="http://localhost:1313/">Jack Gindi</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/posts/">Writing</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/papers/">Papers</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Faster language model inference</h1>
+    <div class="publish-metadata">
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      6 April 2023
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          2455 words
+        </span>
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~12 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc "><nav id="TableOfContents">
+  <ul>
+    <li><a href="#step-1-generate-and-score-a-draft">Step 1: Generate and Score a Draft</a></li>
+    <li><a href="#step-2-deciding-how-much-of-the-sequence-to-accept">Step 2: Deciding How Much of the Sequence to Accept</a>
+      <ul>
+        <li><a href="#proving-that-we-recover-the-target-distribution">Proving that we recover the target distribution</a></li>
+        <li><a href="#outcome-1">Outcome 1</a></li>
+        <li><a href="#outcome-2">Outcome 2</a></li>
+        <li><a href="#putting-them-together">Putting Them Together</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+
+  <article class="content ">
+    
+    <h1 id="introduction">Introduction</h1>
+<p>Over the past few years, large language models (LLMs) &ndash; most recently <a href="https://chat.openai.com/auth/login">ChatGPT</a> &ndash; have
+received lots of (well-deserved) press. Though they have their shortcomings, they are able to compose shockingly
+cogent prose, and the quality appears to increase the bigger the models themselves become.</p>
+<p>One aspect that I think is often overlooked by much of the public is the (computational, which implies financial) cost
+of actually turning the model&rsquo;s crank to produce text. Soon after ChatGPT was released, it was estimated that at 1 million users
+it was costing OpenAI around 3 million dollars per month in cloud compute costs. With 100 million users (assuming nothing else
+has changed), this would cost 300 million dollars per month, or 3.6 billion dollars per year!</p>
+<p>One of the themes we&rsquo;ve observed over and over in technology over the past few decades is that when a disruptive, but costly,
+technological advance emerges, the cost of producing &ndash; or in this case, serving &ndash; that technology typically declines
+in response to increased motivation to profitably unleash the technology&rsquo;s capabilities.</p>
+<p>In this post, I want to describe a relatively simple and intuitive technique from <a href="https://arxiv.org/pdf/2302.01318.pdf">a paper by DeepMind</a>
+that might be a first step in the direction of bringing down the cost of operating the types of large language models that I believe will become
+ubiquitous in the years and decades to come.</p>
+<p>(As a note, below I will use the word &ldquo;expensive&rdquo; a lot. This word refers to computational expense, but computational expense
+is directly relatable to financial expense, so you can think of it that way too if you&rsquo;d like.)</p>
+<h1 id="background">Background</h1>
+<p>At a very high level, many large language models (such as GPT and friends) generally produce text using <strong>autoregressive sampling</strong>, which is
+a fancy term for sampling used previously generated (hence autoregressive) text to produce a probability
+distribution (hence sampling) over possible next words. To understand what this means, suppose your vocabulary
+has three words: &ldquo;apple,&rdquo; &ldquo;banana,&rdquo; and &ldquo;carrot.&rdquo; A distribution over these three words in essence assigns
+a probability to obtaining each word (the probabilities have to add up to 1) if you were to sample randomly
+from them. (There are infinitely many possible distributions you could choose. Usually, assumptions about
+distributions have to be reasonable, not correct.)</p>
+<p>The distribution over your vocabulary words is determined by the model at each step. In some sense, the model produces a
+distribution that makes sense given the text you&rsquo;ve already generated (and/or a prompt that you wrote). If you had already
+generated the partial sentence &ldquo;I will wear a raincoat because it is going to,&rdquo; a good model would
+produce a distribution over your vocabulary that indicates a very high probability on a word like &ldquo;rain,&rdquo;
+and a very low probability on a word like &ldquo;spinach&rdquo; (which contextually doesn&rsquo;t fit).</p>
+<p>The takeaway from this can be summarized as follows:</p>
+<ol>
+<li>These models are very large, so each step (word) is expensive to compute.</li>
+<li>Because the samples have to be produced sequentially, they require
+many LLM steps.</li>
+</ol>
+<p>Put simply, many steps x high cost = very high cost!</p>
+<h1 id="the-new-idea">The New Idea</h1>
+<p>DeepMind attempts to tackle (2) from the previous section by reducing the number of inference steps
+required of the very large (and very expensive) model while maintaining the high quality of the tokens;
+it sounds like free lunch! How do they do this?</p>
+<p>The basic idea is that given some number of previous words, we:</p>
+<ol>
+<li>Use a smaller, less expensive model to generate a candidate sequence of a certain length.</li>
+<li>Use the big model to score the words generated by the small model. (The scores here can be
+thought of as measures of approval of the draft tokens by the big model.)</li>
+<li>Use the word scores to decide how much of the sequence to use.</li>
+<li>Rinse and repeat until the sequence is of the desired length.</li>
+</ol>
+<p>If you stop reading here, you&rsquo;ve learned the important idea. Lately, I&rsquo;ve been trying to keep posts very
+high level, but in this case, the fact that the importance-to-complexity ratio of this idea is very high,
+I&rsquo;m going to break pattern and go into some more technical detail in the sections below.</p>
+<h1 id="speculative-sampling">Speculative Sampling</h1>
+<p>We will now discuss the algorithm in more detail. The below steps are carried out until the sequence is of the
+desired length.</p>
+<h2 id="step-1-generate-and-score-a-draft">Step 1: Generate and Score a Draft</h2>
+<p>Draft generation must be sequential, but the scoring can happen in parallel. (This is one speed-up source.)
+In this context, scoring a token means computing the probability of that token occurring given the current sequence and the already generated draft tokens. This is where the algorithm&rsquo;s speed-up comes from.
+The draft is generated using a smaller, less expensive model (the draft model), and the scoring &ndash;
+which requires appealing to the large model &ndash; can happen in parallel.</p>
+<h2 id="step-2-deciding-how-much-of-the-sequence-to-accept">Step 2: Deciding How Much of the Sequence to Accept</h2>
+<p>Next, the algorithm requires figuring out how much of the sequence to accept.
+This takes the form of accepting each successive token produced by the draft model
+with some probability (that depends on the prior tokens that have already been accepted).
+Once we decide not to accept a token, we sample a token from some distribution (we will think through
+a good one to use below) and start fresh with a new draft.
+In my opinion, choosing the right probability and the right alternative distribution
+is where the algorithm&rsquo;s cleverness is really on display. To be specific about what we aim to
+disambiguate in this section, there a two questions we seek to answer:</p>
+<ol>
+<li><strong>What probability $r$ should we use to decide whether or not to accept the next token?</strong></li>
+<li><strong>What alternative distribution should we use if the $i$th token of the draft is not accepted?</strong></li>
+</ol>
+<p>Before addressing these questions, we should state this algorithm&rsquo;s overall objective a little bit more
+precisely:
+<strong>We want the speculatively sampled sequence to come from the same distribution as the sequence we would</strong>
+<strong>get if we autoregressively sampled a sequence from the large expensive model.</strong></p>
+<p>Another item to clarify is that we can, in some sense, discuss models and distributions interchangeably.
+Here, a model is a way of taking a sequence and producing probabilities that each token in the vocabulary is the
+next one in the sequence. We can thus refer to and talk about models like we refer to distributions. To this end,
+let $q(x \mid x_1, x_2, \dots, x_i)$ be the expensive model, and $p(x \mid x_1, x_2, \dots, x_i)$ be
+the draft model. As in the paper, we will also refer to the $t$th draft token as $\tilde x_t$.</p>
+<p>I will first state the answers to questions (1) and (2), and then I will show that they work. The probability $r$
+that we use is given by the expression
+$$
+\begin{align*}
+r = \min\biggr(1, \frac{q(\tilde x_t \mid x_1, \dots, x_{n+t-1})}{p(\tilde x_t \mid x_1, \dots, x_{n+t-1})} \biggr)
+\end{align*}
+$$
+and the rejection distribution is
+$$
+\begin{align}
+(q(x \mid x_1, \dots, x_{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))<em>+
+= \frac{\max(0, q(x \mid x_1, \dots, x</em>{n+t-1}) - p(x \mid x_1, \dots, x_{n+t-1}))}
+{\sum_{x&rsquo;} \max(0, q(x&rsquo; \mid x_1, \dots, x_{n+t-1}) - p(x&rsquo; \mid x_1, \dots, x_{n+t-1}))}
+\end{align}
+$$</p>
+<p>These probabilities and distributions depend on the combined initial sequence and already accepted draft tokens.
+Also, note that if $q(x \mid x_1, \dots, x_{n+t-1}) &gt; p(x \mid x_1, \dots, x_{n+t-1})$, we automatically accept
+the $t$th draft token. Intuitively, this checks out, because if the draft model produces a token which, given
+the prior sequence tokens, is more likely to have been produced by the large model than the draft model, of course
+we should use it!</p>
+<p>If instead we have $q(x \mid x_1, \dots, x_{n+t-1}) \leq p(x \mid x_1, \dots, x_{n+t-1})$,
+then we accept $\tilde x_t$ with a probability that is larger when $q$&rsquo;s score is close to $p$&rsquo;s.
+If $p$ gives $\tilde x_t$ a score of 0.36 and $q$ gives it a score of 0.12, for example, then we will accept
+$\tilde x_t$ with probability 0.12 / 0.36 = 1/3. Alternatively, if $p$ gives a score of 0.36
+and $q$ gives a score of 0.0001, we will likely not accept the token because the target and draft
+models really disagree about whether $\tilde x_t$ would make a good next token.</p>
+<p>(Recall from earlier that we computed the $q$ scores for the draft tokens in parallel during Step 1.)</p>
+<p>If we accept $\tilde x_t$, then we take another step and consider whether or not to accept $\tilde x_{t+1}$.
+If, on the other hand, we reject $\tilde x_t$, we sample from the complicated looking distribution
+we spelled out in equation (1). What we want is a distribution that re-weights the possible tokens
+to sample from the large expensive model in a sensible way. In our case, $q - p$ (in the numerator)
+will produce negative &ldquo;probabilities&rdquo;  for tokens where $q &lt; p$, and positive values where $q &gt; p$. This kind of makes
+sense, because if $\tilde x_t$ is rejected, we want to favor sampling tokens to which $q$ assigns higher scores than $p$ does.
+We have two problems, though:</p>
+<ol>
+<li>Probabilities have to be nonnegative</li>
+<li>Probabilities have to sum to 1</li>
+</ol>
+<p>But these are actually no problem at all! To solve (1), we modify $q-p$ to $\max(0, q-p)$, and solve (2),
+we use the standard normalization trick: dividing by the sum!
+(For example, if I wanted to make the list [1, 2, 3, 4, 5] into a probability
+distribution, I would divide each element by the sum to obtain [1/15, 2/15, 3/15, 4/15, 5/15].) Once we
+make both of those modifications, we obtain equation (1), which we shorten to the expression on the left
+side of the equals sign.</p>
+<p>So far, we have resorted to intuition to motivate our choices, but it turns out that the two choices
+fit together like elegant mathematical puzzle pieces. How this happens goes back to our
+objective, which is to come up with a sample that looks as though it was obtained strictly using the
+target (expensive model). Let&rsquo;s see if we can show that our strategy helps accomplish this.</p>
+<h3 id="proving-that-we-recover-the-target-distribution">Proving that we recover the target distribution</h3>
+<p>If we have two discrete distributions $a$ (target) and $b$ (draft) and a draft sample
+$x&rsquo; \sim b$ ($\sim$ means &ldquo;sampled from&rdquo;), let $X$ be a random variable representing the sample
+produced by speculative sampling. If $X$ ends up taking on a specific value $x$, there are two possible
+ways it could have happened:</p>
+<ol>
+<li>We accepted $x&rsquo;$, in which case $x&rsquo; = x$.</li>
+<li>We rejected $x&rsquo;$, in which case $x \sim (a - b)_+$.</li>
+</ol>
+<h3 id="outcome-1">Outcome 1</h3>
+<p>The probability of outcome (1) is the probability that the draft sample $x&rsquo;$ is accepted given that it takes the particular value $x$.
+We have to multiply this by the probability that the draft distribution assigns to the event that $x&rsquo;$ takes on that value, so we have
+$$
+\begin{align*}
+P(\text{option 1}) = P(x&rsquo;~\text{accepted} \mid x&rsquo; = x)P(x&rsquo; = x)
+\end{align*}
+$$</p>
+<p>The probability of sampling the value of $x$ from the distribution $b$ is simply $b(x)$. The probability of
+accepting it is $\min(1, a(x) / b(x))$ (from the algorithm specification). We thus have
+$$
+\begin{align*}
+P(\text{option 1}) = b(x) \min(1, a(x)/b(x)) = \min(b(x), a(x)).
+\end{align*}
+$$</p>
+<h3 id="outcome-2">Outcome 2</h3>
+<p>On the other hand, if $x&rsquo;$ is rejected, then the probability that $X$ takes the value
+$x$ is the probability of sampling $x$ from $(a(x) - b(x))<em>+$. By our definition of that
+distribution, we would have
+$$
+\begin{align*}
+P(X = x \mid x&rsquo;~\text{rejected}) = \frac{\max(0, a(x) - b(x))}{\sum</em>{\hat x} \max(0, a(\hat x) - b(\hat x))}.
+\end{align*}
+$$
+We need to weight this outcome by the probability that $x&rsquo;$ is rejected, which is given by
+$$
+\begin{align*}
+P(x&rsquo;<del>\text{rejected}) &amp;= 1 - P(x&rsquo;</del>\text{accepted}) \
+&amp;= 1 - \sum_{\hat x} P(X = \hat x, x&rsquo;~\text{accepted}) \
+&amp;= 1 - \sum_{\hat x} \min(a(\hat x), b(\hat x)) \
+&amp;= \sum_{\hat x} a(\hat x) - \min(a(\hat x), b(\hat x)) \
+&amp;= \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)).
+\end{align*}
+$$
+In the above sequence of equalities, the second uses the fact that to get the $p(x)$, we can sum up
+$p(x, y)$ over all possible values of $y$. The third equality reuses our computation from Outcome 1.
+The fourth uses the fact that the 1 outside the summation can be broken into probabilities $a(\hat x)$
+for all possible values of $\hat x$, since probabilities must sum to 1. Finally, the last equality follows
+when you flip $-\min(a(\hat x), b(\hat x))$ to $\max(-a(\hat x), -b(\hat x))$ and then add the $a(\hat x)$
+to both of the arguments to $\max$.</p>
+<p>Now that we&rsquo;ve worked all of the details out, does the last expression look familiar? It is the denominator of
+$P(X = x \mid x&rsquo;<del>\text{rejected})$! Multiplying our two probabilities together, we have
+$$
+\begin{align*}
+P(\text{option 2}) &amp;= P(X = x \mid x&rsquo;</del>\text{rejected}) P(x&rsquo;~\text{rejected}) \
+&amp;= \frac{\max(0, a(x) - b(x))}{\sum_{\hat x} \max(0, a(\hat x) - b(\hat x))} \sum_{\hat x} \max(0, a(\hat x) - b(\hat x)) \
+&amp;= \max(0, a(x) - b(x))
+\end{align*}
+$$</p>
+<h3 id="putting-them-together">Putting Them Together</h3>
+<p>Now that we&rsquo;ve computed probabilities for both options, we note that the two possibilities are mutually
+exclusive and exhaustive ways that $X$ can take the value $x$. Thus, the probability $P(X = x)$ is given by
+$$
+\begin{align*}
+P(X = x) &amp;= P(\text{option 1}) + P(\text{option 2}) \
+&amp;= \min(b(x), a(x)) + \max(0, a(x) - b(x)).
+\end{align*}
+$$
+Now, if $a(x) &gt; b(x)$, then the first term is $b(x)$ and the second term is $a(x) - b(x)$. Adding these together,
+we get $a(x)$. If $a(x) \leq b(x)$, then the first term is $a(x)$ and the second term is 0, so again the sum
+is $a(x)$. Thus, speculative sampling recovers the target distribution $a(x)$. In other words, the rejection
+sampling technique we&rsquo;ve devised produces sequences of tokens that are theoretically indistinguishable
+from the very expensive target model!</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>While this technique is just one step towards making LLMs more efficient, it highlights the potential return on
+further innovation in the space of faster LLM inference. As the number of LLM applications continues to explode, we can expect even more creative solutions
+to emerge, hopefully making these powerful tools more accessible and affordable for everyone.</p>
+<p>If not speculative sampling itself, methods in the same spirit will become more necessary and important as we
+continue to push the boundaries of size and scale in generative models. I thought this technique was worth
+illuminating because of its simple, yet powerful, theoretically grounded choices. In many deep
+learning applications, systems often seem like quasi-magical feats of engineering whose designers don&rsquo;t even always
+know why they work as well as they do. In reading DeepMind&rsquo;s speculative sampling paper, I found the technique&rsquo;s
+simplicity and mathematical rigor refreshing.</p>
+
+    
+  </article>
+
+  
+  <div class="post-tags">
+    
+    <a class="link tag" href='http://localhost:1313/tags/computer-science'>#computer-science</a>
+    
+    <a class="link tag" href='http://localhost:1313/tags/machine-learning'>#machine-learning</a>
+    
+  </div>
+  
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  <div class="paginator">
+    
+    <a class="link" href="http://localhost:1313/posts/2023-01-03-dalle/" title="How does OpenAI&#39;s DALL-E work?">← prev</a>
+    
+    
+    <a class="link" href="http://localhost:1313/posts/2023-07-14-series-rearrangement/" title="Is addition commutative?">next →</a>
+    
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div class="footer-links">
+    
+    <a href="https://github.com/gindij" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+    
+    
+    <a href="https://www.linkedin.com/in/jackegindi/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    
+  </div>
+  <div>
+    <span>Copyright © 2026 </span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='http://localhost:1313/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

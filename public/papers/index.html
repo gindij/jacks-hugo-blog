@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="">
+
+  
+  
+  <meta name="description" content="Papers I&rsquo;ve had the privilege of contributing to:
+
+  
+      
+          Title/Link
+          Author(s)
+          Year
+          Description
+      
+  
+  
+      
+          Portfolio contstruction as linearly constrained separable optimization
+          Moehle et al
+          2022
+          ADMM-based fast portfolio optimization.
+      
+      
+          Finding AI-Generated Faces in the Wild
+          Aniano et al
+          2023
+          AI-generated face detection at scale.
+      
+  
+
+As time permits, I also like to (try) to keep read papers about applied math and
+machine learning. Below you&rsquo;ll find an archive of papers I&rsquo;ve read that I think
+are worthwhile:">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:url" content="http://localhost:1313/papers/">
+  <meta property="og:site_name" content="Jack Gindi">
+  <meta property="og:title" content="Papers">
+  <meta property="og:description" content="Papers I’ve had the privilege of contributing to:
+Title/Link Author(s) Year Description Portfolio contstruction as linearly constrained separable optimization Moehle et al 2022 ADMM-based fast portfolio optimization. Finding AI-Generated Faces in the Wild Aniano et al 2023 AI-generated face detection at scale. As time permits, I also like to (try) to keep read papers about applied math and machine learning. Below you’ll find an archive of papers I’ve read that I think are worthwhile:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+
+
+  
+  <link rel="canonical" href="http://localhost:1313/papers/">
+
+  
+  
+  
+  <meta itemprop="name" content="Papers">
+  <meta itemprop="description" content="Papers I’ve had the privilege of contributing to:
+Title/Link Author(s) Year Description Portfolio contstruction as linearly constrained separable optimization Moehle et al 2022 ADMM-based fast portfolio optimization. Finding AI-Generated Faces in the Wild Aniano et al 2023 AI-generated face detection at scale. As time permits, I also like to (try) to keep read papers about applied math and machine learning. Below you’ll find an archive of papers I’ve read that I think are worthwhile:">
+  <meta itemprop="wordCount" content="376">
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.0e6556df209fd07250070e9a66bae6aae45273dd9904fb0f908fc61c7087ae31.css" integrity="sha256-DmVW3yCf0HJQBw6aZrrmquRSc92ZBPsPkI/GHHCHrjE=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.72a76d6e120e34d26028018cf79b77a2f2e99ee5402411bb7f5ce3770157340c.css" integrity="sha256-cqdtbhIONNJgKAGM95t3ovLpnuVAJBG7f1zjdwFXNAw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Papers - Jack Gindi</title>
+  
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Papers">
+  <meta name="twitter:description" content="Papers I’ve had the privilege of contributing to:
+Title/Link Author(s) Year Description Portfolio contstruction as linearly constrained separable optimization Moehle et al 2022 ADMM-based fast portfolio optimization. Finding AI-Generated Faces in the Wild Aniano et al 2023 AI-generated face detection at scale. As time permits, I also like to (try) to keep read papers about applied math and machine learning. Below you’ll find an archive of papers I’ve read that I think are worthwhile:">
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.d97c0aabdd6b4b93a3860bb977216c4a4e31291d41d1243a69cf06fe4a89df4d.css" integrity="sha256-2XwKq91rS5Ojhgu5dyFsSk4xKR1B0SQ6ac8G/kqJ300=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="http://localhost:1313/">Jack Gindi</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/posts/">Writing</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/papers/">Papers</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <article class="content ">
+    <p>Papers I&rsquo;ve had the privilege of contributing to:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Title/Link</th>
+          <th>Author(s)</th>
+          <th>Year</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2103.05455">Portfolio contstruction as linearly constrained separable optimization</a></td>
+          <td>Moehle et al</td>
+          <td>2022</td>
+          <td>ADMM-based fast portfolio optimization.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/pdf/2311.08577.pdf">Finding AI-Generated Faces in the Wild</a></td>
+          <td>Aniano et al</td>
+          <td>2023</td>
+          <td>AI-generated face detection at scale.</td>
+      </tr>
+  </tbody>
+</table>
+<p>As time permits, I also like to (try) to keep read papers about applied math and
+machine learning. Below you&rsquo;ll find an archive of papers I&rsquo;ve read that I think
+are worthwhile:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Title/Link</th>
+          <th>Author(s)</th>
+          <th>Year</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2406.04093">Scaling and evaluating sparse autoencoders</a></td>
+          <td>Gao et al, OpenAI</td>
+          <td>2024</td>
+          <td>This paper discusses a top-k sparse autoencoder approach to explainability in large language models.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2309.08600">Sparse Autoencoders Find Highly Interpertable Feature in Language Models</a></td>
+          <td>Cunningham at al</td>
+          <td>2023</td>
+          <td>This paper discusses using sparse autoencoders to try to learn monosemantic interpretable features in language models.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2405.07987">The Platonic Representation Hypothesis</a></td>
+          <td>Huh et al</td>
+          <td>2024</td>
+          <td>This paper argues that large deep neural network models are converging to similar underlying representations of reality.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2402.09353">DoRA: Weight-Decomposed Low-Rank Adaptation</a></td>
+          <td>Liu et al, NVIDIA</td>
+          <td>2024</td>
+          <td>This paper introduces a method for parameter-efficient fine-tuning that decomponses a pre-trained weight into magnitude and direction component.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/abs/2402.17764">The Era of 1-bit LLMS: All Large Language Models are in 1.58 Bits</a></td>
+          <td>Ma et al, Microsoft</td>
+          <td>2024</td>
+          <td>This paper introduces a 1-bit LLM variant where parameters are ternary. It matches performance of similarily sized full-precision models with increased efficiency.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/abs/1111.0352">Revisiting k-means: New Algorithms via Bayesian Nonparametrics</a></td>
+          <td>Kulis and Jordan</td>
+          <td>2012</td>
+          <td>This paper introduces a Bayesian nonparametric approach to clustering. This leads to an elegant algorithm that doesn&rsquo;t require us to choose k.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/pdf/2302.01318.pdf">Accelerating Large Language Model Decoding with Speculative Sampling</a></td>
+          <td>Chen et al, DeepMind</td>
+          <td>2023</td>
+          <td>This paper introduces a method to speed up the decoding process in large language models. It explores speculative sampling techniques to enhance performance efficiency.</td>
+      </tr>
+      <tr>
+          <td><a href="https://www.pnas.org/doi/pdf/10.1073/pnas.0601602103">Modularity and community structure in networks</a></td>
+          <td>M.E.J. Newman</td>
+          <td>2006</td>
+          <td>Elegant spectral method for community detection.</td>
+      </tr>
+      <tr>
+          <td><a href="https://dl.acm.org/doi/pdf/10.1145/3447548.3467404">Scalable Hierarchical Agglomerative Clustering</a></td>
+          <td>Monath et al, Google</td>
+          <td>2021</td>
+          <td>A scalable, level-based approach to hierarchical agglomerative clustering.</td>
+      </tr>
+      <tr>
+          <td><a href="https://arxiv.org/pdf/2312.03814.pdf">Pearl: A Production-Ready Reinforcement Learning Agent</a></td>
+          <td>Zhu et al, Meta</td>
+          <td>2023</td>
+          <td>This paper introduces Pearl, a modular reinforcement learning agent designed for production environments.</td>
+      </tr>
+      <tr>
+          <td><a href="https://www.nature.com/articles/s41586-022-05172-4">Discovering faster matrix multiplication algorithms with reinforcement learning</a></td>
+          <td>Fawzi et al, DeepMind</td>
+          <td>2022</td>
+          <td>This paper introduces AlphaTensor, an RL-based algorithm to find faster ways to multiply matrices.</td>
+      </tr>
+  </tbody>
+</table>
+
+  </article>
+
+  
+  
+</main>
+
+    <footer id="footer">
+  <div class="footer-links">
+    
+    <a href="https://github.com/gindij" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+    
+    
+    <a href="https://www.linkedin.com/in/jackegindi/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    
+  </div>
+  <div>
+    <span>Copyright © 2026 </span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='http://localhost:1313/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

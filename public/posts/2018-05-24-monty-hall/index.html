@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="">
+
+  
+  
+  <meta name="description" content="Introduction
+The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to
+correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but
+the result is somewhat subtle, so I thought it’d be fun to write about.
+The problem
+The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors
+(labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each
+door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty
+asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a
+goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer?
+Think about what you would do before continuing to read. What is your intuition telling you?">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/2018-05-24-monty-hall/">
+  <meta property="og:site_name" content="Jack Gindi">
+  <meta property="og:title" content="The Monty Hall paradox">
+  <meta property="og:description" content="Introduction The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but the result is somewhat subtle, so I thought it’d be fun to write about.
+The problem The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors (labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer? Think about what you would do before continuing to read. What is your intuition telling you?">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-05-24T00:00:00+00:00">
+    <meta property="article:modified_time" content="2018-05-24T00:00:00+00:00">
+    <meta property="article:tag" content="Statistics">
+
+
+  
+  <link rel="canonical" href="http://localhost:1313/posts/2018-05-24-monty-hall/">
+
+  
+  
+  
+  <meta itemprop="name" content="The Monty Hall paradox">
+  <meta itemprop="description" content="Introduction The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but the result is somewhat subtle, so I thought it’d be fun to write about.
+The problem The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors (labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer? Think about what you would do before continuing to read. What is your intuition telling you?">
+  <meta itemprop="datePublished" content="2018-05-24T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-05-24T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1153">
+  <meta itemprop="keywords" content="Statistics">
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.0e6556df209fd07250070e9a66bae6aae45273dd9904fb0f908fc61c7087ae31.css" integrity="sha256-DmVW3yCf0HJQBw6aZrrmquRSc92ZBPsPkI/GHHCHrjE=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.72a76d6e120e34d26028018cf79b77a2f2e99ee5402411bb7f5ce3770157340c.css" integrity="sha256-cqdtbhIONNJgKAGM95t3ovLpnuVAJBG7f1zjdwFXNAw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>The Monty Hall paradox - Jack Gindi</title>
+  
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The Monty Hall paradox">
+  <meta name="twitter:description" content="Introduction The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but the result is somewhat subtle, so I thought it’d be fun to write about.
+The problem The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors (labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer? Think about what you would do before continuing to read. What is your intuition telling you?">
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.d97c0aabdd6b4b93a3860bb977216c4a4e31291d41d1243a69cf06fe4a89df4d.css" integrity="sha256-2XwKq91rS5Ojhgu5dyFsSk4xKR1B0SQ6ac8G/kqJ300=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="http://localhost:1313/">Jack Gindi</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/posts/">Writing</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/papers/">Papers</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">The Monty Hall paradox</h1>
+    <div class="publish-metadata">
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      24 May 2018
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          1153 words
+        </span>
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~6 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  
+  <details>
+    <summary>
+      <b>Table of Contents</b>
+    </summary>
+    <div class="toc "><nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#the-problem">The problem</a></li>
+    <li><a href="#law-of-total-probability">Law of total probability</a></li>
+    <li><a href="#intuition">Intuition</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav></div>
+  </details>
+  
+  
+
+  <article class="content ">
+    
+    <h2 id="introduction">Introduction</h2>
+<p>The field of probability is rife with counterintuitive results that show how necessary the rigor of mathematics is to
+correct understanding of certain situations. This post will be about the Monty Hall Problem. It isn’t hard to state, but
+the result is somewhat subtle, so I thought it’d be fun to write about.</p>
+<h2 id="the-problem">The problem</h2>
+<p>The parlor-trick version of the problem goes as follows: You are on a game show and in front of you are three doors
+(labeled 1, 2 and 3). Two conceal goats and one hides a car. The car has a 1/3 probability of initially being behind each
+door. Your host, Monty, knows which door the car is behind. If you pick the door with the car behind it, you win. Monty
+asks you to select a door and you choose door 1. Monty then opens one of the two remaining doors (door 3, say), revealing a
+goat, and then asks you if you want to change your selection to door 2. Does it pay to take him up on his offer?
+Think about what you would do before continuing to read. What is your intuition telling you?</p>
+<p>At first, many people are ambivalent. They argue that because I have two doors left, it’s equally likely that the car is
+behind door 1 as it is behind door 2. Thus, switching neither hurts nor helps. This argument isn’t quite correct, though;
+it doesn’t make use of information that Monty provided you with by opening one of the doors for you! It turns out that some
+knowledge of conditional probability would greatly increase your chances of going home with that new car. Let’s see why.</p>
+<h2 id="law-of-total-probability">Law of total probability</h2>
+<p>Let’s see what a probabilistic argument tells us. From the fact that Monty opened door 3, we know that the car has to be
+behind door 1 or door 2. Let $S$ represent the event that the switching strategy wins the game. I think the simplest
+argument is the one that makes use of the Law of Total Probability (LoTP), which we will simplify to:
+Given a partition of a sample space (a set of events that are disjoint from one another and together make up the whole
+sample space) $B, B^C$, $P(A)$ (for $A$ in the same probability space as $B$) can be written as $P(A) = P(A|B)P(B) +
+P(A|B^C)P(B^C)$ (Note: $B^C$ is the complement of $B$. $B^C$ occurs if $B$ does not).
+(The above can be naturally generalized to an infinite partition of the sample space.)
+For an intuitive idea of what this means, this picture is helpful:</p>
+<p><img src="/posts/monty-hall/lotp.png" alt="Law of total probability"></p>
+<p>As you can see, part of $A$ intersects with $B$ and the other part intersects with $B^C$. The LoTP basically tells us that
+one way of computing $P(A)$ is to add up the probabilities that A occurred given that either (1) $B$ occurred, or (2) $B$
+did not occur (i.e. $B^C$ occurred). Because $B$ either occurred or didn’t, this sum has to give the total probability of
+$A$. We are going to apply similar logic to our problem.</p>
+<p>As is obvious, at the outset, the car is either behind door 1, door 2 or door 3. Let $D_i$ be the event that the car is
+behind door $i$. Because the $D_i$ are a partition of the sample space, I can use the LoTP, so that
+$$P(S) = P(S|D_1)P(D_1) + P(S|D_2)P(D_2) + P(S|D_3)P(D_3)$$
+At the beginning of the game, the car had an equal likelihood of being behind any of the three doors, we can fill in the
+right multiplicands in the sum above:
+$$P(S) = P(S|D_1)\cdot \frac{1}{3} + P(S|D_2)\cdot \frac{1}{3} + P(S|D_3)\cdot \frac{1}{3}$$
+Next, observe that $P(S|D_1)$ is the probability that switching wins given that the car is behind the door you initially
+chose. This probability is 0, because you would be switching away from the winning door. If the car is behind door 2 (note
+that in this case, door 3 was opened and is no longer in contention), switching always gets you the car, i.e. $P(S|D_2) =
+1$. The same is true if the car is behind door 3 (and door 2 was opened). Hence
+$$P(S) = 0 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} = \frac{2}{3}.$$
+In other words, switching wins the game for you with probability $2/3$!</p>
+<h2 id="intuition">Intuition</h2>
+<p>Let’s see if we can understand this a bit better without appealing to symbols. When you first chose door 1, you had a $1/3$
+chance of winning the car. Stated a different way, you had a $2/3$ chance of <em>not</em> getting the car. When Monty opens one of
+the unchosen doors and reveals a goat, he is, in effect, providing you with new information. The probability of your
+initial choice being correct is still $1/3$, but with your updated understanding of the world, the $2/3$ probability that
+the car is not behind your initial choice of door is all resting on the single remaining door.</p>
+<p>For a more extreme application of this line of reasoning, consider the a similar problem in which you start with 100 doors
+to choose from. You choose door 1 and Monty opens 98 of the remaining doors, revealing goats. Originally, your choice held
+a $99/100$ probability of being incorrect. Initially, that $99/100$ was spread evenly over the 99 doors you didn’t select.
+With each door Monty opened, that $99/100$ was condensed to fewer and fewer doors, so that by the very end, there is a
+single door holding all of that probability that you were initially wrong. You’d be crazy not to switch.*</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Monty Hall paradox is a fun, relatable problem that is a terrific example of the need for formality in thinking about
+probabilities. Our intuition is a powerful tool, but for as many problems as it allows us to solve, it yet more often leads
+us astray. In such moments it is crucial to have a systematic, rigorous approach with which to check ourselves and make
+sure that we remain on sound logical footing.</p>
+<p>*For the more symbolically inclined reader, I want to quickly use the logic from the simple cases to show that it in fact
+always pays to switch doors. Suppose we generalize the problem so that there are $n\geq 3$ doors and after you select one
+of them, Monty opens $m$ of the remaining doors ($1 \leq m \leq n - 2$) and then asks you if you want to switch. In this
+case, after opening $m$ doors, the $(n-1)/n$ probability that you were initially wrong gets evenly distributed across the
+$n - 1 - m$ remaining doors, so that each door carries a probability of $(n-1)/(n(n - 1 - m))$. We complete the argument by
+verifying that this quantity is always bigger than $1/n$.
+To do this, note that showing
+$1/n &lt; (n-1)/(n(n - 1 - m))$
+is the same as showing
+$1 &lt; (n-1)/(n - 1 - m)$, which is clear.</p>
+
+    
+  </article>
+
+  
+  <div class="post-tags">
+    
+    <a class="link tag" href='http://localhost:1313/tags/statistics'>#statistics</a>
+    
+  </div>
+  
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  <div class="paginator">
+    
+    <a class="link" href="http://localhost:1313/posts/2018-05-22-mvt/" title="The mean value theorem">← prev</a>
+    
+    
+    <a class="link" href="http://localhost:1313/posts/2018-05-28-birthday/" title="The birthday problem">next →</a>
+    
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div class="footer-links">
+    
+    <a href="https://github.com/gindij" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+    
+    
+    <a href="https://www.linkedin.com/in/jackegindi/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    
+  </div>
+  <div>
+    <span>Copyright © 2026 </span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='http://localhost:1313/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>

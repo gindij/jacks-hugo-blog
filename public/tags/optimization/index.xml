@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Optimization on Jack Gindi</title>
+    <link>http://localhost:1313/tags/optimization/</link>
+    <description>Recent content in Optimization on Jack Gindi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 08 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/optimization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Simulated annealing</title>
+      <link>http://localhost:1313/posts/2024-03-08-sim-ann/</link>
+      <pubDate>Fri, 08 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2024-03-08-sim-ann/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Optimization problems are everywhere!&lt;/p&gt;
+&lt;p&gt;Whether it&amp;rsquo;s finding the most efficient way to deliver packages to customers,
+determining the best next move in a game of chess, or figuring out how to adjust the parameters of a
+gigantic machine learning model, many important practical problems are, at their cores, optimization problems.
+In this post, we will learn an optimization meta-algorithm called &lt;strong&gt;simulated annealing&lt;/strong&gt;, a
+general approach to (approximately) finding global solutions to optimization problems&amp;hellip; which is,
+interestingly, inspired by a physical process from material science.&lt;/p&gt;
+&lt;h1 id=&#34;simulated-annealing-overview&#34;&gt;Simulated annealing: overview&lt;/h1&gt;
+&lt;h2 id=&#34;annealing&#34;&gt;Annealing&lt;/h2&gt;
+&lt;p&gt;Before discussing its algorithmic analog, we should sketch out what annealing is and how it works.
+Annealing is a process that alters the physical and chemical properties of a metal so that it can be worked
+more easily. It begins by heating the metal above its recrystallization point in order for it to
+enter a state in which its chemical states can change more freely. We then slowly cool the meatal to allow it
+to settle into a chemically superior state.&lt;/p&gt;
+&lt;h2 id=&#34;relationship-to-optimization&#34;&gt;Relationship to optimization&lt;/h2&gt;
+&lt;p&gt;One way to solve an optimization problem is to carry out the the following iterative process:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Start in some state (e.g., a chessboard just after it has been set up).&lt;/li&gt;
+&lt;li&gt;Transition from the the current state to a new state that most decreases the value of your
+an objective function you want to minimize (e.g., make a move that decreases your probability of losing).&lt;/li&gt;
+&lt;li&gt;Repeat step 2 until a stopping condition is met (e.g., the game ends).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Simulated annealing modifies this process. It would instead look something like this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Start in an initial state.&lt;/li&gt;
+&lt;li&gt;Sample a random candidate state to transition to.&lt;/li&gt;
+&lt;li&gt;With some probability that depends on the current and candidate state, accept the candidate
+transition. Otherwise, stay put.&lt;/li&gt;
+&lt;li&gt;Repeat steps 2 and 3 until a stopping condition is met.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The analogy to physical annealing comes from the fact that step 3 depends on a parameter called the temperature.
+In physics, the higher the temperature of a system, the more jittery the system is &amp;ndash; that is, the
+more random motion there is among its constituent particles. Early in the optimization process, we set a
+high temperature; this allows the algorithm explore by accepting riskier transitions, i.e., those that result in a
+higher (worse) objective value than that of our current state. As the annealing progresses, we lower the temperature;
+this causes the optimization process to become more conservative. Eventually, the space of acceptable
+next states will contain only those that are better than the current state (in terms of objective value).&lt;/p&gt;
+&lt;h2 id=&#34;global-vs-local-optimization&#34;&gt;Global vs local optimization&lt;/h2&gt;
+&lt;p&gt;One question you might ask is: Why bother with the high temperature phase at all? If low temperatures
+will allow the algorithm to only move toward better solutions, why not always make those kinds of moves?
+The key to answering this question lies in the difference between globally and locally optimal solutions
+to a problem. Suppose you are on a quest to see the view from the highest point in San Francisco
+(which has lots of hills). If you only ever step in the direction of steepest ascent from where you are,
+you will reach the top of &lt;em&gt;some&lt;/em&gt; hill, but it&amp;rsquo;s possible that in order to reach the top of the &lt;em&gt;highest&lt;/em&gt; hill,
+you should have walked downhill for a while in another direction first and only then started to ascend.
+The hill whose acme you reached by steepest ascent &amp;ndash; a local optimum &amp;ndash; is not very difficult to find.
+By contrast, finding the true tallest peak in San Francisco &amp;ndash; the global optimum &amp;ndash; is trickier.&lt;/p&gt;
+&lt;p&gt;For many problems &amp;ndash; like finding the best set of parameters for a machine learning model &amp;ndash; local
+optima work very well, and in many cases we have powerful algorithms for efficiently finding them.
+Finding global optima, on the other hand, is far more challenging in general, and good algorithms
+are scarcer, if they exist at all. Simulated annealing is a probabilistic strategy for searching for
+&lt;em&gt;global&lt;/em&gt; optima by exploring aggresively enough early to find the base of the right hill.&lt;/p&gt;
+&lt;p&gt;In the remainder of this post, we will more explicitly discuss how we carry out steps 2 and 3, and show how
+we might apply this meta-algorithm to the &lt;a href=&#34;https://en.wikipedia.org/wiki/Travelling_salesman_problem&#34;&gt;traveling salesman problem&lt;/a&gt;,
+one of the most difficult discrete optimization problems we have.&lt;/p&gt;
+&lt;h1 id=&#34;acceptance-probability&#34;&gt;Acceptance probability&lt;/h1&gt;
+&lt;p&gt;The key detail that I want to make more precise is how we formulate the probability of accepting a
+transition from one state to another. In terms of notation, $\mathcal S$ is the entire state
+space, $s \in \mathcal S$ refers to the current state, $s&amp;rsquo; \in \mathcal S$ refers
+to the candidate state, $E:\mathcal S \to \mathbb R$ is the objective function (lower is better) that we want
+to minimize, and $T_k$ is the temperature parameter value on the $k$th step (a real number). Our objective
+is to find the state $s^\star$ that minimizes $E$. In other words, we want to find
+$$
+s^\star := \underset{s \in \mathcal S}{\text{argmin}} ~ E(s).
+$$
+(The &amp;ldquo;$:=$&amp;rdquo; symbol means that the right hand side is the definition of $s^\star$, rather than some
+equation to prove or solve.)&lt;/p&gt;
+&lt;p&gt;For simplicity, define $e = E(s)$ and $e&amp;rsquo; = E(s&amp;rsquo;)$. If we are currently in state $s_k$,
+and $e&amp;rsquo; &amp;lt; e$, we automatically transition to $s&amp;rsquo;$. If $e&amp;rsquo; &amp;gt; e$, then we transition
+with probability
+$$
+P_{\rm acc}(e, e&amp;rsquo;; T_k) = \exp(-(e&amp;rsquo; - e) / T_k).
+$$
+(Note: This is not a probability distribution over states. Instead, here, $P_{\rm acc}$ is used to make a decision about
+whether to transition to a &lt;em&gt;particular&lt;/em&gt; successor state. For this purpose, after we compute
+$p = P_{\rm acc}(e, e&amp;rsquo;; T_k)$, we can use a random number generator to generate a random
+number $r$. If $r &amp;lt; p$, we transition. To sample a state from the entire state space, we would need the
+transition probabilities for each possible transition to sum to 1.)&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s take a minute to think through why this acceptance probability works the way we want it to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Since we would have accepted if $e&amp;rsquo; &amp;lt; e$, we can assume that $e&amp;rsquo; - e &amp;gt; 0$. If
+this difference is very positive, the negative sign and the exponential around it makes
+$P_{\rm acc}$ very small. This means that the probability of accepting a transition
+exponentially decays for less desirable candidates.&lt;/li&gt;
+&lt;li&gt;Decreasing the value of $T_k$ (as $k$ increases) causes the exponent to become large and negative,
+producing probabilities close to 0. This means that as we run more steps and decrease the temperature,
+the same differences in objective value will become less and less acceptable. This aligns with the
+intuition that as the temperature decreases, the optimization process becomes more conservative.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;application-the-traveling-salesman-problem-tsp&#34;&gt;Application: The Traveling Salesman Problem (TSP)&lt;/h1&gt;
+&lt;p&gt;If you&amp;rsquo;ve never heard of the traveling salesman problem, check out &lt;a href=&#34;https://en.wikipedia.org/wiki/Travelling_salesman_problem&#34;&gt;this wikipedia article&lt;/a&gt;
+before continuing. To summarize:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;There are $n$ cities to visit.&lt;/li&gt;
+&lt;li&gt;There are roads connecting every pair of cities.&lt;/li&gt;
+&lt;li&gt;Each road has a (nonnegative) toll associated with it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Goal:&lt;/strong&gt; Find the minimum cost path that ends where you start and visits each city exactly once.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first thing to remember when using simulated annealing is that for most problems we would
+apply it to, we should expect to not obtain the globally optimal solution at the end; instead, we
+hope for a result that is just good enough. In the case of TSP, simulated annealing can give us a
+reasonable approximation, but we cannot really guarantee anything more than that.&lt;/p&gt;
+&lt;p&gt;Another practical consideration that arises is how to define the state space for the problem at hand.
+Before continuing, think about how you might define it for TSP.&lt;/p&gt;
+&lt;p&gt;A sensible way to define it is to consider any ordering of the $n$ cities to be a state. Defining states
+this way, there are $n!$ states &amp;ndash; for $n \geq 20$, this number is absolutely massive. With such large state
+spaces, one typically also has to narrow the space of transitions under consideration at each step. In the case of TSP,
+we might do this by only allowing transitions that swap a pair of cities in the order. Can you think of
+other methods?&lt;/p&gt;
+&lt;p&gt;Finally, we define our objective function $E$ to just be the total cost of a particular route, and we
+stop when we&amp;rsquo;ve gone some number of iterations without making progress over the best solution we&amp;rsquo;ve obtained
+so far. With this setup, we can implement our algorithm following the pseudo-python below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;simulated_annealing_TSP&lt;/span&gt;(G, max_iters_with_no_improvement):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;   G: the initial problem structure (tolls for each road)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;   max_iters_with_no_improvement: The maximum number of iterations allowed without
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;      surpassing the best seen so far before termination.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;   &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#75715e&#34;&gt;# initialize the temperature and pick an initial state&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   T &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; initialize_temperature()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pick_random_city_order(G)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   no_improvement_counter, best_state, lowest_so_far &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;, inf
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#75715e&#34;&gt;# while we&amp;#39;re making progress...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; no_improvement_counter &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; max_iters_with_no_improvement:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# select a candidate next state&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      candidate &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; randomly_swap_pair(s)  &lt;span style=&#34;color:#75715e&#34;&gt;# using any restriction&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# compute the costs of the current state and the candidate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      e_s, e_cand &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; total_cost(s, G), total_cost(candidate, G)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# decide whether to accept by comparing a uniform random number&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# to the acceptance probability described earlier&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; uniform(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; p_acc(e_s, e_cand, T):
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; candidate
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#75715e&#34;&gt;# if we see a new best, reset the progress counter and&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#75715e&#34;&gt;# save the best state&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; e_cand &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; lowest_so_far:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            best_state &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; s
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            no_improvement_counter &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;         &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            no_improvement_counter &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;# reduce the temperature&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;      T &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; reduce_temperature(T)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#75715e&#34;&gt;# return the best state when the iteration completes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;   &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; best_state
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are some details and optimizations left out, but hopefully the code feels straightforward enough for
+you to try to implement this on your own!&lt;/p&gt;
+&lt;p&gt;(Note: One detail we left out in the above is the schedule to use to reduce $T_k$ over time. This is
+a subtle problem, since if we lower it too quickly, our optimization process will not sufficiently explore,
+whereas if we lower it too slowly, we may not make forward progress fast enough.)&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;In this post, we briefly described a meta-algorithm called simulated annealing that can help approximate
+global optima for properly formulated optimization problems, many of which are extremely computationally difficult.
+It is often most useful when there are not other more direct, problem-specific algorithms we can bring to bear.
+In addition to describing the general setup, we also looked at how we could apply this approach to the TSP,
+which gave us a flavor for some of the practical considerations that arise when trying to fit a problem
+into the SA framework.&lt;/p&gt;
+&lt;p&gt;Simulated annealing is a powerful tool that is employed to solve a variety of thorny optimization problems
+across the sciences. It&amp;rsquo;s a good tool to have in your toolkit &amp;ndash; I hope it comes in handy!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Probabilistic interpretation of regularization</title>
+      <link>http://localhost:1313/posts/2021-05-09-regularization/</link>
+      <pubDate>Sun, 09 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2021-05-09-regularization/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;If you&amp;rsquo;ve read enough of my posts over the years, you know that some of my favorite
+topics to write about are those that can be thought about or studied from
+different perspectives. In this post, I want to write about regularization, a
+technique used in machine learning to mitigate a common problem called overfitting
+&amp;ndash; a problem that crops up when algorithms fit their understanding of the world
+so tightly to a particular dataset, that it isn&amp;rsquo;t able to make predictions about
+data that it hasn&amp;rsquo;t seen. Regularization can be thought about as a term to add
+to the optimization objective that directly discourages overfitting, or it can be
+thought of in an interesting statistical way.&lt;/p&gt;
+&lt;h2 id=&#34;a-helpful-example-simple-linear-regression&#34;&gt;A helpful example: simple linear regression&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s assume that we&amp;rsquo;re building a linear regression model. That is, assuming that
+$b$ represents the number of bedrooms in the house, we &lt;em&gt;assume&lt;/em&gt; (more on this in a second)
+that the relationship between the number of bedrooms and the price of the house
+is linear:
+$$
+p(b) = \theta b + \epsilon.
+$$
+Here, $p$ is price, $b$ is the number of bedrooms in the house, and $\epsilon$
+is a random number that represents the error in our model, or the part of our model that
+the data we are using do not explain. What the formula above says is that &lt;em&gt;we believe&lt;/em&gt;
+that we can model the relationship between #bedrooms and price with a linear model.
+This &lt;em&gt;does not&lt;/em&gt; say that we believe that the actual relationship is linear. This is a
+very important distinction. We believe that the linear model might be &lt;em&gt;useful&lt;/em&gt;, not
+necessarily that it is &lt;em&gt;correct&lt;/em&gt; or &lt;em&gt;true&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;(Another way of thinking about our equation, or model, is that it says once we know
+the parameter $\theta$ and the particular number of bedrooms $b_0$, the randomness
+has been confined to the variation of prices around a known mean: $\theta b_0$.)&lt;/p&gt;
+&lt;h2 id=&#34;fitting-the-parameters&#34;&gt;Fitting the parameters&lt;/h2&gt;
+&lt;p&gt;One natural way to find the best parameter $\theta$ for a set of data is to find the
+the value of $\theta$ that literally best fits the input data! To better understand what
+this means, let&amp;rsquo;s suppose that we have (#bedroom, price) pairs $(b_i, y_i)$ for $i=1,\dots,100$,
+and a current guess at a parameter $\theta$. To evaluate $\theta$, a natural measure of how
+well $\theta$ fits is to find the average (square) error, where the error for each example
+can be expressed as the difference between $\theta b_i$ (our prediction) and $y_i$
+(the actual price). Mathematically, we can write this measure down as
+$$
+J(\theta) = \frac{1}{100} \sum_{i=1}^{100} (\theta b_i - y_i)^2.
+$$
+Now that we&amp;rsquo;ve decided what constitutes a good choice of parameter, we can employ
+tools provided by calculus to actually calculate what value of $\theta$ is best
+by solving the optimization problem (replacing 100 with the more general $m$) given by
+$$
+\text{argmin}&lt;em&gt;\theta \sum&lt;/em&gt;{i=1}^m (\theta b_i - y_i)^2.
+$$
+(This is the value of $\theta$ that minimizes $J$. Without going into detail,
+in this case, it turns out that the best value is $\theta = \frac{\mathbf y^T \mathbf b}{\mathbf b^T \mathbf b}$,
+where $\mathbf b = (b_1,\dots, b_m)$ and $\mathbf y = (y_1,\dots,y_m)$.)&lt;/p&gt;
+&lt;h2 id=&#34;regularization&#34;&gt;Regularization&lt;/h2&gt;
+&lt;p&gt;One important concern when fitting a machine learning model is whether or not
+your model is too tightly fit to the data that you have. Because models are fit using
+a finite sample of data, it is possible, even likely, that your data is not representative
+of what can occur &amp;ldquo;in the wild.&amp;rdquo; As such, the model you&amp;rsquo;ve built may be terrific on the data
+it used to train, but does not actually generalize to situations it hasn&amp;rsquo;t encountered.
+There are various techniques for combating this problem, but the one we will discuss
+here is one called regularization.&lt;/p&gt;
+&lt;h3 id=&#34;the-intuitive-motivation&#34;&gt;The intuitive motivation&lt;/h3&gt;
+&lt;p&gt;In models with more than one feature, overfitting tends to occur because certain
+of the features have parameters that are too large, i.e., that their impact is overstated
+in the model. As such, rather than just finding the parameters that minimize the least
+squares objective, we want to find &lt;em&gt;small&lt;/em&gt; parameters that minimize the objective.
+For the simple regression case, we would add a term to the objective:
+$$
+\text{argmin}&lt;em&gt;\theta ~~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+$$&lt;/p&gt;
+&lt;p&gt;Intuitively, if $\theta$ is large, the objective value that we are trying to minimize
+will also be large, so the optimizer will not be encouraged to pick that value of $\theta$,
+even it fits the data pretty well. Adding this term causes the optimizer to trade off
+goodness of fit and simplicity (in the sense of parameters that aren&amp;rsquo;t too large).
+The constant $\lambda$ controls our preferences with respect to that tradeoff: larger
+values of $\lambda$ will encourage smaller value of $\theta$.&lt;/p&gt;
+&lt;h3 id=&#34;statistical-interpretation&#34;&gt;Statistical interpretation&lt;/h3&gt;
+&lt;p&gt;While the intuitive motivation is usually enough, there is a cool
+statistical interpretation of what is going on here that I think is worth pointing out.
+If we instead think of finding $\theta$ by carrying out &lt;a href=&#34;https://en.wikipedia.org/wiki/Maximum_likelihood_estimation&#34;&gt;maximum (log) likelihood estimation&lt;/a&gt; (MLE),
+then regularization naturally arises when we add the additional assumption to our
+model that $\theta$ comes from a normal distribution centered around zero with variance
+$1/\lambda$ (we can tune $\lambda$ to change the width of the bell curve). Making this assumption
+essentially pins down a probability density function for the parameter $\theta$:
+$P(\theta) = \frac{\sqrt{\lambda}}{\sqrt{2\pi}}\exp(-\lambda(\theta - 0)^2/2)$.
+Taking $\log$s (this doesn&amp;rsquo;t affect the optimization problem we need to solve), we have
+$$
+\log P(\theta) = \log\biggr( \frac{\sqrt{\lambda}}{\sqrt{2\pi}} \biggr) - \frac{\lambda}{2} \theta^2.
+$$
+Adding this assumption about the prior distribution over $\theta$ and ignoring
+constants (with respect to $\theta$), we would need to solve the modified MLE problem:
+$$
+\begin{align}
+\text{argmax}&lt;em&gt;\theta~ \log(P(\mathbf y &lt;del&gt;|&lt;/del&gt; \mathbf b, \theta)P(\theta))
+&amp;amp;= \text{argmax}&lt;/em&gt;\theta ~ -\sum_{y_i, b_i}(\theta b_i - y_i)^2 - \frac{\lambda}{2} \theta^2\
+&amp;amp;= \text{argmin}&lt;em&gt;\theta ~ \sum&lt;/em&gt;{y_i, b_i}(\theta b_i - y_i)^2 + \frac{\lambda}{2} \theta^2
+\end{align}
+$$
+which is exactly what we had intuitively motivated in the previous section!&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ve just uncovered the statistical interpretation of regularization!* Using (this flavor
+of) regularization is actually imposing a Gaussian prior onto $\theta$. As we force the
+width of $\theta$&amp;rsquo;s bell curve to become smaller by increasing $\lambda$, we are encoding the
+fact that larger values of $\theta$ are less likely and should therefore be penalized more
+heavily during the optimization process.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we encountered a cool technique that underlies many statistical models called maximum likelihood estimation (MLE), and showed that a common technique used to combat overfitting actually has a nice statistical interpretation, too!&lt;/p&gt;
+&lt;p&gt;Happy Mother&amp;rsquo;s Day to all!&lt;/p&gt;
+&lt;p&gt;*The regularization we discuss here is called L2 regularization. Regularization comes in
+other forms too. The most popular other choice is called L1 regularization, and it can
+actually be interpreted as imposing a Laplacian (rather than a Gaussian) prior.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Solving sudoku as a linear program</title>
+      <link>http://localhost:1313/posts/2021-04-11-sudoku-lp/</link>
+      <pubDate>Sun, 11 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2021-04-11-sudoku-lp/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;During the last several months, my wife and I went through a Kenken phase. For
+those not familiar with Kenken, check out this &lt;a href=&#34;https://www.kenkenpuzzle.com&#34;&gt;website&lt;/a&gt;.
+Kenken is a great example of a class of problems that are more broadly categorized as
+constraint satisfaction problems (CSPs). I wrote some code that generates and solves Kenkens,
+which I&amp;rsquo;d like to write about when I have more time, but in this post I want to talk about
+an interesting, nonstandard way to set up and solve a different, far more popular CSP: sudoku!&lt;/p&gt;
+&lt;h2 id=&#34;what-is-sudoku&#34;&gt;What is sudoku?&lt;/h2&gt;
+&lt;p&gt;For those who are not familiar with sudoku puzzles, they are designed as follows.
+The initial board is a 9x9, partially filled in grid. The goal is for the solver
+to find (the unique) values for the empty squares so that the board satisfies the following
+rules:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;There can be no repeated values in any row. (Each row must contain each value
+from 1 up to 9 exactly once.)&lt;/li&gt;
+&lt;li&gt;There can be no repeated values in any column. (Each column must contain each
+value from 1 up to 9 exactly once.)&lt;/li&gt;
+&lt;li&gt;There can be no repeated values in each of the 9 3x3 groups of cells outlined
+in a bolded black line in the figures below.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div align=&#39;center&#39;&gt;
+&lt;img src=&#34;http://localhost:1313/posts/sudoku-lp/initial.png&#34; alt=&#34;drawing&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/posts/sudoku-lp/solved.png&#34; alt=&#34;drawing&#34; width=&#34;200&#34; height=&#34;200&#34;/&gt;
+&lt;p&gt;An unfilled board (left) and its solution (right).&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;modeling-the-problem&#34;&gt;Modeling the problem&lt;/h2&gt;
+&lt;p&gt;In order to formulate this as an optimization problem we need to come up with a
+variable to optimize and constraints that tell the optimization algorithm what kinds
+of solutions are valid. In any sudoku problem, there are 81 cells that need to
+be filled in (including those that are already populated at the start). Each of those
+cells has 9 possible values, so we will index our variable $x$ with 3 indices: the first
+will indicate the row, the second will indicate the column, and the third will refer to a
+value between 1 and 9. Furthermore, we will require each $x_{ijk}$ to take either the
+value 0 or the value 1: $x_{ijk} = 1$ if the cell at position $(i, j)$ on the board
+has the value $k$ and 0 otherwise.&lt;/p&gt;
+&lt;p&gt;This way of modeling a sudoku board is not the most intuitive one possible, but it
+will make formulating our constraints easier, which is the topic we turn to next. (If
+the above wasn&amp;rsquo;t clear, give it another read before moving on.)&lt;/p&gt;
+&lt;h2 id=&#34;constraints&#34;&gt;Constraints&lt;/h2&gt;
+&lt;p&gt;There are a few types of constraints we need to respect to make sure that our
+optimization algorithm comes up with a valid solution to our sudoku problems. We
+will discuss each type of constraint in turn.&lt;/p&gt;
+&lt;h3 id=&#34;respecting-given-values&#34;&gt;Respecting given values&lt;/h3&gt;
+&lt;p&gt;The first constraint the solution needs to satisfy is that the values that are
+already provided must be respected. That is, if the first cell is already
+filled with the value 5, the optimizer is not allowed to change that. By the way
+we defined $x$ earlier, this would correspond to the constraint $x_{115} = 1$. Similarly,
+if the lower right value were set to 1, we would have another constraint corresponding
+to this value given by $x_{991} = 1$. We add a constraint like this for every value
+that is provided on the initial board.&lt;/p&gt;
+&lt;h3 id=&#34;each-cell-contains-a-single-value&#34;&gt;Each cell contains a single value&lt;/h3&gt;
+&lt;p&gt;This is a relatively simple constraint, but an important one. To model this constraint
+for cell $(1, 1)$, we would require that $\sum_{k=1}^9 x_{11k} = 1$. Because each
+entry of $x$ is either 0 or 1, this constraint says that exactly one of the entries
+corresponding to the first cell must be set. We add a constraint like the one I described
+for the first cell for each of the 81 cells.&lt;/p&gt;
+&lt;h3 id=&#34;row-column-and-box-constraints&#34;&gt;Row, column, and box constraints&lt;/h3&gt;
+&lt;p&gt;We require that each row contain each digit from 1 to 9 . To encode that the digits
+in row $i$ must be unique, we need to make sure that for each value $k$, we have
+$\sum_{j=1}^9 x_{ijk} = 1$ (in the sum, $i$ and $k$ are fixed). There are 81 such
+constraints corresponding to the rows, another 81 can be analogously formulated
+for the columns, and another 81 can be formulated to model the box constraints.&lt;/p&gt;
+&lt;h3 id=&#34;consolidating-constraints&#34;&gt;Consolidating constraints&lt;/h3&gt;
+&lt;p&gt;Once we&amp;rsquo;ve modeled all the constraints, we can stack them into a single matrix
+equality constraint $Ax = b$. Although we&amp;rsquo;ve been discussing $x$ as though
+it were three dimensional, when we pass the optimization problem to the computer, we
+flatten it into one long 729-vector (9 rows $\times$ 9 columns $\times$ 9
+candidate values per cell). Each row of $A$ corresponds to a single constraint.
+Coefficients corresponding to the variables that are active in that constraint
+are set to 1 and the other coefficients in that row are all set to 0. Because
+all of our constraints have 1s on their right hand sides, we have $b = \mathbf 1$.&lt;/p&gt;
+&lt;h2 id=&#34;formulating-and-solving-the-problem&#34;&gt;Formulating and solving the problem&lt;/h2&gt;
+&lt;p&gt;We can now formulate our optimization problem:
+$$
+\begin{align*}
+&amp;amp;\underset{x \in {0, 1}^{729}}{\text{minimize}} ~~ 0\
+&amp;amp;\text{subject to} ~~ Ax = \mathbf 1.
+\end{align*}
+$$
+Because sudokus have unique solutions, we just need to find the $x$ that satisfies
+our constraints &amp;ndash; there will only be one such $x$! Because we just need to find that
+$x$, the objective value doesn&amp;rsquo;t have to help us discriminate between competing feasible
+points for this problem, so we can safely use 0 as our objective function. (This type
+of problem is known as a feasibility problem.)*&lt;/p&gt;
+&lt;p&gt;With the optimization problem in hand, the following short piece of code
+uses &lt;a href=&#34;https://www.cvxpy.org&#34;&gt;CVXPY&lt;/a&gt; to solve any sudoku puzzle very quickly:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cvxpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; cp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# ... &amp;lt;code that formulates the constraints&amp;gt; ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Variable(N, boolean&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;A &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;array(list(constrs))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ones(len(constrs))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;objective &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Minimize(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;constraints &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [A &lt;span style=&#34;color:#f92672&#34;&gt;@&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; b]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;problem &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Problem(objective, constraints)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;problem&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;solve(solver&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ECOS_BB)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The full code (~100 lines) can be found &lt;a href=&#34;https://github.com/gindij/SudokuLP&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Sudoku is typically framed and solved as a CSP with
+algorithms that involve some guessing and checking. I thought this was an interesting
+application of optimization to a problem that maybe doesn&amp;rsquo;t immediately lend itself
+to such a formulation. Hope you enjoyed!&lt;/p&gt;
+&lt;p&gt;*As a note for a slightly more technically inclined reader, a friend of mine
+pointed out that the algorithm that the solver uses, called &lt;a href=&#34;https://web.stanford.edu/class/ee364b/lectures/bb_slides.pdf&#34;&gt;branch and bound&lt;/a&gt;,
+ends up degenerating into an exponential tree search, akin to just trying out
+all possibilities with no way of discriminating between &amp;ldquo;better&amp;rdquo; and &amp;ldquo;worse&amp;rdquo;
+points. To remedy this (at least in part), we can use the objective function
+$x^T \mathbf 1$, which counts the number of ones in any solution. By using
+this objective instead of $0$, we give the algorithm a way to &amp;ldquo;prune&amp;rdquo; the tree it
+is searching, which may lead to performance benefits. The code implementing this
+approach would only be slightly different:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; cvxpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; cp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; numpy &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; np
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# ... &amp;lt;code that formulates the constraints&amp;gt; ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Variable(N, boolean&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;A &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;array(list(constrs))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ones(len(constrs))
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;objective &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Minimize(x&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;T &lt;span style=&#34;color:#f92672&#34;&gt;@&lt;/span&gt; np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ones(N))  &lt;span style=&#34;color:#75715e&#34;&gt;# &amp;lt;-- new objective function&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;constraints &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [A &lt;span style=&#34;color:#f92672&#34;&gt;@&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; b]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;problem &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;Problem(objective, constraints)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;problem&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;solve(solver&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;cp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ECOS_BB)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>An introduction to convex optimization</title>
+      <link>http://localhost:1313/posts/2020-09-04-cvx-opt/</link>
+      <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/2020-09-04-cvx-opt/</guid>
+      <description>&lt;h2 id=&#34;the-general-idea&#34;&gt;The General Idea&lt;/h2&gt;
+&lt;p&gt;Over this past summer (2020), I took Stanford&amp;rsquo;s &lt;a href=&#34;https://web.stanford.edu/class/ee364a/&#34;&gt;EE364A&lt;/a&gt; course, which is about a subdiscipline of mathematical optimization called convex optimization. I learned that it has myriad applications all over engineering, finance, medicine, signal processing, and many other seemingly disconnected fields. In this post, I want to discuss what convex optimization is and what makes it so useful as a problem solving technique.&lt;/p&gt;
+&lt;p&gt;In as general a sense as possible, we humans solve optimization problems all the time. We find ourselves in situations where we have to make decisions about which choice will lead to the best outcome (or the least bad outcome in some unfortunate cases), but most of the time, the space of possible decisions is constrained. When we find ourselves saying things like &amp;ldquo;If the stars aligned, I would&amp;hellip;,&amp;rdquo; or, &amp;ldquo;In a perfect world, I&amp;rsquo;d choose&amp;hellip;,&amp;rdquo; we&amp;rsquo;re usually lamenting the fact that the decision we&amp;rsquo;re facing would be easier to make if our options were not constrained.&lt;/p&gt;
+&lt;p&gt;The field of mathematical optimization attempts to bring mathematical formalism to the above-described decision making process. A mathematical optimization problem has a few components:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Decision variable:&lt;/strong&gt; This represents the space of decisions you have to make. Solving an optimization problem involves finding the &amp;ldquo;best&amp;rdquo; value of a decision variable, where best is defined by your choice of&amp;hellip;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cost/Profit (a.k.a. objective) function:&lt;/strong&gt; This represents some negative/positive utility of a decision.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Constraints:&lt;/strong&gt; These constrain the space of decisions you can make. The constraints imply a &lt;em&gt;feasible&lt;/em&gt; set, which is a set of allowed decisions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Solving an optimization problem with these components amounts to finding a feasible value of the decision variable that minimizes (or maximizes) the cost (or profit) function. We will see examples of this below.&lt;/p&gt;
+&lt;p&gt;While mathematicians have managed to develop a deep, rich mathematical theory around how to reason about and solve different kinds of mathematical optimization problems, unfortunately, many (most) optimization problems are computationally very difficult to find optimal solutions for. For problems of significant enough size, this effectively renders them intractable.&lt;/p&gt;
+&lt;p&gt;There is, however, a certain interesting class of optimization problems that can be solved very efficiently: these are called convex optimization problems. What makes a convex optimization problems easier to work with is the &amp;ldquo;shape&amp;rdquo; of its objective function and its feasible set. In order for an optimization problem to be convex, the objective function and feasible set must be convex.&lt;/p&gt;
+&lt;h2 id=&#34;convex-sets-and-convex-functions&#34;&gt;Convex sets and convex functions&lt;/h2&gt;
+&lt;p&gt;In an effort to not use any math symbols in this post, I&amp;rsquo;m going to resort to pictures to describe what convexity means and looks like for sets and functions. A set is convex if anytime you pick two points in a set, the line between those points is also inside the set. A picture from Chapter 2 of Convex Optimization by Boyd and Vandenberghe provides the idea:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/posts/cvx-opt/convex.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In the left set (all the points on the inside of the hexagon), pick any two points you want. Now draw a line segment between them. Notice that no matter what pair of points you pick, all points along the line segment between them will lie inside the hexagon! In the right set, on the other hand, we see pair of points (there are actually many, can you find another pair?) for which the line segment between them is not fully contained within the set. The set on the right is thus not convex.&lt;/p&gt;
+&lt;p&gt;Loosely speaking, a function is convex if it has upward curvature. The simplest example that gets the point across is to think of a smile. In three dimensions, a simple example is a bowl. In more mathematical parlance, upward curvature means that any tangent line (or, in higher dimensions, plane) that you draw through any point on the function lies below the function itself. In the picture on the next page, the red and green lines are tangent to the black curve. Notice that the red, green, and any other tangent line you might draw lie or would lie beneath the black curve.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s it! Those properties and some clever reasoning are enough to ensure that if a problem is convex, you can probably solve it efficiently with the right software. As long as the space of allowed decisions is a convex set and the objective function is convex, you&amp;rsquo;re off to the races!&lt;/p&gt;
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+&lt;p&gt;Before closing this post, I want to describe two examples of how you might translate an industry problem into a convex optimization problem.&lt;/p&gt;
+&lt;p&gt;The first has to do with radiation treatment planning for cancer patients. The goal is to figure out how to schedule a radiation treatment plan (over some period of time) that trades off damage to a patient&amp;rsquo;s health with shrinking the size of a tumor. For this problem, we set it up as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The decision we have to make is how much treatment to administer in each time period.&lt;/li&gt;
+&lt;li&gt;The goal is to minimize the maximum damage to the patient over the entire course of the treatment.&lt;/li&gt;
+&lt;li&gt;We are constrained by:
+&lt;ul&gt;
+&lt;li&gt;A maximum allowed dose in each period.&lt;/li&gt;
+&lt;li&gt;Wanting the tumor to be below some maximum tumor size.&lt;/li&gt;
+&lt;li&gt;The way the patients health changes with treatment over time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With a few mathematical tricks, this problem can be formulated as a convex problem and solved very efficiently. As you might imagine, balancing patient health and tumor size is obviously critical for the health and longevity of patients. I think this is a great example of one case in which convex optimization allows us to threat that needle very precisely. (Note: This problem was actually a problem on the final exam in the course I took. It was derived from real research by the professor.)&lt;/p&gt;
+&lt;p&gt;Another example of the effectiveness of convex optimization comes from a very different application: finance. In this example, we want to choose a portfolio that minimizes risk while achieving a particular expected return. In its simplest form, this is a convex optimization problem that can be formulated as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The decision we have to make is to pick a portfolio (from a universe of a bunch of stocks).&lt;/li&gt;
+&lt;li&gt;The cost of the portfolio is the amount of risk the portfolio holds. We want to minimize this quantity.&lt;/li&gt;
+&lt;li&gt;We are constrained by the expected return that we want to achieve. Any portfolio we pick has to achieve a particular expected return.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We can add other constraints (e.g., no short-selling) and add terms to the cost function (e.g., tax liability, transaction costs, which we would also want to minimize), but optimization problem we just formulated, in some form or other, is at the core of most of the portfolio construction being done in industry today.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Examples of convex optimization&amp;rsquo;s uncanny effectiveness and ubiquity are everywhere, but there&amp;rsquo;s an important point I want to stress before we close. In each of the examples above, the accuracy and utility of the output depends on very human choices about the problem setup. In the treatment planning example, it depends on the models the mathematicians and doctors come up with for how patient health changes and how tumor size changes. In the portfolio construction example, it depends on how good our projections of expected returns are. Some of what I showed and talked about in this post is heavily mathematical, but modeling these problems well is truly an art. So while the math is important and the engine that makes all of this possible, none of it really works without consistent communication and collaboration with domain experts.&lt;/p&gt;
+&lt;p&gt;Finally, I want to thank &lt;a href=&#34;https://web.stanford.edu/~boyd/&#34;&gt;Stephen Boyd&lt;/a&gt;, &lt;a href=&#34;https://web.stanford.edu/~anqif/&#34;&gt;Anqi Fu&lt;/a&gt;, and the rest of the EE364A staff for a fantastic course. I really cannot overstate how excellent the class was. If you&amp;rsquo;re interested in seeing what some of this is about in more detail, a free version of the class is available &lt;a href=&#34;https://www.youtube.com/playlist?list=PL3940DD956CDF0622&#34;&gt;on YouTube&lt;/a&gt; and the lecture slides and course textbook are available for free &lt;a href=&#34;https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I did it! No math symbols!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

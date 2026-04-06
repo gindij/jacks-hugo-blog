@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 100%">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <meta name="author" content="">
+
+  
+  
+  <meta name="description" content="Introduction
+In everyday life, we show that things exist by producing an example. In order to believe that black sheep exist, I would need someone to show me one. To believe the claim that pigs can fly, I would need to actually observe a flying pig. If you can show me the thing, then I will believe it exists.
+In mathematics, existence is a more abstract concept. Under certain assumptions about logic, a mathematical object can be proven to exist without ever being explicitly constructed or observed. For instance, we can show that a function $f$ has a root $x_0$ (this means that $f(x_0) = 0$) without knowing the concrete value for $x_0$. This can feel counterintuitive, but in the mathematical world, these two concepts are actually separate, with the task of construction often significantly more difficult than the task of existence.">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//images/favicon-16x16.png">
+
+  
+  
+  <meta name="keywords" content='hugo latex theme blog texify texify2 texify3 michael neuper'>
+  
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  
+  
+  <link rel="stylesheet" href='/katex/katex.min.css'>
+<script defer defer src='/katex/katex.min.js'></script>
+<script defer src='/katex/contrib/auto-render.min.js'></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          throwOnError : false
+        });
+    });
+</script>
+  
+
+  
+  <script data-name="BMC-Widget" 
+    data-cfasync="true" 
+    src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" 
+    data-id="michaelneuper" 
+    data-description="Like what I do? Buy me a coffee!" 
+    data-message="" 
+    data-color="#d79921" 
+    data-position="Right" 
+    data-x_margin="18" 
+    data-y_margin="18"
+    crossorigin="anonymous">
+</script>
+
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/2024-09-02-exist-vs-construct/">
+  <meta property="og:site_name" content="Jack Gindi">
+  <meta property="og:title" content="Existence vs construction">
+  <meta property="og:description" content="Introduction In everyday life, we show that things exist by producing an example. In order to believe that black sheep exist, I would need someone to show me one. To believe the claim that pigs can fly, I would need to actually observe a flying pig. If you can show me the thing, then I will believe it exists.
+In mathematics, existence is a more abstract concept. Under certain assumptions about logic, a mathematical object can be proven to exist without ever being explicitly constructed or observed. For instance, we can show that a function $f$ has a root $x_0$ (this means that $f(x_0) = 0$) without knowing the concrete value for $x_0$. This can feel counterintuitive, but in the mathematical world, these two concepts are actually separate, with the task of construction often significantly more difficult than the task of existence.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-07-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2024-07-17T00:00:00+00:00">
+    <meta property="article:tag" content="Misc">
+
+
+  
+  <link rel="canonical" href="http://localhost:1313/posts/2024-09-02-exist-vs-construct/">
+
+  
+  
+  
+  <meta itemprop="name" content="Existence vs construction">
+  <meta itemprop="description" content="Introduction In everyday life, we show that things exist by producing an example. In order to believe that black sheep exist, I would need someone to show me one. To believe the claim that pigs can fly, I would need to actually observe a flying pig. If you can show me the thing, then I will believe it exists.
+In mathematics, existence is a more abstract concept. Under certain assumptions about logic, a mathematical object can be proven to exist without ever being explicitly constructed or observed. For instance, we can show that a function $f$ has a root $x_0$ (this means that $f(x_0) = 0$) without knowing the concrete value for $x_0$. This can feel counterintuitive, but in the mathematical world, these two concepts are actually separate, with the task of construction often significantly more difficult than the task of existence.">
+  <meta itemprop="datePublished" content="2024-07-17T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2024-07-17T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1354">
+  <meta itemprop="keywords" content="Misc">
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/common.min.0e6556df209fd07250070e9a66bae6aae45273dd9904fb0f908fc61c7087ae31.css" integrity="sha256-DmVW3yCf0HJQBw6aZrrmquRSc92ZBPsPkI/GHHCHrjE=" crossorigin="anonymous">
+  
+
+  
+  
+    <link rel="stylesheet" href="/css/content.min.72a76d6e120e34d26028018cf79b77a2f2e99ee5402411bb7f5ce3770157340c.css" integrity="sha256-cqdtbhIONNJgKAGM95t3ovLpnuVAJBG7f1zjdwFXNAw=" crossorigin="anonymous">
+  
+
+  
+  
+  <title>Existence vs construction - Jack Gindi</title>
+  
+
+  
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Existence vs construction">
+  <meta name="twitter:description" content="Introduction In everyday life, we show that things exist by producing an example. In order to believe that black sheep exist, I would need someone to show me one. To believe the claim that pigs can fly, I would need to actually observe a flying pig. If you can show me the thing, then I will believe it exists.
+In mathematics, existence is a more abstract concept. Under certain assumptions about logic, a mathematical object can be proven to exist without ever being explicitly constructed or observed. For instance, we can show that a function $f$ has a root $x_0$ (this means that $f(x_0) = 0$) without knowing the concrete value for $x_0$. This can feel counterintuitive, but in the mathematical world, these two concepts are actually separate, with the task of construction often significantly more difficult than the task of existence.">
+
+
+  
+
+
+  <link rel="stylesheet" href="/css/single.min.d97c0aabdd6b4b93a3860bb977216c4a4e31291d41d1243a69cf06fe4a89df4d.css" integrity="sha256-2XwKq91rS5Ojhgu5dyFsSk4xKR1B0SQ6ac8G/kqJ300=" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" href="/css/single.min.78a121b7d7a160420f9daab0ea13add66c37b9c44f27bba07b27207e2b0975d2.css" integrity="sha256-eKEht9ehYEIPnaqw6hOt1mw3ucRPJ7ugeycgfisJddI=" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div id="wrapper">
+    
+
+
+<header id="header">
+  <h1>
+    <a href="http://localhost:1313/">Jack Gindi</a>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle theme">
+        <svg width="2rem" height="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 496">
+        <path fill="currentColor" d="M8,256C8,393,119,504,256,504S504,393,504,256,393,8,256,8,8,119,8,256ZM256,440V72a184,184,0,0,1,0,368Z" transform="translate(-8 -8)"/>
+        </svg>
+    </button>
+  </h1>
+
+  <nav>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/posts/">Writing</a>
+    </span>
+    
+    <span class="nav-bar-item">
+      
+      <a class="link" href="/papers/">Papers</a>
+    </span>
+    
+  </nav>
+</header>
+<hr class="head-rule"></hr>
+    
+<main id="main" class="post">
+  
+  <div class="post-heading">
+    <h1 class="post-title">Existence vs construction</h1>
+    <div class="publish-metadata">
+      <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      17 July 2024
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.4998 5.49994L18.3282 8.32837M3 20.9997L3.04745 20.6675C3.21536 19.4922 3.29932 18.9045 3.49029 18.3558C3.65975 17.8689 3.89124 17.4059 4.17906 16.9783C4.50341 16.4963 4.92319 16.0765 5.76274 15.237L17.4107 3.58896C18.1918 2.80791 19.4581 2.80791 20.2392 3.58896C21.0202 4.37001 21.0202 5.63634 20.2392 6.41739L8.37744 18.2791C7.61579 19.0408 7.23497 19.4216 6.8012 19.7244C6.41618 19.9932 6.00093 20.2159 5.56398 20.3879C5.07171 20.5817 4.54375 20.6882 3.48793 20.9012L3 20.9997Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          1354 words
+        </span>
+      
+      
+        
+      
+      
+        &nbsp;
+        <span>
+          <svg width="0.75em" height="0.75em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          ~7 mins
+        </span>
+      
+    </div>
+  </div>
+
+  
+  
+  
+
+  <article class="content ">
+    
+    <h1 id="introduction">Introduction</h1>
+<p>In everyday life, we show that things exist by producing an example. In order to believe that black sheep exist, I would need someone to show me one. To believe the claim that pigs can fly, I would need to actually observe a flying pig. If you can show me the thing, then I will believe it exists.</p>
+<p>In mathematics, existence is a more abstract concept. Under certain assumptions about logic, a mathematical object can be proven to exist without ever being explicitly constructed or observed. For instance, we can show that a function $f$ has a root $x_0$ (this means that $f(x_0) = 0$) without knowing the concrete value for $x_0$. This can feel counterintuitive, but in the mathematical world, these two concepts are actually separate, with the task of construction often significantly more difficult than the task of existence.</p>
+<p>In this post, we will take a high-level tour through a few examples of problems for which existence is much simpler than construction. Departing from our everyday intuition that existence and construction go hand in hand requires creativity and willingness to think outside the box. Without further ado, let&rsquo;s jump in!</p>
+<h1 id="testing-for-convergence-vs-finding-the-sum">Testing for Convergence vs. Finding the Sum</h1>
+<p>One area in which we can readily observe the difference in difficulty between showing that something exists and constructing it concerns infinite sums. Typically, when we&rsquo;re dealing with infinite sums, there are two questions we care about:</p>
+<ol>
+<li>Is the sum finite?</li>
+<li>What is the sum? (This question only really makes sense if the answer to (1) is yes.)</li>
+</ol>
+<p>The Basel Problem, posed in 1650 by Pietro Mengoli and solved by Euler in 1734, asks for the sum of the infinite series $S = \sum_{i = 1}^n \frac{1}{n^2}$. Showing that $S$ is finite &ndash; i.e., that a finite sum exists &ndash; simply requires observing that $n$&rsquo;s exponent in the denominator (2) is greater than 1. Finding the sum however, requires a more elaborate argument which we won&rsquo;t spend time on here. Spoiler alert: $S = \pi^2 / 6$! What the irrational, transcendental $\pi$ has to do with this very integer-y sum is not obvious, but it&rsquo;s another story for <a href="https://www.jgindi.me/posts/euler-basel/">another post</a>.</p>
+<p>Establishing the fact that $S$ is finite just required a simple test. Producing the actual sum, however, took almost 85 years! This is weird! Next, we&rsquo;ll look at an example from number theory where the difficulty of construction is the foundation upon which cybersecurity rests.</p>
+<h1 id="primality-testing-vs-integer-factorization">Primality Testing vs. Integer Factorization</h1>
+<p>One of the most deeply studied parts of number theory &ndash; the study of properties of the positive whole numbers &ndash; is the prime numbers. A number $p$ is prime if its only divisors are $p$ and $1$. So how do we tell if a number is prime?</p>
+<p>The simplest algorithm is to enumerate the numbers between $2$ and $p - 1$. If one of them divides $p$ evenly, the number is not prime. A slightly better way to do it is based on the fact that if $p = ab$, then unless $p$ is a perfect square, then either $a &lt; \sqrt{p}$ and $b &gt; \sqrt{p}$ or vice versa. Thus, instead of searching all the way up to $p$, we can search up to $\sqrt{p}$. But we&rsquo;re not done! Another observation we can make is that since, at bottom, all numbers are products of primes, we only need to search the <em>primes</em> up to $\sqrt{p}$.</p>
+<p>Much more (very sophisticated) work has been done improving these methods (and some of these improvements may at some point be the subject of another post), but the important thing to say here is that we now have algorithms that run relatively quickly for establishing the primality of a natural number. These efficient methods are often unlike the methods I mentioned earlier, since they do not rely on &ldquo;trial divisions&rdquo; (where we check different candidate divisors by dividing $p$ by them).</p>
+<p>Suppose now that instead of deciding if a number is prime, we change the problem statement slightly to: Find the prime factors of $p$. While it seems like being able to efficiently answer the &ldquo;Is it prime?&rdquo; question should require finding the factors along the way, once again, this turns out not to be the case. As of now, there are no published &ldquo;efficient&rdquo; integer factorization algorithms, though there are algorithms that are &ldquo;almost efficient&rdquo;. (Here, efficiency is a measure of how long it takes to factor an integer $n$ as a function of $n$&rsquo;s size.)</p>
+<p>Many of the cryptographic protocols responsible for securing data on the internet rely on the (likely) computational hardness of factoring numbers efficiently. If an efficient algorithm were to be found, the internet could become a far less safe place to entrust with our credit card information.</p>
+<h1 id="the-probabilistic-method">The Probabilistic Method</h1>
+<p>The probabilistic method, often used when studying finite structures, is a very interesting and general technique that manages to cleverly prove that an object with certain (rare) properties exists without actually finding one. The method does this by using randomness in the following ingenious way. First, we construct a &ldquo;random&rdquo; instance of the object. Then, we show that the object has the desired property with nonzero probability. Since, if we sample an object at random, the &ldquo;probability&rdquo; of drawing the object with the properties we care about is
+$$
+\frac{\text{# of configurations with property}}{\text{# of configurations}},
+$$
+if the probability is nonzero, it means there must be at least one instance that has our property. Without using the method to actually carry out a proof here, I&rsquo;ll set a problem up to give a &ldquo;concrete&rdquo; sense of a problem we can solve with this.</p>
+<p>A graph is a collection of nodes connected to one another by edges. A <em>complete</em> graph is a graph where every node is connected to all of the other nodes. If such a graph has $n$ nodes, then it has $n(n - 1) / 2$ edges. Examples of complete graphs on $n = 2, &hellip;, 7$ vertices are shown below. We typically refer to the complete graph on $n$ vertices as $K_n$.</p>
+<img src="/posts/exist-vs-construct/complete.png" alt="drawing" width="550" height="400"/>
+<p>The question we care about here is: Given a complete graph with $n$ vertices ($K_n$) and an integer $r$ (where $r &lt; n$), is it possible to color each edge either red or blue in such a way that no group of $r$ vertices ($K_r$) has monochromatic connecting edges?</p>
+<p>(Read that again if you need to.)</p>
+<p>The proof begins by constructing a &ldquo;random&rdquo; graph where each edge is colored red or blue independently at random. Using the fact that the graph is random (in the edge-coloring sense) and skipping over some details, it turns out that if for a particular choice of $n$ and $r$,
+$$
+\frac{n!}{r!(n-r)!} 2^{1 - r(r - 1) / 2} &lt; 1,
+$$
+then such an edge-coloring exists. In other words, given our initial question with some specific values of $n$ and $r$, you can determine if such an edge-coloring exists just by plugging those values into the left side of the inequality and seeing whether the result is smaller than 1. Note, however, that this plug-and-chug way of answering the question gives us <em>no information</em> about <em>how</em> to color the edges to see the actual coloring!</p>
+<p>Here, again, we have some clever way to answer the existence question while still being at square zero in terms of how we might go about construction.</p>
+<p>For this and other combinatorial problems, one can imagine sitting down and drawing some small examples to try to gain an intuition for what a valid coloring might look like. Maybe you draw a few examples for $n=5$ vertices (ten edges) or $n = 10$ vertices (45 edges). Then you pick a few values of $r$ and realize (if you&rsquo;re lucky and persistent) that a few values of $r$ work while others don&rsquo;t, and you start to feel like getting intuition for this problem from examples might be more difficult than you thought. The probabilistic method allows us to sidestep the problem of construction and instead prove existence in a way that highlights the surprising power of abstract reasoning in tackling what are otherwise mind-crushingly complex combinatorial problems.</p>
+
+    
+  </article>
+
+  
+  <div class="post-tags">
+    
+    <a class="link tag" href='http://localhost:1313/tags/misc'>#misc</a>
+    
+  </div>
+  
+
+  <button onclick="topFunction()" id="back-to-top" title="Go to top">Back to Top</button>
+
+  <div class="paginator">
+    
+    <a class="link" href="http://localhost:1313/posts/2024-07-17-self-supervision/" title="Self-supervised learning">← prev</a>
+    
+    
+    <a class="link" href="http://localhost:1313/posts/2024-11-17-sorting-bound/" title="A bound on sorting performance">next →</a>
+    
+  </div>
+  
+  
+</main>
+
+    <footer id="footer">
+  <div class="footer-links">
+    
+    <a href="https://github.com/gindij" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+    
+    
+    <a href="https://www.linkedin.com/in/jackegindi/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    
+  </div>
+  <div>
+    <span>Copyright © 2026 </span>
+  </div>
+</footer>
+
+  </div>
+
+  
+  <script src='http://localhost:1313/js/script.js' defer></script>
+
+  
+  
+
+  
+  
+
+  
+  
+
+</body>
+
+</html>
