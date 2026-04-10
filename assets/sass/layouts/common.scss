@@ -3,6 +3,10 @@
 @use "../vars" as *;
 @use "../fonts";
 
+html {
+  font-size: 18px;
+}
+
 // global
 * {
   box-sizing: border-box;
