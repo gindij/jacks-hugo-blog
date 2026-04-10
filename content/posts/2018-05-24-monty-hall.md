@@ -1,7 +1,7 @@
 ---
 title: "The Monty Hall paradox"
 date: 2018-05-24
-tags: ["statistics"]
+tags: ["math"]
 ---
 
 ## Introduction

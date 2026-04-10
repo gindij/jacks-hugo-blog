@@ -1,7 +1,7 @@
 ---
 title: "The connection between k-means and Gaussian mixtures"
 date: 2024-04-04
-tags: ["machine-learning", "statistics"]
+tags: ["machine-learning"]
 ---
 
 # Introduction

@@ -1,7 +1,7 @@
 ---
 title: "Anniversary math"
 date: 2020-11-27
-tags: ["misc"]
+tags: ["miscellaneous"]
 ---
 
 My wife and I got married one year ago today, on 11/27/2019. In honor of this very special day, I wanted to write a special short post showing that, in some sense, we've actually been married longer than one year.

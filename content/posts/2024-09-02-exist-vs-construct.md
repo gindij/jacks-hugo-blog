@@ -1,7 +1,7 @@
 ---
 title: "Existence vs construction"
 date: 2024-07-17
-tags: ["misc"]
+tags: ["math"]
 ---
 
 # Introduction

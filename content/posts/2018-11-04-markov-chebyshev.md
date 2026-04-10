@@ -1,7 +1,7 @@
 ---
 title: "Bounding probabilities with Markov and Chebyshev"
 date: 2018-11-04
-tags: ["statistics"]
+tags: ["math"]
 ---
 
 ## Introduction

@@ -1,7 +1,7 @@
 ---
 title: "Building ML Paper Explorer (late 2024)"
 date: 2024-12-13
-tags: ["misc"]
+tags: ["miscellaneous"]
 ---
 
 # Introduction

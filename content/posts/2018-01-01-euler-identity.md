@@ -1,7 +1,7 @@
 ---
 title: "Euler's Identity"
 date: 2018-01-01
-tags: ["calculus", "linear-algebra"]
+tags: ["math"]
 ---
 ## Introduction
 In this post I want to show a few different ways of proving that $e^{i\theta} = \cos\theta + i\sin\theta$. It’s a cute illustration of how it’s often possible and rather cool to look at and solve problems in different ways.

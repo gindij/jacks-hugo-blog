@@ -1,7 +1,7 @@
 ---
 title: "The Basel problem"
 date: 2017-05-26
-tags: ["misc"]
+tags: ["math"]
 ---
 
 ## Introduction

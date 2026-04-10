@@ -1,7 +1,7 @@
 ---
 title: "Fibonacci with difference equations"
 date: 2020-10-13
-tags: ["diff-eq"]
+tags: ["math"]
 ---
 
 ## Introduction

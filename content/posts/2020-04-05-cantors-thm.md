@@ -1,7 +1,7 @@
 ---
 title: "How many infinities are there?"
 date: 2020-04-05
-tags: ["infinity"]
+tags: ["math"]
 ---
 
 (This post assumes you've read, at least, [this](https://www.quora.com/q/iqjtzyaumcdpirqz/Big-and-bigger-Part-1-one-to-one-correspondences) and [this](https://www.blogger.com/blog/post/edit/754026028311034636/3224454722535965349#).)

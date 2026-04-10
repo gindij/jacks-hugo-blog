@@ -1,7 +1,7 @@
 ---
 title: "Randomized matrix multiplication checking"
 date: 2017-02-25
-tags: ["computer-science", "linear-algebra"]
+tags: ["computer-science"]
 ---
 
 ## Introduction

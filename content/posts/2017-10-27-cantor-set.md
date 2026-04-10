@@ -1,7 +1,7 @@
 ---
 title: "The Cantor set"
 date: 2017-10-27
-tags: ["infinity"]
+tags: ["math"]
 ---
 
 ## Introduction

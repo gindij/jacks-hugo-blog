@@ -1,7 +1,7 @@
 ---
 title: "The Alternating Series test"
 date: 2017-09-27
-tags: ["calculus"]
+tags: ["math"]
 ---
 
 ## Introduction

@@ -1,7 +1,7 @@
 ---
 title: "The derivative via linear algebra"
 date: 2017-03-15
-tags: ["linear-algebra"]
+tags: ["math"]
 ---
 
 ## Introduction

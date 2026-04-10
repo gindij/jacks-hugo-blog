@@ -1,7 +1,7 @@
 ---
 title: "Faster language model inference"
 date: 2023-04-06
-tags: ["computer-science", "machine-learning"]
+tags: ["machine-learning"]
 ---
 
 # Introduction

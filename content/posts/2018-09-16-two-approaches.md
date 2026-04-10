@@ -1,7 +1,7 @@
 ---
 title: "Counting chord intersections: two approaches"
 date: 2018-09-16
-tags: ["combinatorics"]
+tags: ["math"]
 ---
 
 ## Introduction

@@ -1,7 +1,7 @@
 ---
 title: "Probabilistic interpretation of regularization"
 date: 2021-05-09
-tags: ["statistics", "optimization"]
+tags: ["machine-learning"]
 ---
 
 ## Introduction

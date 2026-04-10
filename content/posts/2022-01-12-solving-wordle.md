@@ -1,7 +1,7 @@
 ---
 title: "Solving Wordle"
 date: 2022-01-12
-tags: ["misc"]
+tags: ["computer-science"]
 ---
 
 ## Introduction

@@ -1,7 +1,7 @@
 ---
 title: "Fibonacci with linear algebra"
 date: 2020-10-27
-tags: ["linear-algebra"]
+tags: ["math"]
 ---
 
 ## Introduction

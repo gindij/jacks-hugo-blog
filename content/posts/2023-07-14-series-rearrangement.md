@@ -1,7 +1,7 @@
 ---
 title: "Is addition commutative?"
 date: 2023-07-14
-tags: ["calculus", "infinity"]
+tags: ["math"]
 ---
 
 # Introduction
