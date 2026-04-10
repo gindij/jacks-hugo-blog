@@ -11,24 +11,14 @@
 
 {{ define "main" }}
 <main id="main">
-  {{ with .Site.GetPage "_index.md" }}
-  <section class="bio content">
-    {{ .Content }}
-  </section>
-  <hr>
-  {{ end }}
-
-  {{ $pages := where .Site.RegularPages "Type" "posts" }}
-  {{ range $pages.GroupByDate "2006" }}
+  <h2 style="margin-bottom: 1.5rem;">#{{ .Title }}</h2>
+  {{ range .Pages.GroupByDate "2006" }}
   <div class="post-group">
     <h3>{{ .Key }}</h3>
     <ul>
       {{ range .Pages }}
       <li>
-        <span class="post-row">
-          <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-          <span class="tag-list">{{ range .Params.tags }}<a class="tag-pill" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">{{ . }}</a>{{ end }}</span>
-        </span>
+        <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
         <time>{{ .PublishDate.Format $.Site.Params.dateFormat }}</time>
       </li>
       {{ end }}

@@ -22,3 +22,31 @@
     margin-bottom: $margin * 1.5;
   }
 }
+
+.post-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag-list {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.tag-pill {
+  font-size: 0.65em;
+  color: var(--fg1) !important;
+  border: 1px solid var(--fg1);
+  border-radius: 3px;
+  padding: 0 0.35em;
+  white-space: nowrap;
+  text-decoration: none !important;
+
+  &:hover {
+    color: var(--blue) !important;
+    border-color: var(--blue);
+  }
+}
