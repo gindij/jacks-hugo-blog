@@ -18,22 +18,11 @@
   <hr>
   {{ end }}
 
-  {{ $pages := where .Site.RegularPages "Type" "posts" }}
-  {{ range $pages.GroupByDate "2006" }}
-  <div class="post-group">
-    <h3>{{ .Key }}</h3>
-    <ul>
-      {{ range .Pages }}
-      <li>
-        <span class="post-row">
-          <a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-          <span class="tag-list">{{ range .Params.tags }}<a class="tag-pill" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">{{ . }}</a>{{ end }}</span>
-        </span>
-        <time>{{ .PublishDate.Format $.Site.Params.dateFormat }}</time>
-      </li>
-      {{ end }}
-    </ul>
-  </div>
+  <dl class="topic-list">
+  {{ range .Site.Taxonomies.tags.ByCount }}
+    <dt><a class="link" href="{{ "/tags/" | relURL }}{{ .Name | urlize }}/">{{ .Name }}</a></dt>
+    <dd><ul>{{ range .Pages }}<li><a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul></dd>
   {{ end }}
+  </dl>
 </main>
 {{ end }}
