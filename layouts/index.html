@@ -18,11 +18,23 @@
   <hr>
   {{ end }}
 
-  <dl class="topic-list">
+  <div class="post-archive">
   {{ range .Site.Taxonomies.tags.ByCount }}
-    <dt><a class="link" href="{{ "/tags/" | relURL }}{{ .Name | urlize }}/">{{ .Name }}</a></dt>
-    <dd><ul>{{ range .Pages }}<li><a class="link" href="{{ .RelPermalink }}">{{ .Title }}</a></li>{{ end }}</ul></dd>
+    <section class="tag-section">
+      <h3 class="tag-header">
+        <a class="tag-link" href="{{ "/tags/" | relURL }}{{ .Name | urlize }}/">{{ .Name }}</a>
+        <span class="post-count">{{ len .Pages }} {{ if gt (len .Pages) 1 }}posts{{ else }}post{{ end }}</span>
+      </h3>
+      <ul class="post-list">
+      {{ range .Pages }}
+        <li>
+          <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+          <time class="post-date">{{ .PublishDate.Format "2 Jan 2006" }}</time>
+        </li>
+      {{ end }}
+      </ul>
+    </section>
   {{ end }}
-  </dl>
+  </div>
 </main>
 {{ end }}
